@@ -1448,3 +1448,129 @@ footer .footer-logo {
   }
 
 }
+
+/* =========================
+   DASHBOARD BOOK CARD FIX
+========================= */
+
+.dashboard-books {
+  display: grid !important;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 24px;
+  width: 100%;
+}
+
+.dashboard-book {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.dashboard-book-link {
+  display: block;
+  width: 100%;
+  color: inherit;
+  text-decoration: none;
+}
+
+.dashboard-book-cover {
+  width: 100%;
+  height: 300px;
+  border-radius: 15px;
+  background: linear-gradient(145deg, #ffd5e6, #fff1f7);
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  color: #d81b60;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  overflow: hidden;
+  transition: 0.2s ease;
+}
+
+.dashboard-book-link:hover .dashboard-book-cover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+}
+
+.dashboard-book-link h3 {
+  margin: 12px 0 5px;
+  font-size: 16px;
+  color: #171717;
+}
+
+.dashboard-book-link:hover h3 {
+  color: #e91e63;
+}
+
+.dashboard-book > p {
+  margin: 0 0 10px;
+  color: #888;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.add-library-dashboard {
+  width: 100%;
+  margin-top: auto;
+  padding: 11px 12px;
+  border: 1px solid #e91e63;
+  border-radius: 9px;
+  background: #ffffff;
+  color: #e91e63;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.add-library-dashboard:hover {
+  background: #e91e63;
+  color: #ffffff;
+}
+
+
+/* TABLET */
+
+@media (max-width: 900px) {
+
+  .dashboard-books {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .dashboard-book-cover {
+    height: 260px;
+  }
+
+}
+
+
+/* PHONE */
+
+@media (max-width: 480px) {
+
+  .dashboard-books {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 15px;
+  }
+
+  .dashboard-book-cover {
+    height: 210px;
+    border-radius: 12px;
+  }
+
+  .dashboard-book-link h3 {
+    font-size: 14px;
+  }
+
+  .dashboard-book > p {
+    font-size: 11px;
+  }
+
+  .add-library-dashboard {
+    font-size: 10px;
+    padding: 9px 6px;
+  }
+
+}
