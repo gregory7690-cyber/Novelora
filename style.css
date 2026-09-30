@@ -832,3 +832,445 @@ footer .footer-logo {
 .forgot-password a:hover {
   text-decoration: underline;
 }
+
+/* =========================
+   READER DASHBOARD
+========================= */
+
+.reader-page {
+  margin: 0;
+  background: #fff;
+  color: #171717;
+  min-height: 100vh;
+}
+
+
+/* TOP NAVIGATION */
+
+.reader-navbar {
+  width: 100%;
+  min-height: 72px;
+  background: #ffffff;
+  border-bottom: 1px solid #eeeeee;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 5%;
+  box-sizing: border-box;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+
+.reader-logo {
+  color: #e91e63;
+  font-size: 26px;
+  font-weight: 800;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+
+.reader-logo span {
+  color: #171717;
+}
+
+
+.reader-nav {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+}
+
+
+.reader-nav a {
+  color: #444;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  transition: 0.2s ease;
+}
+
+
+.reader-nav a:hover {
+  color: #e91e63;
+}
+
+
+.reader-profile {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+
+.notification-btn,
+.profile-btn {
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 50%;
+  background: #fff5fa;
+  cursor: pointer;
+  font-size: 17px;
+}
+
+
+.notification-btn:hover,
+.profile-btn:hover {
+  background: #ffe4ef;
+}
+
+
+/* MAIN CONTENT */
+
+.reader-content {
+  width: 90%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 45px 0 80px;
+}
+
+
+/* WELCOME */
+
+.reader-welcome {
+  background: linear-gradient(135deg, #fff1f7, #ffffff);
+  border-radius: 22px;
+  padding: 45px;
+  margin-bottom: 30px;
+}
+
+
+.reader-welcome h1 {
+  font-size: 34px;
+  margin: 8px 0 12px;
+}
+
+
+.reader-welcome p:not(.section-label) {
+  color: #777;
+  max-width: 600px;
+  line-height: 1.6;
+}
+
+
+/* QUICK FEATURES */
+
+.quick-features {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 55px;
+}
+
+
+.feature-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 20px;
+  background: #ffffff;
+  border: 1px solid #eeeeee;
+  border-radius: 16px;
+  text-decoration: none;
+  color: #171717;
+  transition: 0.2s ease;
+}
+
+
+.feature-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.07);
+}
+
+
+.feature-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: #fff1f7;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  flex-shrink: 0;
+}
+
+
+.feature-card h3 {
+  margin: 0 0 4px;
+  font-size: 15px;
+}
+
+
+.feature-card p {
+  margin: 0;
+  color: #888;
+  font-size: 12px;
+}
+
+
+/* SECTIONS */
+
+.dashboard-section {
+  margin-bottom: 60px;
+}
+
+
+.dashboard-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 22px;
+}
+
+
+.dashboard-heading h2 {
+  margin: 5px 0 0;
+  font-size: 25px;
+}
+
+
+.section-label {
+  margin: 0;
+  color: #e91e63;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.2px;
+}
+
+
+.view-all {
+  color: #e91e63;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+
+/* GENRES */
+
+.genre-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+
+.genre-list a {
+  padding: 11px 18px;
+  background: #fff5fa;
+  color: #d81b60;
+  border-radius: 30px;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 600;
+  transition: 0.2s ease;
+}
+
+
+.genre-list a:hover {
+  background: #e91e63;
+  color: #ffffff;
+}
+
+
+/* EMPTY SECTIONS */
+
+.empty-reading {
+  text-align: center;
+  padding: 45px 20px;
+  border: 1px dashed #dddddd;
+  border-radius: 18px;
+  background: #fdfdfd;
+}
+
+
+.empty-icon {
+  font-size: 35px;
+  margin-bottom: 10px;
+}
+
+
+.empty-reading h3 {
+  margin: 0 0 7px;
+  font-size: 18px;
+}
+
+
+.empty-reading p {
+  margin: 0 auto 20px;
+  color: #888;
+  font-size: 14px;
+  max-width: 450px;
+  line-height: 1.5;
+}
+
+
+.dashboard-button {
+  display: inline-block;
+  padding: 12px 20px;
+  background: #e91e63;
+  color: #ffffff;
+  border-radius: 9px;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+
+.dashboard-button:hover {
+  background: #d81b60;
+}
+
+
+/* BOOKS */
+
+.dashboard-books {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+
+.dashboard-book {
+  min-width: 0;
+}
+
+
+.dashboard-book-cover {
+  height: 230px;
+  border-radius: 15px;
+  background: linear-gradient(145deg, #ffd5e6, #fff1f7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #d81b60;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+
+.dashboard-book h3 {
+  margin: 12px 0 5px;
+  font-size: 16px;
+}
+
+
+.dashboard-book p {
+  margin: 0;
+  color: #888;
+  font-size: 13px;
+}
+
+
+/* MOBILE NAVIGATION */
+
+.mobile-reader-nav {
+  display: none;
+}
+
+
+/* MOBILE */
+
+@media (max-width: 800px) {
+
+  .reader-navbar {
+    padding: 0 20px;
+  }
+
+
+  .reader-nav {
+    display: none;
+  }
+
+
+  .reader-profile {
+    margin-left: auto;
+  }
+
+
+  .reader-content {
+    width: 92%;
+    padding-top: 25px;
+  }
+
+
+  .reader-welcome {
+    padding: 30px 24px;
+  }
+
+
+  .reader-welcome h1 {
+    font-size: 27px;
+  }
+
+
+  .quick-features {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+
+  .dashboard-books {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+
+  .mobile-reader-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 65px;
+    background: #ffffff;
+    border-top: 1px solid #eeeeee;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    z-index: 200;
+  }
+
+
+  .mobile-reader-nav a {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    color: #666;
+    text-decoration: none;
+    font-size: 18px;
+  }
+
+
+  .mobile-reader-nav span {
+    font-size: 10px;
+  }
+
+}
+
+
+@media (max-width: 480px) {
+
+  .quick-features {
+    grid-template-columns: 1fr;
+  }
+
+
+  .dashboard-books {
+    grid-template-columns: 1fr 1fr;
+  }
+
+
+  .dashboard-book-cover {
+    height: 190px;
+  }
+
+
+  .reader-welcome h1 {
+    font-size: 24px;
+  }
+
+}
