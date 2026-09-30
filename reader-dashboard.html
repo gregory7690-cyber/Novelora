@@ -53,7 +53,7 @@
   </header>
 
 
-  <!-- DASHBOARD CONTENT -->
+  <!-- DASHBOARD -->
   <main class="reader-content">
 
     <!-- WELCOME -->
@@ -79,6 +79,7 @@
 
       <a href="library.html" class="feature-card">
         <span class="feature-icon">📚</span>
+
         <div>
           <h3>My Library</h3>
           <p>Your saved stories</p>
@@ -88,6 +89,7 @@
 
       <a href="coins.html" class="feature-card">
         <span class="feature-icon">🪙</span>
+
         <div>
           <h3>My Coins</h3>
           <p>Manage your coins</p>
@@ -97,6 +99,7 @@
 
       <a href="trending.html" class="feature-card">
         <span class="feature-icon">🔥</span>
+
         <div>
           <h3>Trending</h3>
           <p>Popular stories</p>
@@ -106,6 +109,7 @@
 
       <a href="free-books.html" class="feature-card">
         <span class="feature-icon">🆓</span>
+
         <div>
           <h3>Free Books</h3>
           <p>Read without coins</p>
@@ -121,6 +125,7 @@
       <div class="dashboard-heading">
 
         <div>
+
           <p class="section-label">
             EXPLORE
           </p>
@@ -128,6 +133,7 @@
           <h2>
             Genres
           </h2>
+
         </div>
 
       </div>
@@ -155,6 +161,7 @@
       <div class="dashboard-heading">
 
         <div>
+
           <p class="section-label">
             YOUR STORIES
           </p>
@@ -162,6 +169,7 @@
           <h2>
             Continue Reading
           </h2>
+
         </div>
 
       </div>
@@ -190,12 +198,13 @@
     </section>
 
 
-    <!-- TRENDING -->
+    <!-- TRENDING STORIES -->
     <section class="dashboard-section">
 
       <div class="dashboard-heading">
 
         <div>
+
           <p class="section-label">
             POPULAR NOW
           </p>
@@ -203,6 +212,7 @@
           <h2>
             Trending Stories
           </h2>
+
         </div>
 
         <a href="trending.html" class="view-all">
@@ -214,49 +224,96 @@
 
       <div class="dashboard-books">
 
+
+        <!-- BOOK 1 -->
         <div class="dashboard-book">
+
           <div class="dashboard-book-cover">
             ROMANCE
           </div>
 
           <h3>
-            Featured Story
+            The Alpha's Forbidden Hybrid
           </h3>
 
           <p>
-            Discover a new favorite
+            A forbidden love story
           </p>
+
+          <button
+            class="add-library-dashboard"
+            onclick="addToLibrary(
+              'alpha-hybrid',
+              &quot;The Alpha's Forbidden Hybrid&quot;,
+              'Romance',
+              ''
+            )"
+          >
+            ＋ Add to Library
+          </button>
+
         </div>
 
 
+        <!-- BOOK 2 -->
         <div class="dashboard-book">
+
+          <div class="dashboard-book-cover">
+            BILLIONAIRE
+          </div>
+
+          <h3>
+            The Billionaire's Secret Bride
+          </h3>
+
+          <p>
+            Love, secrets and power
+          </p>
+
+          <button
+            class="add-library-dashboard"
+            onclick="addToLibrary(
+              'billionaire-bride',
+              &quot;The Billionaire's Secret Bride&quot;,
+              'Billionaire',
+              ''
+            )"
+          >
+            ＋ Add to Library
+          </button>
+
+        </div>
+
+
+        <!-- BOOK 3 -->
+        <div class="dashboard-book">
+
           <div class="dashboard-book-cover">
             FANTASY
           </div>
 
           <h3>
-            Featured Story
+            Crown of the Moon
           </h3>
 
           <p>
-            Discover a new favorite
+            A kingdom ruled by destiny
           </p>
+
+          <button
+            class="add-library-dashboard"
+            onclick="addToLibrary(
+              'crown-of-the-moon',
+              'Crown of the Moon',
+              'Fantasy',
+              ''
+            )"
+          >
+            ＋ Add to Library
+          </button>
+
         </div>
 
-
-        <div class="dashboard-book">
-          <div class="dashboard-book-cover">
-            MYSTERY
-          </div>
-
-          <h3>
-            Featured Story
-          </h3>
-
-          <p>
-            Discover a new favorite
-          </p>
-        </div>
 
       </div>
 
@@ -269,6 +326,7 @@
       <div class="dashboard-heading">
 
         <div>
+
           <p class="section-label">
             READ FOR FREE
           </p>
@@ -276,6 +334,7 @@
           <h2>
             Free Books
           </h2>
+
         </div>
 
         <a href="free-books.html" class="view-all">
@@ -314,6 +373,7 @@
       <div class="dashboard-heading">
 
         <div>
+
           <p class="section-label">
             JUST FOR YOU
           </p>
@@ -321,6 +381,7 @@
           <h2>
             Recommended
           </h2>
+
         </div>
 
       </div>
@@ -347,7 +408,7 @@
   </main>
 
 
-  <!-- MOBILE BOTTOM NAVIGATION -->
+  <!-- MOBILE NAVIGATION -->
   <nav class="mobile-reader-nav">
 
     <a href="reader-dashboard.html">
@@ -377,5 +438,55 @@
 
   </nav>
 
+
+  <!-- LIBRARY FUNCTION -->
+  <script>
+
+    function addToLibrary(id, title, genre, cover) {
+
+      let savedBooks =
+        JSON.parse(localStorage.getItem("noveloraLibrary")) || [];
+
+
+      const alreadySaved =
+        savedBooks.some(function(book) {
+
+          return book.id === id;
+
+        });
+
+
+      if (alreadySaved) {
+
+        alert("This book is already in your library.");
+
+        return;
+
+      }
+
+
+      savedBooks.push({
+
+        id: id,
+        title: title,
+        genre: genre,
+        cover: cover
+
+      });
+
+
+      localStorage.setItem(
+        "noveloraLibrary",
+        JSON.stringify(savedBooks)
+      );
+
+
+      alert(title + " has been added to your library!");
+
+
+    }
+
+  </script>
+
 </body>
-  </html>
+</html>
