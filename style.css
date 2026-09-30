@@ -813,3 +813,22 @@ footer .footer-logo {
     font-size: 24px;
   }
 }
+
+/* FORGOT PASSWORD */
+
+.forgot-password {
+  text-align: right;
+  margin-top: -4px;
+  margin-bottom: 18px;
+}
+
+.forgot-password a {
+  color: #e91e63;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.forgot-password a:hover {
+  text-decoration: underline;
+}
