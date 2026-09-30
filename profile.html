@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Novelora - Profile</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #fff7fb;
+    color: #222;
+}
+
+header {
+    background: #fff;
+    border-bottom: 1px solid #f0d9e5;
+    padding: 15px 5%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.logo {
+    color: #e83e8c;
+    font-size: 25px;
+    font-weight: bold;
+}
+
+.back {
+    text-decoration: none;
+    color: #e83e8c;
+    font-weight: bold;
+}
+
+.container {
+    max-width: 900px;
+    margin: 25px auto;
+    padding: 0 20px 50px;
+}
+
+/* NOTIFICATIONS */
+
+.notification-top {
+    background: linear-gradient(135deg, #e83e8c, #b91f68);
+    color: white;
+    border-radius: 20px;
+    padding: 22px;
+    margin-bottom: 20px;
+    box-shadow: 0 10px 25px rgba(232, 62, 140, .15);
+}
+
+.notification-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+.notification-heading h2 {
+    font-size: 21px;
+}
+
+.unread {
+    background: white;
+    color: #e83e8c;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.notification {
+    background: rgba(255,255,255,.14);
+    border-radius: 12px;
+    padding: 12px;
+    margin-top: 9px;
+}
+
+.notification strong {
+    display: block;
+    margin-bottom: 4px;
+}
+
+.notification small {
+    opacity: .85;
+}
+
+.view-all {
+    display: block;
+    color: white;
+    text-align: center;
+    margin-top: 15px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+/* PROFILE */
+
+.profile-card {
+    background: white;
+    border: 1px solid #f0d9e5;
+    border-radius: 20px;
+    padding: 28px;
+    text-align: center;
+}
+
+.avatar {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    background: #ffe1ef;
+    color: #e83e8c;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: auto;
+    font-size: 38px;
+    font-weight: bold;
+}
+
+.username {
+    margin-top: 12px;
+    font-size: 25px;
+}
+
+.email {
+    color: #888;
+    margin-top: 5px;
+}
+
+.edit-btn {
+    margin-top: 16px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 10px;
+    background: #e83e8c;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* STATS */
+
+.section-title {
+    margin: 28px 0 14px;
+    font-size: 21px;
+}
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+}
+
+.stat {
+    background: white;
+    border: 1px solid #f0d9e5;
+    border-radius: 16px;
+    padding: 18px 10px;
+    text-align: center;
+}
+
+.stat-number {
+    font-size: 24px;
+    font-weight: bold;
+    color: #e83e8c;
+}
+
+.stat-label {
+    font-size: 12px;
+    color: #777;
+    margin-top: 5px;
+}
+
+/* ACTIVITY */
+
+.activity {
+    background: white;
+    border: 1px solid #f0d9e5;
+    border-radius: 18px;
+    overflow: hidden;
+}
+
+.activity-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 18px;
+    border-bottom: 1px solid #eee;
+    text-decoration: none;
+    color: #222;
+}
+
+.activity-item:last-child {
+    border-bottom: none;
+}
+
+.activity-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    background: #fff0f7;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+}
+
+.activity-text strong {
+    display: block;
+    margin-bottom: 4px;
+}
+
+.activity-text span {
+    color: #888;
+    font-size: 13px;
+}
+
+/* SETTINGS */
+
+.settings {
+    background: white;
+    border: 1px solid #f0d9e5;
+    border-radius: 18px;
+    overflow: hidden;
+}
+
+.setting {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px;
+    border-bottom: 1px solid #eee;
+    cursor: pointer;
+}
+
+.setting:last-child {
+    border-bottom: none;
+}
+
+.setting-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.setting-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 11px;
+    background: #fff0f7;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.setting-text strong {
+    display: block;
+    margin-bottom: 4px;
+}
+
+.setting-text span {
+    color: #888;
+    font-size: 12px;
+}
+
+.arrow {
+    color: #aaa;
+    font-size: 20px;
+}
+
+.logout {
+    width: 100%;
+    margin-top: 20px;
+    padding: 14px;
+    border: 1px solid #e83e8c;
+    background: white;
+    color: #e83e8c;
+    border-radius: 12px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+footer {
+    text-align: center;
+    color: #999;
+    font-size: 13px;
+    padding: 25px;
+}
+
+/* MOBILE */
+
+@media (max-width: 650px) {
+    .stats {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .profile-card {
+        padding: 22px;
+    }
+
+    .notification-heading h2 {
+        font-size: 18px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <div class="logo">Novelora</div>
+    <a href="reader-dashboard.html" class="back">← Dashboard</a>
+</header>
+
+<div class="container">
+
+    <!-- NOTIFICATIONS AT THE TOP -->
+
+    <div class="notification-top">
+
+        <div class="notification-heading">
+            <h2>🔔 Notifications</h2>
+            <span class="unread">3 New</span>
+        </div>
+
+        <div class="notification">
+            <strong>📖 New chapter available</strong>
+            <small>A new chapter has been added to a book you're following.</small>
+        </div>
+
+        <div class="notification">
+            <strong>🎁 Reward received</strong>
+            <small>You received 2 coins from your daily check-in.</small>
+        </div>
+
+        <div class="notification">
+            <strong>✍️ Author update</strong>
+            <small>An author you follow has posted an update.</small>
+        </div>
+
+        <a href="#" class="view-all">View all notifications →</a>
+
+    </div>
+
+    <!-- PROFILE -->
+
+    <div class="profile-card">
+
+        <div class="avatar">N</div>
+
+        <h1 class="username">Novelora Reader</h1>
+
+        <p class="email">reader@example.com</p>
+
+        <button class="edit-btn" onclick="editProfile()">
+            ✏️ Edit Profile
+        </button>
+
+    </div>
+
+    <!-- READING STATS -->
+
+    <h2 class="section-title">📊 Reading Stats</h2>
+
+    <div class="stats">
+
+        <div class="stat">
+            <div class="stat-number">0</div>
+            <div class="stat-label">Books Read</div>
+        </div>
+
+        <div class="stat">
+            <div class="stat-number">0</div>
+            <div class="stat-label">Chapters Read</div>
+        </div>
+
+        <div class="stat">
+            <div class="stat-number">0</div>
+            <div class="stat-label">Reading Streak</div>
+        </div>
+
+        <div class="stat">
+            <div class="stat-number">20</div>
+            <div class="stat-label">Coins</div>
+        </div>
+
+    </div>
+
+    <!-- ACTIVITY -->
+
+    <h2 class="section-title">📚 My Activity</h2>
+
+    <div class="activity">
+
+        <a href="library.html" class="activity-item">
+            <div class="activity-icon">📚</div>
+            <div class="activity-text">
+                <strong>My Library</strong>
+                <span>View your saved books</span>
+            </div>
+        </a>
+
+        <a href="#" class="activity-item">
+            <div class="activity-icon">🕘</div>
+            <div class="activity-text">
+                <strong>Reading History</strong>
+                <span>See books and chapters you've read</span>
+            </div>
+        </a>
+
+        <a href="#" class="activity-item">
+            <div class="activity-icon">❤️</div>
+            <div class="activity-text">
+                <strong>Followed Authors</strong>
+                <span>View authors you follow</span>
+            </div>
+        </a>
+
+        <a href="#" class="activity-item">
+            <div class="activity-icon">💬</div>
+            <div class="activity-text">
+                <strong>My Reviews & Comments</strong>
+                <span>View your interactions</span>
+            </div>
+        </a>
+
+    </div>
+
+    <!-- SETTINGS -->
+
+    <h2 class="section-title">⚙️ Settings</h2>
+
+    <div class="settings">
+
+        <div class="setting" onclick="settingMessage('Account Information')">
+            <div class="setting-left">
+                <div class="setting-icon">👤</div>
+                <div class="setting-text">
+                    <strong>Account Information</strong>
+                    <span>Username, email and profile</span>
+                </div>
+            </div>
+            <div class="arrow">›</div>
+        </div>
+
+        <div class="setting" onclick="settingMessage('Password')">
+            <div class="setting-left">
+                <div class="setting-icon">🔐</div>
+                <div class="setting-text">
+                    <strong>Password & Security</strong>
+                    <span>Change password and security options</span>
+                </div>
+            </div>
+            <div class="arrow">›</div>
+        </div>
+
+        <div class="setting" onclick="settingMessage('Notifications')">
+            <div class="setting-left">
+                <div class="setting-icon">🔔</div>
+                <div class="setting-text">
+                    <strong>Notifications</strong>
+                    <span>Manage your notification preferences</span>
+                </div>
+            </div>
+            <div class="arrow">›</div>
+        </div>
+
+        <div class="setting" onclick="settingMessage('Language')">
+            <div class="setting-left">
+                <div class="setting-icon">🌍</div>
+                <div class="setting-text">
+                    <strong>Language</strong>
+                    <span>English</span>
+                </div>
+            </div>
+            <div class="arrow">›</div>
+        </div>
+
+        <div class="setting" onclick="settingMessage('Privacy')">
+            <div class="setting-left">
+                <div class="setting-icon">🛡️</div>
+                <div class="setting-text">
+                    <strong>Privacy</strong>
+                    <span>Manage privacy preferences</span>
+                </div>
+            </div>
+            <div class="arrow">›</div>
+        </div>
+
+        <div class="setting" onclick="settingMessage('Purchase History')">
+            <div class="setting-left">
+                <div class="setting-icon">💳</div>
+                <div class="setting-text">
+                    <strong>Purchase History</strong>
+                    <span>View coin purchases and transactions</span>
+                </div>
+            </div>
+            <div class="arrow">›</div>
+        </div>
+
+        <div class="setting" onclick="settingMessage('Help')">
+            <div class="setting-left">
+                <div class="setting-icon">❓</div>
+                <div class="setting-text">
+                    <strong>Help & Support</strong>
+                    <span>Get help with Novelora</span>
+                </div>
+            </div>
+            <div class="arrow">›</div>
+        </div>
+
+    </div>
+
+    <button class="logout" onclick="logout()">
+        🚪 Log Out
+    </button>
+
+</div>
+
+<footer>
+    © 2026 Novelora — Your next story awaits.
+</footer>
+
+<script>
+
+function editProfile() {
+    alert("Profile editing will be connected to your Novelora account later.");
+}
+
+function settingMessage(name) {
+    alert(name + " will be fully connected when Novelora accounts are connected to the backend.");
+}
+
+function logout() {
+    const confirmLogout = confirm("Are you sure you want to log out?");
+
+    if (confirmLogout) {
+        window.location.href = "login.html";
+    }
+}
+
+</script>
+
+</body>
+</html>
