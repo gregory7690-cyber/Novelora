@@ -119,12 +119,459 @@
       </p>
 
     </section>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>The Alpha's Forbidden Hybrid — Novelora</title>
+
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+
+    /* =========================
+       BOOK PAGE
+    ========================= */
+
+    body {
+      margin: 0;
+      background: linear-gradient(180deg, #fff4f8 0%, #ffffff 45%);
+      color: #171717;
+    }
+
+    .book-interface {
+      width: 100%;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 35px 25px 100px;
+      box-sizing: border-box;
+    }
+
+    /* BACK BUTTON */
+
+    .return-dashboard {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      color: #e91e63;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 30px;
+    }
+
+    .return-dashboard:hover {
+      text-decoration: underline;
+    }
+
+    /* BOOK HEADER */
+
+    .book-main {
+      display: grid;
+      grid-template-columns: 360px 1fr;
+      gap: 55px;
+      align-items: center;
+      background: #ffffff;
+      border-radius: 28px;
+      padding: 35px;
+      box-shadow: 0 15px 45px rgba(233, 30, 99, 0.08);
+    }
+
+    /* HUGE COVER */
+
+    .huge-book-cover {
+      width: 100%;
+      aspect-ratio: 2 / 3;
+      border-radius: 18px;
+      background: linear-gradient(145deg, #ffd1e2, #fff0f6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: #d81b60;
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      box-shadow: 0 18px 35px rgba(0, 0, 0, 0.12);
+    }
+
+    /* BOOK INFORMATION */
+
+    .book-tag {
+      color: #e91e63;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      margin-bottom: 12px;
+    }
+
+    .book-main h1 {
+      margin: 0 0 12px;
+      font-size: 42px;
+      line-height: 1.1;
+    }
+
+    .book-author {
+      color: #777;
+      font-size: 15px;
+      margin-bottom: 20px;
+    }
+
+    .book-description {
+      color: #666;
+      line-height: 1.7;
+      font-size: 15px;
+      margin-bottom: 25px;
+    }
+
+    .book-stats {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 25px;
+    }
+
+    .book-stat {
+      background: #fff1f6;
+      color: #d81b60;
+      padding: 8px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    /* BUTTONS */
+
+    .book-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .start-reading {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 13px 24px;
+      border-radius: 10px;
+      background: #e91e63;
+      color: #ffffff;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 700;
+      border: none;
+      cursor: pointer;
+    }
+
+    .start-reading:hover {
+      background: #d81b60;
+    }
+
+    .add-book {
+      padding: 13px 20px;
+      border-radius: 10px;
+      background: #ffffff;
+      color: #e91e63;
+      border: 1px solid #e91e63;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .add-book:hover {
+      background: #fff1f6;
+    }
+
+    /* CHAPTER AREA */
+
+    .chapters-section {
+      margin-top: 45px;
+      background: #ffffff;
+      border-radius: 24px;
+      padding: 30px;
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.06);
+    }
+
+    .chapters-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .chapters-header h2 {
+      margin: 0;
+      font-size: 25px;
+    }
+
+    .chapters-header span {
+      color: #999;
+      font-size: 13px;
+    }
+
+    /* CHAPTER LIST */
+
+    .chapter-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .chapter {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 17px 18px;
+      border: 1px solid #f0e5ea;
+      border-radius: 12px;
+      text-decoration: none;
+      color: #222;
+      background: #ffffff;
+      transition: 0.2s ease;
+    }
+
+    .chapter:hover {
+      background: #fff5f9;
+      border-color: #f3a6c1;
+      transform: translateX(3px);
+    }
+
+    .chapter-name {
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .chapter-status {
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .free {
+      color: #2e9d62;
+    }
+
+    .locked {
+      color: #e91e63;
+    }
+
+    /* MOBILE */
+
+    @media (max-width: 800px) {
+
+      .book-interface {
+        padding: 25px 15px 100px;
+      }
+
+      .book-main {
+        grid-template-columns: 1fr;
+        gap: 30px;
+        padding: 22px;
+      }
+
+      .huge-book-cover {
+        max-width: 300px;
+        margin: 0 auto;
+      }
+
+      .book-main h1 {
+        font-size: 32px;
+      }
+
+      .chapters-section {
+        padding: 20px;
+      }
+
+    }
+
+    @media (max-width: 480px) {
+
+      .book-main h1 {
+        font-size: 28px;
+      }
+
+      .book-description {
+        font-size: 14px;
+      }
+
+      .book-actions {
+        flex-direction: column;
+      }
+
+      .start-reading,
+      .add-book {
+        width: 100%;
+        box-sizing: border-box;
+      }
+
+      .chapters-header {
+        align-items: flex-start;
+        gap: 10px;
+        flex-direction: column;
+      }
+
+    }
+
+  </style>
+
+</head>
+
+
+<body>
+
+
+  <!-- NAVIGATION -->
+
+  <header class="reader-navbar">
+
+    <a href="reader-dashboard.html" class="reader-logo">
+      NOVEL<span>ORA</span>
+    </a>
+
+    <nav class="reader-nav">
+
+      <a href="library.html">📚 Library</a>
+
+      <a href="coins.html">🪙 Coins</a>
+
+      <a href="trending.html">🔥 Trending</a>
+
+      <a href="free-books.html">🆓 Free Books</a>
+
+    </nav>
+
+    <div class="reader-profile">
+
+      <button type="button">🔔</button>
+
+      <button type="button">👤</button>
+
+    </div>
+
+  </header>
+
+
+
+  <main class="book-interface">
+
+
+    <!-- RETURN TO DASHBOARD -->
+
+    <a
+      href="reader-dashboard.html"
+      class="return-dashboard"
+    >
+      ← Return to Dashboard
+    </a>
+
+
+
+    <!-- BOOK INFORMATION -->
+
+    <section class="book-main">
+
+
+      <!-- HUGE COVER -->
+
+      <div class="huge-book-cover">
+
+        THE ALPHA'S
+        <br>
+        FORBIDDEN
+        <br>
+        HYBRID
+
+      </div>
+
+
+
+      <!-- DETAILS -->
+
+      <div>
+
+        <p class="book-tag">
+          ROMANCE · WEREWOLF
+        </p>
+
+
+        <h1>
+          The Alpha's Forbidden Hybrid
+        </h1>
+
+
+        <p class="book-author">
+          By <strong>Novelora Author</strong>
+        </p>
+
+
+        <div class="book-stats">
+
+          <span class="book-stat">
+            ⭐ 4.8
+          </span>
+
+          <span class="book-stat">
+            📖 120 Chapters
+          </span>
+
+          <span class="book-stat">
+            🔥 Trending
+          </span>
+
+        </div>
+
+
+        <p class="book-description">
+
+          She was never supposed to exist.
+
+          Born between two worlds, she carries a secret
+          that could threaten the entire werewolf kingdom.
+
+          When the most powerful Alpha discovers who she
+          really is, their forbidden connection puts both
+          their lives and the future of the pack at risk.
+
+        </p>
+
+
+        <div class="book-actions">
+
+          <a
+            href="#chapters"
+            class="start-reading"
+          >
+            📖 Start Reading
+          </a>
+
+
+          <button
+            type="button"
+            class="add-book"
+            onclick="addBookToLibrary()"
+          >
+            ＋ Add to Library
+          </button>
+
+        </div>
+
+      </div>
+
+
+    </section>
+
 
 
     <!-- CHAPTERS -->
-    <section class="book-section">
 
-      <div class="book-section-heading">
+    <section
+      class="chapters-section"
+      id="chapters"
+    >
+
+      <div class="chapters-header">
 
         <h2>
           Chapters
@@ -139,30 +586,136 @@
 
       <div class="chapter-list">
 
-        <a href="#" class="chapter-item">
-          <span>Chapter 1</span>
-          <span>Free</span>
+
+        <a href="#" class="chapter">
+
+          <span class="chapter-name">
+            Chapter 1
+          </span>
+
+          <span class="chapter-status free">
+            Free
+          </span>
+
         </a>
 
-        <a href="#" class="chapter-item">
-          <span>Chapter 2</span>
-          <span>Free</span>
+
+        <a href="#" class="chapter">
+
+          <span class="chapter-name">
+            Chapter 2
+          </span>
+
+          <span class="chapter-status free">
+            Free
+          </span>
+
         </a>
 
-        <a href="#" class="chapter-item">
-          <span>Chapter 3</span>
-          <span>Free</span>
+
+        <a href="#" class="chapter">
+
+          <span class="chapter-name">
+            Chapter 3
+          </span>
+
+          <span class="chapter-status free">
+            Free
+          </span>
+
         </a>
 
-        <a href="#" class="chapter-item">
-          <span>Chapter 4</span>
-          <span>🔒 10 🪙</span>
+
+        <a href="#" class="chapter">
+
+          <span class="chapter-name">
+            Chapter 4
+          </span>
+
+          <span class="chapter-status locked">
+            🔒 10 🪙
+          </span>
+
         </a>
 
-        <a href="#" class="chapter-item">
-          <span>Chapter 5</span>
-          <span>🔒 10 🪙</span>
+
+        <a href="#" class="chapter">
+
+          <span class="chapter-name">
+            Chapter 5
+          </span>
+
+          <span class="chapter-status locked">
+            🔒 10 🪙
+          </span>
+
         </a>
+
+
+        <a href="#" class="chapter">
+
+          <span class="chapter-name">
+            Chapter 6
+          </span>
+
+          <span class="chapter-status locked">
+            🔒 10 🪙
+          </span>
+
+        </a>
+
+
+        <a href="#" class="chapter">
+
+          <span class="chapter-name">
+            Chapter 7
+          </span>
+
+          <span class="chapter-status locked">
+            🔒 10 🪙
+          </span>
+
+        </a>
+
+
+        <a href="#" class="chapter">
+
+          <span class="chapter-name">
+            Chapter 8
+          </span>
+
+          <span class="chapter-status locked">
+            🔒 10 🪙
+          </span>
+
+        </a>
+
+
+        <a href="#" class="chapter">
+
+          <span class="chapter-name">
+            Chapter 9
+          </span>
+
+          <span class="chapter-status locked">
+            🔒 10 🪙
+          </span>
+
+        </a>
+
+
+        <a href="#" class="chapter">
+
+          <span class="chapter-name">
+            Chapter 10
+          </span>
+
+          <span class="chapter-status locked">
+            🔒 10 🪙
+          </span>
+
+        </a>
+
 
       </div>
 
@@ -172,7 +725,9 @@
   </main>
 
 
-  <!-- MOBILE NAV -->
+
+  <!-- MOBILE NAVIGATION -->
+
   <nav class="mobile-reader-nav">
 
     <a href="reader-dashboard.html">
@@ -203,45 +758,69 @@
   </nav>
 
 
-  <!-- ADD TO LIBRARY -->
+
+  <!-- LIBRARY FUNCTION -->
+
   <script>
 
     function addBookToLibrary() {
 
       let savedBooks =
-        JSON.parse(localStorage.getItem("noveloraLibrary")) || [];
+        JSON.parse(
+          localStorage.getItem("noveloraLibrary")
+        ) || [];
+
 
       const book = {
+
         id: "alpha-hybrid",
+
         title: "The Alpha's Forbidden Hybrid",
+
         genre: "Romance",
+
         cover: ""
+
       };
+
 
       const alreadySaved =
         savedBooks.some(function(item) {
+
           return item.id === book.id;
+
         });
+
 
       if (alreadySaved) {
 
-        alert("This book is already in your library.");
+        alert(
+          "This book is already in your library."
+        );
 
         return;
+
       }
 
+
       savedBooks.push(book);
+
 
       localStorage.setItem(
         "noveloraLibrary",
         JSON.stringify(savedBooks)
       );
 
-      alert("The Alpha's Forbidden Hybrid has been added to your library!");
+
+      alert(
+        "The Alpha's Forbidden Hybrid has been added to your library!"
+      );
 
     }
 
   </script>
 
+
 </body>
+
 </html>
