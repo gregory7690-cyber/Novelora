@@ -1274,3 +1274,177 @@ footer .footer-logo {
   }
 
 }
+/* =========================
+   LIBRARY PAGE
+========================= */
+
+.library-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 25px;
+  margin-bottom: 40px;
+}
+
+.library-header h1 {
+  margin: 6px 0 8px;
+  font-size: 32px;
+}
+
+.library-header p:not(.section-label) {
+  margin: 0;
+  color: #888;
+  line-height: 1.5;
+}
+
+.add-books-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 13px 20px;
+  background: #e91e63;
+  color: #ffffff;
+  border-radius: 10px;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.add-books-button:hover {
+  background: #d81b60;
+}
+
+.library-section {
+  width: 100%;
+}
+
+.empty-library {
+  text-align: center;
+  padding: 70px 20px;
+  border: 1px dashed #dddddd;
+  border-radius: 20px;
+  background: #fdfdfd;
+}
+
+.library-empty-icon {
+  font-size: 48px;
+  margin-bottom: 15px;
+}
+
+.empty-library h2 {
+  margin: 0 0 8px;
+  font-size: 22px;
+}
+
+.empty-library p {
+  color: #888;
+  font-size: 14px;
+  line-height: 1.5;
+  max-width: 450px;
+  margin: 0 auto 22px;
+}
+
+.library-books {
+  grid-template-columns: repeat(4, 1fr);
+  gap: 25px;
+}
+
+.library-book-card {
+  min-width: 0;
+}
+
+.library-book-cover {
+  width: 100%;
+  height: 280px;
+  border-radius: 15px;
+  overflow: hidden;
+  background: linear-gradient(145deg, #ffd5e6, #fff1f7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.library-book-cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.library-book-cover span {
+  color: #d81b60;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+.library-book-card h3 {
+  margin: 12px 0 5px;
+  font-size: 16px;
+}
+
+.library-book-card p {
+  margin: 0 0 10px;
+  color: #888;
+  font-size: 13px;
+}
+
+.remove-library-button {
+  border: none;
+  background: #fff1f7;
+  color: #d81b60;
+  padding: 8px 12px;
+  border-radius: 7px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.remove-library-button:hover {
+  background: #ffe0ec;
+}
+
+
+@media (max-width: 900px) {
+
+  .library-books {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+}
+
+
+@media (max-width: 650px) {
+
+  .library-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .library-header h1 {
+    font-size: 27px;
+  }
+
+  .library-books {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+  }
+
+  .library-book-cover {
+    height: 220px;
+  }
+
+}
+
+
+@media (max-width: 420px) {
+
+  .library-books {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .library-book-cover {
+    height: 190px;
+  }
+
+}
