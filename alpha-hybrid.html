@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>The Alpha's Forbidden Hybrid — Novelora</title>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="book-page">
+
+  <!-- NAVIGATION -->
+  <header class="reader-navbar">
+
+    <a href="reader-dashboard.html" class="reader-logo">
+      NOVEL<span>ORA</span>
+    </a>
+
+    <nav class="reader-nav">
+      <a href="library.html">📚 Library</a>
+      <a href="coins.html">🪙 Coins</a>
+      <a href="trending.html">🔥 Trending</a>
+      <a href="free-books.html">🆓 Free Books</a>
+    </nav>
+
+    <div class="reader-profile">
+      <button type="button">🔔</button>
+      <button type="button">👤</button>
+    </div>
+
+  </header>
+
+
+  <!-- BOOK DETAILS -->
+  <main class="book-details">
+
+    <a href="reader-dashboard.html" class="book-back">
+      ← Back to Dashboard
+    </a>
+
+
+    <section class="book-hero">
+
+      <!-- COVER -->
+      <div class="book-cover-large">
+        ROMANCE
+      </div>
+
+
+      <!-- INFORMATION -->
+      <div class="book-information">
+
+        <p class="book-genre">
+          ROMANCE · WEREWOLF
+        </p>
+
+        <h1>
+          The Alpha's Forbidden Hybrid
+        </h1>
+
+        <p class="book-author">
+          By <strong>Novelora Author</strong>
+        </p>
+
+        <div class="book-stats">
+
+          <span>⭐ 4.8</span>
+          <span>📖 120 Chapters</span>
+          <span>🔥 Trending</span>
+
+        </div>
+
+
+        <p class="book-description">
+          She was never supposed to exist.
+
+          Born between two worlds, she carries a secret
+          that could threaten the entire werewolf kingdom.
+          When the most powerful Alpha discovers who she
+          really is, their forbidden connection puts both
+          their lives and the future of the pack at risk.
+        </p>
+
+
+        <div class="book-actions">
+
+          <a href="#" class="read-button">
+            📖 Start Reading
+          </a>
+
+          <button
+            type="button"
+            class="book-library-button"
+            onclick="addBookToLibrary()"
+          >
+            ＋ Add to Library
+          </button>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ABOUT -->
+    <section class="book-section">
+
+      <h2>
+        About This Book
+      </h2>
+
+      <p>
+        A forbidden romance filled with secrets, power,
+        betrayal and supernatural destiny.
+      </p>
+
+    </section>
+
+
+    <!-- CHAPTERS -->
+    <section class="book-section">
+
+      <div class="book-section-heading">
+
+        <h2>
+          Chapters
+        </h2>
+
+        <span>
+          120 Chapters
+        </span>
+
+      </div>
+
+
+      <div class="chapter-list">
+
+        <a href="#" class="chapter-item">
+          <span>Chapter 1</span>
+          <span>Free</span>
+        </a>
+
+        <a href="#" class="chapter-item">
+          <span>Chapter 2</span>
+          <span>Free</span>
+        </a>
+
+        <a href="#" class="chapter-item">
+          <span>Chapter 3</span>
+          <span>Free</span>
+        </a>
+
+        <a href="#" class="chapter-item">
+          <span>Chapter 4</span>
+          <span>🔒 10 🪙</span>
+        </a>
+
+        <a href="#" class="chapter-item">
+          <span>Chapter 5</span>
+          <span>🔒 10 🪙</span>
+        </a>
+
+      </div>
+
+    </section>
+
+
+  </main>
+
+
+  <!-- MOBILE NAV -->
+  <nav class="mobile-reader-nav">
+
+    <a href="reader-dashboard.html">
+      🏠
+      <span>Home</span>
+    </a>
+
+    <a href="library.html">
+      📚
+      <span>Library</span>
+    </a>
+
+    <a href="trending.html">
+      🔥
+      <span>Trending</span>
+    </a>
+
+    <a href="free-books.html">
+      🆓
+      <span>Free</span>
+    </a>
+
+    <a href="#">
+      👤
+      <span>Profile</span>
+    </a>
+
+  </nav>
+
+
+  <!-- ADD TO LIBRARY -->
+  <script>
+
+    function addBookToLibrary() {
+
+      let savedBooks =
+        JSON.parse(localStorage.getItem("noveloraLibrary")) || [];
+
+      const book = {
+        id: "alpha-hybrid",
+        title: "The Alpha's Forbidden Hybrid",
+        genre: "Romance",
+        cover: ""
+      };
+
+      const alreadySaved =
+        savedBooks.some(function(item) {
+          return item.id === book.id;
+        });
+
+      if (alreadySaved) {
+
+        alert("This book is already in your library.");
+
+        return;
+      }
+
+      savedBooks.push(book);
+
+      localStorage.setItem(
+        "noveloraLibrary",
+        JSON.stringify(savedBooks)
+      );
+
+      alert("The Alpha's Forbidden Hybrid has been added to your library!");
+
+    }
+
+  </script>
+
+</body>
+</html>
