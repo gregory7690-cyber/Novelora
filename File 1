@@ -1,0 +1,233 @@
+<!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Novelora — Your Next Story Awaits</title>
+  <meta name="description" content="Discover romance, fantasy, mystery, werewolf and more on Novelora.">
+  <link rel="stylesheet" href="style.css">
+</head><body>  <header class="navbar">
+    <a href="#" class="logo">
+      <span>Novel</span>ora
+    </a><nav>
+  <a href="#home">Home</a>
+  <a href="#genres">Genres</a>
+  <a href="#trending">Trending</a>
+  <a href="#new">New Releases</a>
+  <a href="#library">Library</a>
+</nav>
+
+<div class="nav-actions">
+  <button class="search-button" onclick="openSearch()">⌕</button>
+  <button class="login-button">Log in</button>
+  <button class="signup-button">Sign up</button>
+</div>
+
+  </header>  <main><!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-overlay"></div>
+
+  <div class="hero-content">
+    <p class="eyebrow">WELCOME TO NOVELORA</p>
+
+    <h1>
+      Your next<br>
+      <span>story awaits.</span>
+    </h1>
+
+    <p class="hero-text">
+      Lose yourself in unforgettable romances, dangerous secrets,
+      magical worlds and stories you'll never want to put down.
+    </p>
+
+    <div class="hero-buttons">
+      <button class="primary-button">Start Reading</button>
+      <button class="secondary-button">Explore Stories</button>
+    </div>
+  </div>
+</section>
+
+<!-- SEARCH -->
+<section class="search-section">
+  <div class="search-box">
+    <span>⌕</span>
+    <input
+      type="text"
+      id="searchInput"
+      placeholder="Search novels, authors or genres..."
+      onkeyup="searchNovels()"
+    >
+  </div>
+</section>
+
+<!-- TRENDING -->
+<section class="content-section" id="trending">
+  <div class="section-heading">
+    <div>
+      <p class="section-label">WHAT READERS LOVE</p>
+      <h2>Trending Now</h2>
+    </div>
+
+    <button class="view-all">View all →</button>
+  </div>
+
+  <div class="book-grid" id="bookGrid">
+
+    <article class="book-card" data-title="The Alpha's Forbidden Hybrid" data-genre="Werewolf Romance">
+      <div class="cover cover-one">
+        <span class="cover-tag">TRENDING</span>
+        <div class="cover-title">
+          <small>THE</small>
+          <strong>ALPHA'S<br>FORBIDDEN<br>HYBRID</strong>
+        </div>
+      </div>
+
+      <div class="book-info">
+        <h3>The Alpha's Forbidden Hybrid</h3>
+        <p>Romance · Werewolf</p>
+        <div class="book-meta">
+          <span>♥ 12.4K</span>
+          <span>Free</span>
+        </div>
+      </div>
+    </article>
+
+    <article class="book-card" data-title="The Billionaire's Secret Bride" data-genre="Billionaire Romance">
+      <div class="cover cover-two">
+        <span class="cover-tag">POPULAR</span>
+        <div class="cover-title">
+          <small>THE</small>
+          <strong>BILLIONAIRE'S<br>SECRET<br>BRIDE</strong>
+        </div>
+      </div>
+
+      <div class="book-info">
+        <h3>The Billionaire's Secret Bride</h3>
+        <p>Romance · Billionaire</p>
+        <div class="book-meta">
+          <span>♥ 9.8K</span>
+          <span>Paid</span>
+        </div>
+      </div>
+    </article>
+
+    <article class="book-card" data-title="Crown of the Moon" data-genre="Fantasy">
+      <div class="cover cover-three">
+        <span class="cover-tag">NEW</span>
+        <div class="cover-title">
+          <small>THE</small>
+          <strong>CROWN<br>OF THE<br>MOON</strong>
+        </div>
+      </div>
+
+      <div class="book-info">
+        <h3>Crown of the Moon</h3>
+        <p>Fantasy · Romance</p>
+        <div class="book-meta">
+          <span>♥ 7.2K</span>
+          <span>Free</span>
+        </div>
+      </div>
+    </article>
+
+    <article class="book-card" data-title="The Girl Behind the Mask" data-genre="Mystery">
+      <div class="cover cover-four">
+        <span class="cover-tag">HOT</span>
+        <div class="cover-title">
+          <small>THE GIRL</small>
+          <strong>BEHIND<br>THE<br>MASK</strong>
+        </div>
+      </div>
+
+      <div class="book-info">
+        <h3>The Girl Behind the Mask</h3>
+        <p>Mystery · Drama</p>
+        <div class="book-meta">
+          <span>♥ 5.6K</span>
+          <span>Free</span>
+        </div>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+<!-- GENRES -->
+<section class="genres-section" id="genres">
+  <div class="section-heading">
+    <div>
+      <p class="section-label">EXPLORE</p>
+      <h2>Find Your Genre</h2>
+    </div>
+  </div>
+
+  <div class="genre-grid">
+    <button>💕 Romance</button>
+    <button>🐺 Werewolf</button>
+    <button>✨ Fantasy</button>
+    <button>💎 Billionaire</button>
+    <button>🔮 Paranormal</button>
+    <button>🕵️ Mystery</button>
+    <button>🖤 Thriller</button>
+    <button>👑 Historical</button>
+    <button>🚀 Science Fiction</button>
+    <button>👻 Horror</button>
+    <button>🎭 Drama</button>
+    <button>⚔️ Adventure</button>
+  </div>
+</section>
+
+<!-- NEW RELEASES -->
+<section class="content-section" id="new">
+  <div class="section-heading">
+    <div>
+      <p class="section-label">JUST ARRIVED</p>
+      <h2>New Releases</h2>
+    </div>
+
+    <button class="view-all">View all →</button>
+  </div>
+
+  <div class="horizontal-books">
+
+    <article class="small-book">
+      <div class="small-cover cover-five"></div>
+      <div>
+        <h3>When We Were Strangers</h3>
+        <p>Romance · Drama</p>
+        <span>Free</span>
+      </div>
+    </article>
+
+    <article class="small-book">
+      <div class="small-cover cover-six"></div>
+      <div>
+        <h3>The Last Moon Queen</h3>
+        <p>Fantasy · Werewolf</p>
+        <span>Paid</span>
+      </div>
+    </article>
+
+    <article class="small-book">
+      <div class="small-cover cover-seven"></div>
+      <div>
+        <h3>His Beautiful Revenge</h3>
+        <p>Romance · Thriller</p>
+        <span>Free</span>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+  </main>  <footer>
+    <div class="footer-logo">Novel<span>ora</span></div>
+    <p>Your next story awaits.</p>
+    <div class="footer-links">
+      <a href="#">About</a>
+      <a href="#">Privacy</a>
+      <a href="#">Terms</a>
+      <a href="#">Contact</a>
+    </div>
+    <small>© 2026 Novelora. All rights reserved.</small>
+  </footer>  <script src="script.js"></script></body>
+</html>
