@@ -1,1 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Novelora - Coins</title>
 
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #fff7fb;
+    color: #222;
+}
+
+header {
+    background: #fff;
+    border-bottom: 1px solid #f0d9e5;
+    padding: 15px 5%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.logo {
+    color: #e83e8c;
+    font-size: 25px;
+    font-weight: bold;
+}
+
+.back {
+    text-decoration: none;
+    color: #e83e8c;
+    font-weight: bold;
+}
+
+.container {
+    max-width: 1000px;
+    margin: 30px auto;
+    padding: 0 20px 50px;
+}
+
+h1 {
+    text-align: center;
+    font-size: 32px;
+    margin-bottom: 8px;
+}
+
+.subtitle {
+    text-align: center;
+    color: #777;
+    margin-bottom: 25px;
+}
+
+/* BALANCE */
+
+.balance {
+    background: linear-gradient(135deg, #e83e8c, #b91f68);
+    color: white;
+    border-radius: 22px;
+    padding: 30px;
+    text-align: center;
+    margin-bottom: 25px;
+    box-shadow: 0 10px 25px rgba(232, 62, 140, .18);
+}
+
+.balance small {
+    opacity: .9;
+}
+
+.balance h2 {
+    font-size: 42px;
+    margin: 8px 0;
+}
+
+.balance span {
+    font-size: 18px;
+}
+
+/* REWARDS */
+
+.section-title {
+    font-size: 22px;
+    margin: 30px 0 15px;
+}
+
+.rewards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+}
+
+.reward {
+    background: white;
+    border: 1px solid #f0d9e5;
+    border-radius: 17px;
+    padding: 20px;
+    text-align: center;
+}
+
+.reward-icon {
+    font-size: 30px;
+    margin-bottom: 8px;
+}
+
+.reward h3 {
+    margin-bottom: 6px;
+}
+
+.reward p {
+    color: #777;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.reward button {
+    margin-top: 14px;
+    width: 100%;
+    border: none;
+    border-radius: 10px;
+    padding: 11px;
+    background: #e83e8c;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.reward button:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+}
+
+/* COIN PACKAGES */
+
+.packages {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+}
+
+.package {
+    background: white;
+    border: 1px solid #f0d9e5;
+    border-radius: 18px;
+    padding: 22px;
+    text-align: center;
+    position: relative;
+}
+
+.package.popular {
+    border: 2px solid #e83e8c;
+}
+
+.popular-label {
+    position: absolute;
+    top: -11px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #e83e8c;
+    color: white;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.coin-number {
+    font-size: 28px;
+    font-weight: bold;
+    margin: 8px 0;
+}
+
+.coin-label {
+    color: #e83e8c;
+    font-weight: bold;
+}
+
+.price {
+    font-size: 22px;
+    font-weight: bold;
+    margin: 12px 0;
+}
+
+.package button {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 10px;
+    background: #e83e8c;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* PAYMENT */
+
+.payment {
+    background: white;
+    border: 1px solid #f0d9e5;
+    border-radius: 18px;
+    padding: 22px;
+}
+
+.payment-options {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+}
+
+.payment-option {
+    border: 2px solid #eee;
+    border-radius: 12px;
+    padding: 15px 8px;
+    text-align: center;
+    cursor: pointer;
+    background: white;
+}
+
+.payment-option.active {
+    border-color: #e83e8c;
+    background: #fff0f7;
+}
+
+.payment-option span {
+    display: block;
+    font-size: 25px;
+    margin-bottom: 6px;
+}
+
+.payment-note {
+    margin-top: 15px;
+    color: #777;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+/* GEMS */
+
+.gems {
+    background: #fff;
+    border: 1px solid #f0d9e5;
+    border-radius: 18px;
+    padding: 22px;
+}
+
+.gem-box {
+    background: #fff5d9;
+    border-radius: 14px;
+    padding: 18px;
+    margin-top: 12px;
+}
+
+.gem-box strong {
+    color: #b17a00;
+}
+
+/* HISTORY */
+
+.history {
+    background: white;
+    border: 1px solid #f0d9e5;
+    border-radius: 18px;
+    padding: 22px;
+}
+
+.history-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 14px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.history-row:last-child {
+    border-bottom: none;
+}
+
+.green {
+    color: #179447;
+    font-weight: bold;
+}
+
+.gold {
+    color: #b17a00;
+    font-weight: bold;
+}
+
+footer {
+    text-align: center;
+    color: #999;
+    font-size: 13px;
+    padding: 30px 0;
+}
+
+/* MOBILE */
+
+@media (max-width: 700px) {
+    .rewards,
+    .packages {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .payment-options {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    h1 {
+        font-size: 27px;
+    }
+}
+
+@media (max-width: 450px) {
+    .rewards,
+    .packages {
+        grid-template-columns: 1fr;
+    }
+
+    .balance h2 {
+        font-size: 36px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <div class="logo">Novelora</div>
+    <a href="reader-dashboard.html" class="back">← Dashboard</a>
+</header>
+
+<div class="container">
+
+    <h1>🪙 Novelora Coins</h1>
+    <p class="subtitle">Unlock stories, earn rewards and keep reading.</p>
+
+    <!-- BALANCE -->
+
+    <div class="balance">
+        <small>Your current balance</small>
+        <h2 id="coinBalance">20</h2>
+        <span>🪙 Coins</span>
+    </div>
+
+    <!-- REWARDS -->
+
+    <h2 class="section-title">🎁 Earn Free Coins</h2>
+
+    <div class="rewards">
+
+        <div class="reward">
+            <div class="reward-icon">📅</div>
+            <h3>Daily Check-In</h3>
+            <p>Check in every day and receive 2 coins.</p>
+            <button onclick="claimDaily()">Claim +2</button>
+        </div>
+
+        <div class="reward">
+            <div class="reward-icon">📺</div>
+            <h3>Watch an Ad</h3>
+            <p>Complete a rewarded ad and receive 2 coins.</p>
+            <button onclick="watchAd()">Watch +2</button>
+        </div>
+
+        <div class="reward">
+            <div class="reward-icon">📣</div>
+            <h3>Share a Book</h3>
+            <p>Share a Novelora book and receive 2 coins.</p>
+            <button onclick="shareBook()">Share +2</button>
+        </div>
+
+    </div>
+
+    <!-- COIN PACKAGES -->
+
+    <h2 class="section-title">🪙 Buy Coins</h2>
+
+    <div class="packages">
+
+        <div class="package">
+            <div class="coin-number">5</div>
+            <div class="coin-label">COINS</div>
+            <div class="price">$0.49</div>
+            <button onclick="selectPackage(5, '$0.49')">Buy</button>
+        </div>
+
+        <div class="package">
+            <div class="coin-number">20</div>
+            <div class="coin-label">COINS</div>
+            <div class="price">$1.49</div>
+            <button onclick="selectPackage(20, '$1.49')">Buy</button>
+        </div>
+
+        <div class="package">
+            <div class="coin-number">50</div>
+            <div class="coin-label">COINS</div>
+            <div class="price">$2.99</div>
+            <button onclick="selectPackage(50, '$2.99')">Buy</button>
+        </div>
+
+        <div class="package popular">
+            <div class="popular-label">POPULAR</div>
+            <div class="coin-number">100</div>
+            <div class="coin-label">COINS</div>
+            <div class="price">$5.99</div>
+            <button onclick="selectPackage(100, '$5.99')">Buy</button>
+        </div>
+
+        <div class="package">
+            <div class="coin-number">300</div>
+            <div class="coin-label">COINS</div>
+            <div class="price">$14.99</div>
+            <button onclick="selectPackage(300, '$14.99')">Buy</button>
+        </div>
+
+        <div class="package">
+            <div class="coin-number">700</div>
+            <div class="coin-label">COINS</div>
+            <div class="price">$29.99</div>
+            <button onclick="selectPackage(700, '$29.99')">Buy</button>
+        </div>
+
+        <div class="package">
+            <div class="coin-number">1,500</div>
+            <div class="coin-label">COINS</div>
+            <div class="price">$59.99</div>
+            <button onclick="selectPackage(1500, '$59.99')">Buy</button>
+        </div>
+
+        <div class="package">
+            <div class="coin-number">4,000</div>
+            <div class="coin-label">COINS</div>
+            <div class="price">$149.99</div>
+            <button onclick="selectPackage(4000, '$149.99')">Buy</button>
+        </div>
+
+        <div class="package">
+            <div class="coin-number">10,000</div>
+            <div class="coin-label">COINS</div>
+            <div class="price">$299.99</div>
+            <button onclick="selectPackage(10000, '$299.99')">Buy</button>
+        </div>
+
+    </div>
+
+    <!-- PAYMENT -->
+
+    <h2 class="section-title">💳 Payment Method</h2>
+
+    <div class="payment">
+
+        <div class="payment-options">
+
+            <div class="payment-option active" onclick="choosePayment(this)">
+                <span>💳</span>
+                Card
+            </div>
+
+            <div class="payment-option" onclick="choosePayment(this)">
+                <span>🏦</span>
+                Bank Transfer
+            </div>
+
+            <div class="payment-option" onclick="choosePayment(this)">
+                <span>📱</span>
+                USSD
+            </div>
+
+            <div class="payment-option" onclick="choosePayment(this)">
+                <span>🌍</span>
+                Other
+            </div>
+
+        </div>
+
+        <p class="payment-note">
+            Novelora will use a secure payment provider for real transactions.
+            Card numbers, CVV and other sensitive payment details will be handled
+            by the payment provider rather than stored by Novelora.
+        </p>
+
+    </div>
+
+    <!-- GEMS -->
+
+    <h2 class="section-title">💎 Gems</h2>
+
+    <div class="gems">
+
+        <p>
+            Gems are separate from Coins. Readers can use Gems to support
+            their favorite authors and books.
+        </p>
+
+        <div class="gem-box">
+            💎 <strong>Author Support</strong><br>
+            Send Gems to authors when you love their work.
+        </div>
+
+    </div>
+
+    <!-- HISTORY -->
+
+    <h2 class="section-title">📜 Recent Activity</h2>
+
+    <div class="history">
+
+        <div class="history-row">
+            <span>🎁 New-user bonus</span>
+            <span class="green">+20 🪙</span>
+        </div>
+
+        <div class="history-row">
+            <span>📖 Chapter unlocked</span>
+            <span class="gold">-5 🪙</span>
+        </div>
+
+        <div class="history-row">
+            <span>📅 Daily check-in</span>
+            <span class="green">+2 🪙</span>
+        </div>
+
+    </div>
+
+</div>
+
+<footer>
+    © 2026 Novelora — Your next story awaits.
+</footer>
+
+<script>
+
+let balance = 20;
+
+let adCount = 0;
+const maxAdsPerDay = 5;
+
+function updateBalance() {
+    document.getElementById("coinBalance").textContent = balance;
+}
+
+function claimDaily() {
+    const today = new Date().toDateString();
+    const lastClaim = localStorage.getItem("noveloraDailyClaim");
+
+    if (lastClaim === today) {
+        alert("You've already claimed today's 2 coins. 🌚");
+        return;
+    }
+
+    balance += 2;
+    localStorage.setItem("noveloraDailyClaim", today);
+
+    updateBalance();
+    alert("🎁 You received 2 coins!");
+}
+
+function watchAd() {
+
+    if (adCount >= maxAdsPerDay) {
+        alert("You've reached today's ad reward limit. Come back tomorrow! 💕");
+        return;
+    }
+
+    /*
+      FRONT-END PLACEHOLDER.
+
+      Later, this button will open a real rewarded advertisement.
+      The coins will only be added after the ad provider confirms
+      that the ad was completed.
+    */
+
+    adCount++;
+    balance += 2;
+
+    updateBalance();
+
+    alert("📺 Ad completed! You received 2 coins.");
+}
+
+function shareBook() {
+
+    /*
+      FRONT-END PLACEHOLDER.
+
+      Later, the backend will verify genuine sharing activity
+      before giving the reward.
+    */
+
+    balance += 2;
+    updateBalance();
+
+    alert("📣 Thanks for sharing! You received 2 coins.");
+}
+
+function choosePayment(element) {
+
+    document.querySelectorAll(".payment-option").forEach(option => {
+        option.classList.remove("active");
+    });
+
+    element.classList.add("active");
+}
+
+function selectPackage(coins, price) {
+
+    alert(
+        "You selected " +
+        coins +
+        " coins for " +
+        price +
+        ".\n\nChoose your payment method above to continue."
+    );
+
+    window.scrollTo({
+        top: document.body.scrollHeight,
+        behavior: "smooth"
+    });
+}
+
+updateBalance();
+
+</script>
+
+</body>
+</html>
