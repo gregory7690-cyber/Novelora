@@ -11,6 +11,7 @@
 
 <body class="reader-page">
 
+  <!-- TOP NAVIGATION -->
   <header class="reader-navbar">
 
     <a href="reader-dashboard.html" class="reader-logo">
@@ -52,6 +53,7 @@
   </header>
 
 
+  <!-- LIBRARY -->
   <main class="reader-content">
 
     <section class="library-header">
@@ -70,7 +72,7 @@
         </p>
       </div>
 
-      <a href="trending.html" class="add-books-button">
+      <a href="reader-dashboard.html" class="add-books-button">
         ＋ Add Books
       </a>
 
@@ -79,13 +81,7 @@
 
     <section class="library-section">
 
-      <div id="library-books" class="library-books">
-
-        <!-- Saved books will appear here -->
-
-      </div>
-
-
+      <!-- EMPTY LIBRARY -->
       <div id="empty-library" class="empty-library">
 
         <div class="library-empty-icon">
@@ -100,10 +96,19 @@
           Explore Novelora and add stories you want to read later.
         </p>
 
-        <a href="trending.html" class="dashboard-button">
+        <a href="reader-dashboard.html" class="dashboard-button">
           Explore Books
         </a>
 
+      </div>
+
+
+      <!-- SAVED BOOKS -->
+      <div
+        id="library-books"
+        class="library-books"
+        style="display: none;"
+      >
       </div>
 
     </section>
@@ -111,6 +116,7 @@
   </main>
 
 
+  <!-- MOBILE NAVIGATION -->
   <nav class="mobile-reader-nav">
 
     <a href="reader-dashboard.html">
@@ -141,7 +147,109 @@
   </nav>
 
 
-  <script src="script.js"></script>
+  <script>
+
+    function loadLibrary() {
+
+      const savedBooks =
+        JSON.parse(localStorage.getItem("noveloraLibrary")) || [];
+
+      const libraryBooks =
+        document.getElementById("library-books");
+
+      const emptyLibrary =
+        document.getElementById("empty-library");
+
+
+      if (savedBooks.length === 0) {
+
+        emptyLibrary.style.display = "block";
+        libraryBooks.style.display = "none";
+
+        return;
+
+      }
+
+
+      emptyLibrary.style.display = "none";
+      libraryBooks.style.display = "grid";
+
+
+      libraryBooks.innerHTML = "";
+
+
+      savedBooks.forEach(function(book) {
+
+        const bookCard = document.createElement("div");
+
+        bookCard.className = "library-book-card";
+
+
+        bookCard.innerHTML = `
+
+          <div class="library-book-cover">
+
+            ${
+              book.cover
+              ? `<img src="${book.cover}" alt="${book.title}">`
+              : `<span>${book.genre || "BOOK"}</span>`
+            }
+
+          </div>
+
+          <h3>
+            ${book.title}
+          </h3>
+
+          <p>
+            ${book.author || "Novelora Author"}
+          </p>
+
+          <button
+            class="remove-library-button"
+            onclick="removeFromLibrary('${book.id}')"
+          >
+            Remove
+          </button>
+
+        `;
+
+
+        libraryBooks.appendChild(bookCard);
+
+      });
+
+    }
+
+
+    function removeFromLibrary(bookId) {
+
+      let savedBooks =
+        JSON.parse(localStorage.getItem("noveloraLibrary")) || [];
+
+
+      savedBooks =
+        savedBooks.filter(function(book) {
+
+          return book.id !== bookId;
+
+        });
+
+
+      localStorage.setItem(
+        "noveloraLibrary",
+        JSON.stringify(savedBooks)
+      );
+
+
+      loadLibrary();
+
+    }
+
+
+    loadLibrary();
+
+  </script>
 
 </body>
 </html>
