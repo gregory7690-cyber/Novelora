@@ -10,7 +10,6 @@
   <link rel="stylesheet" href="style.css">
 
   <style>
-
     .book-details-page {
       min-height: 100vh;
     }
@@ -161,17 +160,12 @@
       align-items: center;
       justify-content: space-between;
       gap: 15px;
-
       padding: 17px 20px;
-
       border-radius: 15px;
-
       background: rgba(255, 255, 255, 0.04);
       border: 1px solid rgba(255, 255, 255, 0.07);
-
       text-decoration: none;
       color: inherit;
-
       transition: 0.2s ease;
     }
 
@@ -191,11 +185,9 @@
       width: 42px;
       height: 42px;
       border-radius: 12px;
-
       display: flex;
       align-items: center;
       justify-content: center;
-
       background: rgba(255, 105, 180, 0.12);
       font-weight: 900;
       flex-shrink: 0;
@@ -234,7 +226,6 @@
     }
 
     @media (max-width: 750px) {
-
       .book-details-container {
         width: 94%;
         padding-top: 25px;
@@ -267,594 +258,855 @@
       .chapter-item {
         padding: 14px;
       }
-
     }
-
   </style>
-
 </head>
 
 
 <body class="reader-page book-details-page">
 
 
-  <!-- TOP NAVIGATION -->
+<header class="reader-navbar">
 
-  <header class="reader-navbar">
+  <a href="reader-dashboard.html" class="reader-logo">
+    NOVEL<span>ORA</span>
+  </a>
 
-    <a href="reader-dashboard.html" class="reader-logo">
-      NOVEL<span>ORA</span>
-    </a>
+  <nav class="reader-nav">
 
-    <nav class="reader-nav">
-
-      <a href="library.html">📚 Library</a>
-
-      <a href="coins.html">🪙 Coins</a>
-
-      <a href="trending.html">🔥 Trending</a>
-
-      <a href="free-books.html">🆓 Free Books</a>
-
-    </nav>
-
-    <div class="reader-profile">
-
-      <a href="notifications.html" class="notification-btn">
-        🔔
-      </a>
-
-      <a href="profile.html" class="profile-btn">
-        👤
-      </a>
-
-    </div>
-
-  </header>
-
-
-
-  <!-- BOOK CONTENT -->
-
-  <main class="book-details-container">
-
-
-    <a href="reader-dashboard.html" class="book-back">
-      ← Back to Dashboard
-    </a>
-
-
-    <section class="book-hero">
-
-
-      <!-- COVER -->
-
-      <div
-        id="bookCover"
-        class="book-cover-large"
-      >
-        BOOK
-      </div>
-
-
-
-      <!-- INFORMATION -->
-
-      <div>
-
-        <div
-          id="bookLabel"
-          class="book-label"
-        >
-          NOVELORA STORY
-        </div>
-
-
-        <h1
-          id="bookTitle"
-          class="book-title"
-        >
-          Loading book...
-        </h1>
-
-
-        <p
-          id="bookAuthor"
-          class="book-author"
-        >
-        </p>
-
-
-        <div
-          id="bookMeta"
-          class="book-meta"
-        >
-        </div>
-
-
-        <p
-          id="bookDescription"
-          class="book-description"
-        >
-        </p>
-
-
-        <div class="book-actions">
-
-          <a
-            id="startReading"
-            href="#"
-            class="book-action primary-action"
-          >
-            📖 Start Reading
-          </a>
-
-
-          <button
-            type="button"
-            class="book-action secondary-action"
-            onclick="addCurrentBookToLibrary()"
-          >
-            ＋ Add to Library
-          </button>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-
-    <!-- CHAPTERS -->
-
-    <section class="chapters-section">
-
-      <div class="section-small">
-        THE STORY
-      </div>
-
-      <h2>
-        Chapters
-      </h2>
-
-
-      <div
-        id="chapterList"
-        class="chapter-list"
-      >
-      </div>
-
-    </section>
-
-
-  </main>
-
-
-
-  <!-- MOBILE NAVIGATION -->
-
-  <nav class="mobile-reader-nav">
-
-    <a href="reader-dashboard.html">
-      🏠
-      <span>Home</span>
-    </a>
-
-    <a href="library.html">
-      📚
-      <span>Library</span>
-    </a>
-
-    <a href="trending.html">
-      🔥
-      <span>Trending</span>
-    </a>
-
-    <a href="free-books.html">
-      🆓
-      <span>Free</span>
-    </a>
-
-    <a href="profile.html">
-      👤
-      <span>Profile</span>
-    </a>
+    <a href="library.html">📚 Library</a>
+    <a href="coins.html">🪙 Coins</a>
+    <a href="trending.html">🔥 Trending</a>
+    <a href="free-books.html">🆓 Free Books</a>
 
   </nav>
 
+  <div class="reader-profile">
 
+    <a href="notifications.html" class="notification-btn">
+      🔔
+    </a>
 
-  <script>
+    <a href="profile.html" class="profile-btn">
+      👤
+    </a>
 
-    /*
-      DEMO BOOK DATA
+  </div>
 
-      These are temporary.
-      Later this will come directly
-      from the Novelora database/admin system.
-    */
-
-    const demoBooks = {
-
-      "alpha-hybrid": {
-
-        title: "The Alpha's Forbidden Hybrid",
-
-        author: "Moonlight Writer",
-
-        genre: "Romance",
-
-        secondGenre: "Werewolf",
-
-        rating: "16+",
-
-        status: "Ongoing",
-
-        description:
-          "She was never supposed to exist. Born from a forbidden bloodline, she has spent her entire life hiding the secret that could destroy the supernatural world. But when the powerful Alpha King discovers what she really is, hiding becomes impossible.",
-
-        coverText:
-          "THE ALPHA'S<br>FORBIDDEN<br>HYBRID"
-
-      },
-
-
-      "billionaire-bride": {
-
-        title: "The Billionaire's Secret Bride",
-
-        author: "Novelora Writer",
-
-        genre: "Billionaire",
-
-        secondGenre: "Romance",
-
-        rating: "16+",
-
-        status: "Ongoing",
-
-        description:
-          "A secret marriage, a powerful billionaire and a love neither of them expected.",
-
-        coverText:
-          "THE<br>BILLIONAIRE'S<br>SECRET BRIDE"
-
-      },
-
-
-      "crown-of-the-moon": {
-
-        title: "Crown of the Moon",
-
-        author: "Moonlight Writer",
-
-        genre: "Fantasy",
-
-        secondGenre: "Romance",
-
-        rating: "13+",
-
-        status: "Ongoing",
-
-        description:
-          "A kingdom ruled by destiny, where a forgotten princess discovers that her bloodline may determine the fate of an entire realm.",
-
-        coverText:
-          "CROWN<br>OF THE<br>MOON"
-
-      },
-
-
-      "girl-behind-the-mask": {
-
-        title: "The Girl Behind the Mask",
-
-        author: "Novelora Writer",
-
-        genre: "Mystery",
-
-        secondGenre: "Drama",
-
-        rating: "16+",
-
-        status: "Ongoing",
-
-        description:
-          "Everyone has something to hide. But when one girl removes her mask, the truth could change everything.",
-
-        coverText:
-          "THE GIRL<br>BEHIND<br>THE MASK"
-
-      }
-
-    };
+</header>
 
 
 
-    /*
-      GET BOOK ID FROM URL
-    */
+<main class="book-details-container">
 
-    const params =
-      new URLSearchParams(window.location.search);
-
-    const bookId =
-      params.get("id") || "alpha-hybrid";
+  <a href="reader-dashboard.html" class="book-back">
+    ← Back to Dashboard
+  </a>
 
 
-    const book =
+  <section class="book-hero">
+
+    <div
+      id="bookCover"
+      class="book-cover-large"
+    >
+      BOOK
+    </div>
+
+
+    <div>
+
+      <div
+        id="bookLabel"
+        class="book-label"
+      >
+        NOVELORA STORY
+      </div>
+
+
+      <h1
+        id="bookTitle"
+        class="book-title"
+      >
+        Loading book...
+      </h1>
+
+
+      <p
+        id="bookAuthor"
+        class="book-author"
+      >
+      </p>
+
+
+      <div
+        id="bookMeta"
+        class="book-meta"
+      >
+      </div>
+
+
+      <p
+        id="bookDescription"
+        class="book-description"
+      >
+      </p>
+
+
+      <div class="book-actions">
+
+        <a
+          id="startReading"
+          href="#"
+          class="book-action primary-action"
+        >
+          📖 Start Reading
+        </a>
+
+
+        <button
+          type="button"
+          class="book-action secondary-action"
+          onclick="addCurrentBookToLibrary()"
+        >
+          ＋ Add to Library
+        </button>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+
+  <section class="chapters-section">
+
+    <div class="section-small">
+      THE STORY
+    </div>
+
+    <h2>
+      Chapters
+    </h2>
+
+
+    <div
+      id="chapterList"
+      class="chapter-list"
+    >
+    </div>
+
+  </section>
+
+</main>
+
+
+
+<nav class="mobile-reader-nav">
+
+  <a href="reader-dashboard.html">
+    🏠
+    <span>Home</span>
+  </a>
+
+  <a href="library.html">
+    📚
+    <span>Library</span>
+  </a>
+
+  <a href="trending.html">
+    🔥
+    <span>Trending</span>
+  </a>
+
+  <a href="free-books.html">
+    🆓
+    <span>Free</span>
+  </a>
+
+  <a href="profile.html">
+    👤
+    <span>Profile</span>
+  </a>
+
+</nav>
+
+
+
+<script>
+
+  /*
+   * GET BOOK ID FROM URL
+   */
+
+  const params =
+    new URLSearchParams(window.location.search);
+
+  const bookId =
+    params.get("id");
+
+
+  /*
+   * ADMIN BOOKS
+   */
+
+  const adminBooks =
+    JSON.parse(
+      localStorage.getItem("noveloraAdminBooks")
+    ) || [];
+
+
+  /*
+   * FIND THE SELECTED BOOK
+   */
+
+  let book =
+    adminBooks.find(function(item) {
+
+      return String(
+        item.id ||
+        item.bookId ||
+        item.bookID
+      ) === String(bookId);
+
+    });
+
+
+  /*
+   * DEMO BOOKS
+   *
+   * These remain available until
+   * real books are published.
+   */
+
+  const demoBooks = {
+
+    "alpha-hybrid": {
+      id: "alpha-hybrid",
+      title: "The Alpha's Forbidden Hybrid",
+      author: "Moonlight Writer",
+      genre: "Romance",
+      secondGenre: "Werewolf",
+      rating: "16+",
+      status: "Ongoing",
+      description:
+        "She was never supposed to exist. Born from a forbidden bloodline, she has spent her entire life hiding the secret that could destroy the supernatural world.",
+      cover: ""
+    },
+
+    "billionaire-bride": {
+      id: "billionaire-bride",
+      title: "The Billionaire's Secret Bride",
+      author: "Novelora Writer",
+      genre: "Billionaire",
+      secondGenre: "Romance",
+      rating: "16+",
+      status: "Ongoing",
+      description:
+        "A secret marriage, a powerful billionaire and a love neither of them expected.",
+      cover: ""
+    },
+
+    "crown-of-the-moon": {
+      id: "crown-of-the-moon",
+      title: "Crown of the Moon",
+      author: "Moonlight Writer",
+      genre: "Fantasy",
+      secondGenre: "Romance",
+      rating: "13+",
+      status: "Ongoing",
+      description:
+        "A kingdom ruled by destiny, where a forgotten princess discovers that her bloodline may determine the fate of an entire realm.",
+      cover: ""
+    },
+
+    "girl-behind-the-mask": {
+      id: "girl-behind-the-mask",
+      title: "The Girl Behind the Mask",
+      author: "Novelora Writer",
+      genre: "Mystery",
+      secondGenre: "Drama",
+      rating: "16+",
+      status: "Ongoing",
+      description:
+        "Everyone has something to hide. But when one girl removes her mask, the truth could change everything.",
+      cover: ""
+    }
+
+  };
+
+
+  if (!book) {
+
+    book =
       demoBooks[bookId];
 
+  }
+
+
+  /*
+   * BOOK NOT FOUND
+   */
+
+  if (!book) {
+
+    document.getElementById(
+      "bookTitle"
+    ).textContent = "Book Not Found";
+
+
+    document.getElementById(
+      "bookDescription"
+    ).textContent =
+      "Sorry, this story could not be found.";
+
+
+    document.getElementById(
+      "chapterList"
+    ).innerHTML =
+      '<div class="empty-chapters">Book not found.</div>';
+
+  }
+
+
+  else {
+
+    /*
+     * NORMALIZE BOOK INFORMATION
+     */
+
+    const title =
+      book.title ||
+      book.bookTitle ||
+      "Untitled Book";
+
+
+    const author =
+      book.author ||
+      book.authorName ||
+      book.penName ||
+      "Unknown Author";
+
+
+    const genre =
+      book.genre ||
+      "Romance";
+
+
+    const secondGenre =
+      book.subgenre ||
+      book.secondaryGenre ||
+      book.secondGenre ||
+      "";
+
+
+    const rating =
+      book.ageRating ||
+      book.rating ||
+      "All Ages";
+
+
+    const status =
+      book.status ||
+      book.storyStatus ||
+      "Ongoing";
+
+
+    const description =
+      book.description ||
+      book.synopsis ||
+      "No description available.";
 
 
     /*
-      IF BOOK DOES NOT EXIST
-    */
+     * PAGE TITLE
+     */
 
-    if (!book) {
+    document.title =
+      title + " — Novelora";
 
-      document.getElementById("bookTitle").textContent =
-        "Book Not Found";
 
-      document.getElementById("bookDescription").textContent =
-        "Sorry, this story could not be found.";
+    /*
+     * BOOK INFORMATION
+     */
 
-      document.getElementById("chapterList").innerHTML =
+    document.getElementById(
+      "bookTitle"
+    ).textContent =
+      title;
 
-        '<div class="empty-chapters">Book not found.</div>';
+
+    document.getElementById(
+      "bookAuthor"
+    ).innerHTML =
+      "By <strong>" +
+      author +
+      "</strong>";
+
+
+    document.getElementById(
+      "bookDescription"
+    ).textContent =
+      description;
+
+
+    /*
+     * COVER
+     */
+
+    const cover =
+      book.coverImage ||
+      book.cover ||
+      "";
+
+
+    if (cover) {
+
+      document.getElementById(
+        "bookCover"
+      ).style.backgroundImage =
+        "url('" + cover + "')";
+
+      document.getElementById(
+        "bookCover"
+      ).style.backgroundSize =
+        "cover";
+
+      document.getElementById(
+        "bookCover"
+      ).style.backgroundPosition =
+        "center";
+
+      document.getElementById(
+        "bookCover"
+      ).textContent = "";
+
+    }
+
+    else {
+
+      document.getElementById(
+        "bookCover"
+      ).textContent =
+        title.toUpperCase();
 
     }
 
 
-    else {
+    /*
+     * META
+     */
+
+    let metaHTML =
+      "<span>❤️ " +
+      genre +
+      "</span>";
 
 
-      /*
-        PAGE TITLE
-      */
+    if (secondGenre) {
 
-      document.title =
-        book.title + " — Novelora";
+      metaHTML +=
+        "<span>✨ " +
+        secondGenre +
+        "</span>";
 
-
-      /*
-        BOOK INFORMATION
-      */
-
-      document.getElementById("bookTitle").textContent =
-        book.title;
+    }
 
 
-      document.getElementById("bookAuthor").innerHTML =
-        "By <strong>" + book.author + "</strong>";
+    metaHTML +=
+      "<span>🔞 " +
+      rating +
+      "</span>" +
+      "<span>📖 " +
+      status +
+      "</span>";
 
 
-      document.getElementById("bookDescription").textContent =
-        book.description;
+    document.getElementById(
+      "bookMeta"
+    ).innerHTML =
+      metaHTML;
 
 
-      document.getElementById("bookCover").innerHTML =
-        book.coverText;
+    /*
+     * FIND ADMIN CHAPTERS
+     */
+
+    const adminChapters =
+      JSON.parse(
+        localStorage.getItem(
+          "noveloraAdminChapters"
+        )
+      ) || [];
 
 
-      /*
-        BOOK META
-      */
+    const chapters =
+      adminChapters
 
-      document.getElementById("bookMeta").innerHTML =
+        .filter(function(chapter) {
 
-        "<span>❤️ " + book.genre + "</span>" +
-
-        "<span>✨ " + book.secondGenre + "</span>" +
-
-        "<span>🔞 " + book.rating + "</span>" +
-
-        "<span>📖 " + book.status + "</span>";
+          const chapterBookId =
+            chapter.bookId ||
+            chapter.bookID ||
+            chapter.book;
 
 
-      /*
-        START READING
-      */
+          return String(
+            chapterBookId
+          ) === String(
+            book.id ||
+            book.bookId ||
+            book.bookID ||
+            bookId
+          );
 
-      document.getElementById("startReading").href =
+        })
 
-        "chapter.html?book=" +
+        .sort(function(a, b) {
 
-        encodeURIComponent(bookId) +
+          return Number(
+            a.chapterNumber ||
+            a.number ||
+            0
+          ) -
 
-        "&chapter=1";
+          Number(
+            b.chapterNumber ||
+            b.number ||
+            0
+          );
 
-
-      /*
-        CHAPTERS
-
-        Temporary demo chapters.
-        We will replace these with
-        real admin-published chapters.
-      */
-
-      const chapters = [
-
-        {
-          number: 1,
-          title: "Chapter 1",
-          description: "Begin the story",
-          free: true
-        },
-
-        {
-          number: 2,
-          title: "Chapter 2",
-          description: "Continue reading",
-          free: false
-        },
-
-        {
-          number: 3,
-          title: "Chapter 3",
-          description: "Continue reading",
-          free: false
-        },
-
-        {
-          number: 4,
-          title: "Chapter 4",
-          description: "Continue reading",
-          free: false
-        },
-
-        {
-          number: 5,
-          title: "Chapter 5",
-          description: "Continue reading",
-          free: false
-        }
-
-      ];
+        });
 
 
-      const chapterList =
-        document.getElementById("chapterList");
+    /*
+     * CHAPTER LIST
+     */
+
+    const chapterList =
+      document.getElementById(
+        "chapterList"
+      );
+
+
+    chapterList.innerHTML = "";
+
+
+    /*
+     * IF ADMIN HAS PUBLISHED/CREATED CHAPTERS
+     */
+
+    if (chapters.length > 0) {
 
 
       chapters.forEach(function(chapter) {
 
 
+        const number =
+          chapter.chapterNumber ||
+          chapter.number ||
+          1;
+
+
+        const chapterTitle =
+          chapter.title ||
+          chapter.chapterTitle ||
+          "Chapter " + number;
+
+
+        const access =
+          String(
+            chapter.access ||
+            chapter.accessType ||
+            "Paid"
+          ).toLowerCase();
+
+
+        const isFree =
+          access === "free";
+
+
         const price =
-          chapter.free
+          Number(
+            chapter.price ||
+            chapter.coinPrice ||
+            5
+          );
+
+
+        const statusText =
+          String(
+            chapter.status ||
+            "Published"
+          ).toLowerCase();
+
+
+        const isPublished =
+          statusText === "published";
+
+
+        /*
+         * Do not show unpublished
+         * chapters to readers.
+         */
+
+        if (!isPublished) {
+
+          return;
+
+        }
+
+
+        const priceHTML =
+          isFree
+
             ? '<span class="chapter-price free">FREE</span>'
-            : '<span class="chapter-price paid">🪙 5</span>';
+
+            : '<span class="chapter-price paid">🪙 ' +
+              price +
+              '</span>';
 
 
-        const status =
-          chapter.free
-            ? "Start reading"
-            : "Locked chapter";
+        const subtitle =
+          isFree
+            ? "Free to read"
+            : "Locked • " +
+              price +
+              " coins";
 
 
-        chapterList.innerHTML +=
+        const item =
+          document.createElement("a");
 
-          '<a href="chapter.html?book=' +
 
-          encodeURIComponent(bookId) +
+        item.className =
+          "chapter-item";
 
-          '&chapter=' +
 
-          chapter.number +
+        item.href =
+          "chapter.html?book=" +
 
-          '" class="chapter-item">' +
+          encodeURIComponent(
+            book.id ||
+            book.bookId ||
+            book.bookID ||
+            bookId
+          ) +
+
+          "&chapter=" +
+
+          encodeURIComponent(
+            number
+          );
+
+
+        item.innerHTML =
 
           '<div class="chapter-left">' +
 
-          '<div class="chapter-number">' +
+            '<div class="chapter-number">' +
+              number +
+            '</div>' +
 
-          chapter.number +
+            '<div>' +
 
-          '</div>' +
+              '<div class="chapter-title">' +
+                chapterTitle +
+              '</div>' +
 
-          '<div>' +
+              '<div class="chapter-subtitle">' +
+                subtitle +
+              '</div>' +
 
-          '<div class="chapter-title">' +
-
-          chapter.title +
-
-          '</div>' +
-
-          '<div class="chapter-subtitle">' +
-
-          status +
+            '</div>' +
 
           '</div>' +
 
-          '</div>' +
+          priceHTML;
 
-          '</div>' +
 
-          price +
-
-          '</a>';
+        chapterList.appendChild(
+          item
+        );
 
       });
 
-    }
 
+    }
 
 
     /*
-      ADD BOOK TO LIBRARY
-    */
+     * NO ADMIN CHAPTERS YET
+     */
 
-    function addCurrentBookToLibrary() {
+    else {
 
-      if (!book) {
+      chapterList.innerHTML =
 
-        return;
+        '<div class="empty-chapters">' +
 
-      }
+          '📖 No published chapters yet.<br><br>' +
 
+          'Publish chapters from the Novelora Admin panel and they will appear here.' +
 
-      let library =
+        '</div>';
 
-        JSON.parse(
-          localStorage.getItem("noveloraLibrary")
-        ) || [];
-
-
-      const exists =
-
-        library.some(function(item) {
-
-          return item.id === bookId;
-
-        });
+    }
 
 
-      if (exists) {
+    /*
+     * START READING
+     */
 
-        alert(
-          "This book is already in your library."
-        );
+    const firstPublished =
+      chapters.find(function(chapter) {
 
-        return;
-
-      }
-
-
-      library.push({
-
-        id: bookId,
-
-        title: book.title,
-
-        author: book.author,
-
-        genre: book.genre,
-
-        cover: ""
+        return String(
+          chapter.status ||
+          "Published"
+        ).toLowerCase() ===
+        "published";
 
       });
 
 
-      localStorage.setItem(
+    if (firstPublished) {
 
-        "noveloraLibrary",
+      const firstNumber =
+        firstPublished.chapterNumber ||
+        firstPublished.number ||
+        1;
 
-        JSON.stringify(library)
 
-      );
+      document.getElementById(
+        "startReading"
+      ).href =
 
+        "chapter.html?book=" +
 
-      alert(
-        book.title +
-        " has been added to your library!"
-      );
+        encodeURIComponent(
+          book.id ||
+          book.bookId ||
+          book.bookID ||
+          bookId
+        ) +
+
+        "&chapter=" +
+
+        firstNumber;
 
     }
 
-  </script>
+    else {
+
+      document.getElementById(
+        "startReading"
+      ).style.display =
+        "none";
+
+    }
+
+  }
+
+
+
+  /*
+   * ADD CURRENT BOOK TO LIBRARY
+   */
+
+  function addCurrentBookToLibrary() {
+
+    if (!book) {
+
+      return;
+
+    }
+
+
+    const bookID =
+      book.id ||
+      book.bookId ||
+      book.bookID ||
+      bookId;
+
+
+    let library =
+      JSON.parse(
+        localStorage.getItem(
+          "noveloraLibrary"
+        )
+      ) || [];
+
+
+    const exists =
+      library.some(function(item) {
+
+        return String(
+          item.id
+        ) === String(
+          bookID
+        );
+
+      });
+
+
+    if (exists) {
+
+      alert(
+        "This book is already in your library."
+      );
+
+      return;
+
+    }
+
+
+    library.push({
+
+      id: bookID,
+
+      title:
+        book.title ||
+        book.bookTitle ||
+        "Untitled Book",
+
+      author:
+        book.author ||
+        book.authorName ||
+        book.penName ||
+        "Unknown Author",
+
+      genre:
+        book.genre ||
+        "Romance",
+
+      cover:
+        book.coverImage ||
+        book.cover ||
+        ""
+
+    });
+
+
+    localStorage.setItem(
+      "noveloraLibrary",
+      JSON.stringify(library)
+    );
+
+
+    alert(
+      (book.title ||
+      book.bookTitle ||
+      "This book") +
+
+      " has been added to your library!"
+    );
+
+  }
+
+</script>
 
 
 </body>
-
 </html>
