@@ -85,12 +85,14 @@ h1 {
     font-size: 18px;
 }
 
-/* REWARDS */
+/* SECTIONS */
 
 .section-title {
     font-size: 22px;
     margin: 30px 0 15px;
 }
+
+/* REWARDS */
 
 .rewards {
     display: grid;
@@ -153,6 +155,17 @@ h1 {
     padding: 22px;
     text-align: center;
     position: relative;
+    transition: .2s ease;
+}
+
+.package:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(232, 62, 140, .08);
+}
+
+.package.selected {
+    border: 2px solid #e83e8c;
+    background: #fff7fb;
 }
 
 .package.popular {
@@ -209,6 +222,26 @@ h1 {
     padding: 22px;
 }
 
+.selected-package {
+    display: none;
+    background: #fff0f7;
+    border: 1px solid #f3c6dc;
+    border-radius: 14px;
+    padding: 16px;
+    margin-bottom: 18px;
+}
+
+.selected-package.show {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+}
+
+.selected-package strong {
+    color: #e83e8c;
+}
+
 .payment-options {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -222,6 +255,11 @@ h1 {
     text-align: center;
     cursor: pointer;
     background: white;
+    transition: .2s ease;
+}
+
+.payment-option:hover {
+    border-color: #f1a8c8;
 }
 
 .payment-option.active {
@@ -233,6 +271,131 @@ h1 {
     display: block;
     font-size: 25px;
     margin-bottom: 6px;
+}
+
+/* PAYMENT DETAILS */
+
+.payment-details {
+    display: none;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #f0d9e5;
+}
+
+.payment-details.show {
+    display: block;
+}
+
+.payment-details h3 {
+    margin-bottom: 7px;
+}
+
+.payment-details > p {
+    color: #777;
+    font-size: 13px;
+    margin-bottom: 18px;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.form-group.full {
+    grid-column: 1 / -1;
+}
+
+.form-group label {
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    border: 1px solid #e5d5dd;
+    border-radius: 10px;
+    padding: 12px;
+    font-size: 14px;
+    outline: none;
+    background: white;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    border-color: #e83e8c;
+    box-shadow: 0 0 0 3px rgba(232, 62, 140, .08);
+}
+
+.form-help {
+    font-size: 12px;
+    color: #888;
+}
+
+.transfer-box,
+.ussd-box,
+.other-box {
+    background: #fff8fb;
+    border: 1px solid #f0d9e5;
+    border-radius: 14px;
+    padding: 17px;
+    margin-bottom: 16px;
+    line-height: 1.7;
+}
+
+.transfer-box strong,
+.ussd-box strong {
+    color: #e83e8c;
+}
+
+.pay-button {
+    width: 100%;
+    border: none;
+    border-radius: 11px;
+    padding: 14px;
+    background: #e83e8c;
+    color: white;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 18px;
+}
+
+.pay-button:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+}
+
+.payment-message {
+    display: none;
+    margin-top: 15px;
+    padding: 13px;
+    border-radius: 10px;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.payment-message.show {
+    display: block;
+}
+
+.payment-message.error {
+    background: #fff0f0;
+    color: #b42323;
+    border: 1px solid #f3caca;
+}
+
+.payment-message.info {
+    background: #fff8e8;
+    color: #8a6500;
+    border: 1px solid #f0dfad;
 }
 
 .payment-note {
@@ -274,6 +437,7 @@ h1 {
 .history-row {
     display: flex;
     justify-content: space-between;
+    gap: 15px;
     padding: 14px 0;
     border-bottom: 1px solid #eee;
 }
@@ -290,6 +454,17 @@ h1 {
 .gold {
     color: #b17a00;
     font-weight: bold;
+}
+
+.red {
+    color: #c62828;
+    font-weight: bold;
+}
+
+.empty-history {
+    text-align: center;
+    color: #888;
+    padding: 15px 0;
 }
 
 footer {
@@ -316,6 +491,16 @@ footer {
     }
 }
 
+@media (max-width: 550px) {
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .form-group.full {
+        grid-column: auto;
+    }
+}
+
 @media (max-width: 450px) {
     .rewards,
     .packages {
@@ -324,6 +509,11 @@ footer {
 
     .balance h2 {
         font-size: 36px;
+    }
+
+    .selected-package.show {
+        flex-direction: column;
+        align-items: flex-start;
     }
 }
 </style>
@@ -345,7 +535,7 @@ footer {
 
     <div class="balance">
         <small>Your current balance</small>
-        <h2 id="coinBalance">20</h2>
+        <h2 id="coinBalance">0</h2>
         <span>🪙 Coins</span>
     </div>
 
@@ -358,22 +548,22 @@ footer {
         <div class="reward">
             <div class="reward-icon">📅</div>
             <h3>Daily Check-In</h3>
-            <p>Check in every day and receive 2 coins.</p>
-            <button onclick="claimDaily()">Claim +2</button>
+            <p id="dailyDescription">Check in every day and receive coins.</p>
+            <button id="dailyButton" onclick="claimDaily()">Claim</button>
         </div>
 
         <div class="reward">
             <div class="reward-icon">📺</div>
             <h3>Watch an Ad</h3>
-            <p>Complete a rewarded ad and receive 2 coins.</p>
-            <button onclick="watchAd()">Watch +2</button>
+            <p id="adDescription">Complete a rewarded ad and receive coins.</p>
+            <button id="adButton" onclick="watchAd()">Watch</button>
         </div>
 
         <div class="reward">
             <div class="reward-icon">📣</div>
             <h3>Share a Book</h3>
-            <p>Share a Novelora book and receive 2 coins.</p>
-            <button onclick="shareBook()">Share +2</button>
+            <p id="shareDescription">Share a Novelora book and receive coins.</p>
+            <button id="shareButton" onclick="shareBook()">Share</button>
         </div>
 
     </div>
@@ -388,21 +578,21 @@ footer {
             <div class="coin-number">5</div>
             <div class="coin-label">COINS</div>
             <div class="price">$0.49</div>
-            <button onclick="selectPackage(5, '$0.49')">Buy</button>
+            <button onclick="selectPackage(5, '$0.49', this)">Buy</button>
         </div>
 
         <div class="package">
             <div class="coin-number">20</div>
             <div class="coin-label">COINS</div>
             <div class="price">$1.49</div>
-            <button onclick="selectPackage(20, '$1.49')">Buy</button>
+            <button onclick="selectPackage(20, '$1.49', this)">Buy</button>
         </div>
 
         <div class="package">
             <div class="coin-number">50</div>
             <div class="coin-label">COINS</div>
             <div class="price">$2.99</div>
-            <button onclick="selectPackage(50, '$2.99')">Buy</button>
+            <button onclick="selectPackage(50, '$2.99', this)">Buy</button>
         </div>
 
         <div class="package popular">
@@ -410,42 +600,42 @@ footer {
             <div class="coin-number">100</div>
             <div class="coin-label">COINS</div>
             <div class="price">$5.99</div>
-            <button onclick="selectPackage(100, '$5.99')">Buy</button>
+            <button onclick="selectPackage(100, '$5.99', this)">Buy</button>
         </div>
 
         <div class="package">
             <div class="coin-number">300</div>
             <div class="coin-label">COINS</div>
             <div class="price">$14.99</div>
-            <button onclick="selectPackage(300, '$14.99')">Buy</button>
+            <button onclick="selectPackage(300, '$14.99', this)">Buy</button>
         </div>
 
         <div class="package">
             <div class="coin-number">700</div>
             <div class="coin-label">COINS</div>
             <div class="price">$29.99</div>
-            <button onclick="selectPackage(700, '$29.99')">Buy</button>
+            <button onclick="selectPackage(700, '$29.99', this)">Buy</button>
         </div>
 
         <div class="package">
             <div class="coin-number">1,500</div>
             <div class="coin-label">COINS</div>
             <div class="price">$59.99</div>
-            <button onclick="selectPackage(1500, '$59.99')">Buy</button>
+            <button onclick="selectPackage(1500, '$59.99', this)">Buy</button>
         </div>
 
         <div class="package">
             <div class="coin-number">4,000</div>
             <div class="coin-label">COINS</div>
             <div class="price">$149.99</div>
-            <button onclick="selectPackage(4000, '$149.99')">Buy</button>
+            <button onclick="selectPackage(4000, '$149.99', this)">Buy</button>
         </div>
 
         <div class="package">
             <div class="coin-number">10,000</div>
             <div class="coin-label">COINS</div>
             <div class="price">$299.99</div>
-            <button onclick="selectPackage(10000, '$299.99')">Buy</button>
+            <button onclick="selectPackage(10000, '$299.99', this)">Buy</button>
         </div>
 
     </div>
@@ -456,34 +646,229 @@ footer {
 
     <div class="payment">
 
+        <div id="selectedPackage" class="selected-package">
+            <div>
+                <small>Selected package</small><br>
+                <strong id="selectedCoins">0 Coins</strong>
+            </div>
+
+            <strong id="selectedPrice">$0.00</strong>
+        </div>
+
         <div class="payment-options">
 
-            <div class="payment-option active" onclick="choosePayment(this)">
+            <div class="payment-option active" onclick="choosePayment('card', this)">
                 <span>💳</span>
                 Card
             </div>
 
-            <div class="payment-option" onclick="choosePayment(this)">
+            <div class="payment-option" onclick="choosePayment('bank', this)">
                 <span>🏦</span>
                 Bank Transfer
             </div>
 
-            <div class="payment-option" onclick="choosePayment(this)">
+            <div class="payment-option" onclick="choosePayment('ussd', this)">
                 <span>📱</span>
                 USSD
             </div>
 
-            <div class="payment-option" onclick="choosePayment(this)">
+            <div class="payment-option" onclick="choosePayment('other', this)">
                 <span>🌍</span>
                 Other
             </div>
 
         </div>
 
+        <!-- CARD -->
+
+        <div id="cardDetails" class="payment-details show">
+
+            <h3>💳 Card Details</h3>
+
+            <p>
+                Enter your payment details when real card payments
+                are connected. Card information is not saved by this page.
+            </p>
+
+            <div class="form-grid">
+
+                <div class="form-group full">
+                    <label for="cardName">Cardholder Name</label>
+                    <input
+                        type="text"
+                        id="cardName"
+                        placeholder="Name on card"
+                        autocomplete="cc-name"
+                    >
+                </div>
+
+                <div class="form-group full">
+                    <label for="cardNumber">Card Number</label>
+                    <input
+                        type="text"
+                        id="cardNumber"
+                        placeholder="1234 5678 9012 3456"
+                        inputmode="numeric"
+                        autocomplete="cc-number"
+                        maxlength="19"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="expiry">Expiry Date</label>
+                    <input
+                        type="text"
+                        id="expiry"
+                        placeholder="MM/YY"
+                        inputmode="numeric"
+                        autocomplete="cc-exp"
+                        maxlength="5"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="cvv">CVV</label>
+                    <input
+                        type="password"
+                        id="cvv"
+                        placeholder="123"
+                        inputmode="numeric"
+                        autocomplete="cc-csc"
+                        maxlength="4"
+                    >
+                </div>
+
+            </div>
+
+            <button class="pay-button" onclick="startPayment()">
+                Continue to Secure Payment
+            </button>
+
+        </div>
+
+        <!-- BANK TRANSFER -->
+
+        <div id="bankDetails" class="payment-details">
+
+            <h3>🏦 Bank Transfer</h3>
+
+            <p>
+                Your real bank-transfer details will be supplied by the
+                payment provider/backend when payment processing is connected.
+            </p>
+
+            <div class="transfer-box">
+                <strong>Payment account</strong><br>
+                Bank: <span id="bankName">Not connected yet</span><br>
+                Account Name: <span id="accountName">Novelora Payments</span><br>
+                Account Number: <span id="accountNumber">••••••••••</span>
+            </div>
+
+            <div class="form-grid">
+
+                <div class="form-group full">
+                    <label for="transferReference">
+                        Transfer Reference
+                    </label>
+
+                    <input
+                        type="text"
+                        id="transferReference"
+                        placeholder="Enter your payment reference"
+                    >
+                </div>
+
+            </div>
+
+            <button class="pay-button" onclick="startPayment()">
+                Continue with Bank Transfer
+            </button>
+
+        </div>
+
+        <!-- USSD -->
+
+        <div id="ussdDetails" class="payment-details">
+
+            <h3>📱 USSD Payment</h3>
+
+            <p>
+                Select your bank and enter the phone number connected to
+                your bank account.
+            </p>
+
+            <div class="form-grid">
+
+                <div class="form-group">
+                    <label for="ussdBank">Bank</label>
+
+                    <select id="ussdBank">
+                        <option value="">Select bank</option>
+                        <option>Access Bank</option>
+                        <option>GTBank</option>
+                        <option>First Bank</option>
+                        <option>UBA</option>
+                        <option>Zenith Bank</option>
+                        <option>Fidelity Bank</option>
+                        <option>Opay</option>
+                        <option>Other</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="ussdPhone">Phone Number</label>
+
+                    <input
+                        type="tel"
+                        id="ussdPhone"
+                        placeholder="08012345678"
+                        autocomplete="tel"
+                    >
+                </div>
+
+            </div>
+
+            <div class="ussd-box">
+                <strong>USSD processing</strong><br>
+                The payment provider will generate the appropriate
+                USSD instruction when the backend is connected.
+            </div>
+
+            <button class="pay-button" onclick="startPayment()">
+                Continue with USSD
+            </button>
+
+        </div>
+
+        <!-- OTHER -->
+
+        <div id="otherDetails" class="payment-details">
+
+            <h3>🌍 Other Payment Options</h3>
+
+            <p>
+                Additional payment methods can be connected here later
+                without changing the Coins page.
+            </p>
+
+            <div class="other-box">
+                <strong>Payment provider</strong><br>
+                No alternative provider is connected yet.
+                Once the backend is ready, available methods will appear here.
+            </div>
+
+            <button class="pay-button" onclick="startPayment()">
+                Continue
+            </button>
+
+        </div>
+
+        <div id="paymentMessage" class="payment-message"></div>
+
         <p class="payment-note">
-            Novelora will use a secure payment provider for real transactions.
-            Card numbers, CVV and other sensitive payment details will be handled
-            by the payment provider rather than stored by Novelora.
+            🔒 Payment details should be processed by a secure payment provider.
+            Novelora does not save card numbers, CVV or bank credentials in
+            this browser.
         </p>
 
     </div>
@@ -510,23 +895,10 @@ footer {
 
     <h2 class="section-title">📜 Recent Activity</h2>
 
-    <div class="history">
-
-        <div class="history-row">
-            <span>🎁 New-user bonus</span>
-            <span class="green">+20 🪙</span>
+    <div class="history" id="history">
+        <div class="empty-history">
+            No coin activity yet.
         </div>
-
-        <div class="history-row">
-            <span>📖 Chapter unlocked</span>
-            <span class="gold">-5 🪙</span>
-        </div>
-
-        <div class="history-row">
-            <span>📅 Daily check-in</span>
-            <span class="green">+2 🪙</span>
-        </div>
-
     </div>
 
 </div>
@@ -535,99 +907,195 @@ footer {
     © 2026 Novelora — Your next story awaits.
 </footer>
 
+
 <script>
 
-let balance = 20;
+"use strict";
 
-let adCount = 0;
-const maxAdsPerDay = 5;
+/* =========================================================
+   STORAGE
+========================================================= */
 
-function updateBalance() {
-    document.getElementById("coinBalance").textContent = balance;
+function getJSON(key, fallback) {
+
+    try {
+
+        const value = localStorage.getItem(key);
+
+        if (!value) {
+            return fallback;
+        }
+
+        return JSON.parse(value);
+
+    } catch (error) {
+
+        return fallback;
+    }
 }
 
-function claimDaily() {
-    const today = new Date().toDateString();
-    const lastClaim = localStorage.getItem("noveloraDailyClaim");
 
-    if (lastClaim === today) {
-        alert("You've already claimed today's 2 coins. 🌚");
-        return;
+function saveJSON(key, value) {
+
+    localStorage.setItem(
+        key,
+        JSON.stringify(value)
+    );
+}
+
+
+/* =========================================================
+   READER
+========================================================= */
+
+function getReader() {
+
+    let reader =
+        getJSON("noveloraCurrentReader", null);
+
+    if (reader) {
+        return reader;
     }
 
-    balance += 2;
-    localStorage.setItem("noveloraDailyClaim", today);
 
-    updateBalance();
-    alert("🎁 You received 2 coins!");
-}
+    reader =
+        getJSON("noveloraReader", null);
 
-function watchAd() {
-
-    if (adCount >= maxAdsPerDay) {
-        alert("You've reached today's ad reward limit. Come back tomorrow! 💕");
-        return;
+    if (reader) {
+        return reader;
     }
 
-    /*
-      FRONT-END PLACEHOLDER.
 
-      Later, this button will open a real rewarded advertisement.
-      The coins will only be added after the ad provider confirms
-      that the ad was completed.
-    */
+    const readers =
+        getJSON("noveloraReaders", []);
 
-    adCount++;
-    balance += 2;
 
-    updateBalance();
+    if (
+        Array.isArray(readers) &&
+        readers.length
+    ) {
 
-    alert("📺 Ad completed! You received 2 coins.");
-}
+        return readers[0];
 
-function shareBook() {
+    }
+
 
     /*
-      FRONT-END PLACEHOLDER.
+     * Temporary local reader for the current frontend.
+     * Real authentication/backend will replace this.
+     */
 
-      Later, the backend will verify genuine sharing activity
-      before giving the reward.
-    */
+    reader = {
+        id: "reader_demo",
+        username: "Reader",
+        email: "",
+        coins: 20,
+        createdAt: new Date().toISOString()
+    };
 
-    balance += 2;
-    updateBalance();
 
-    alert("📣 Thanks for sharing! You received 2 coins.");
-}
-
-function choosePayment(element) {
-
-    document.querySelectorAll(".payment-option").forEach(option => {
-        option.classList.remove("active");
-    });
-
-    element.classList.add("active");
-}
-
-function selectPackage(coins, price) {
-
-    alert(
-        "You selected " +
-        coins +
-        " coins for " +
-        price +
-        ".\n\nChoose your payment method above to continue."
+    saveJSON(
+        "noveloraCurrentReader",
+        reader
     );
 
-    window.scrollTo({
-        top: document.body.scrollHeight,
-        behavior: "smooth"
-    });
+
+    return reader;
 }
 
-updateBalance();
 
-</script>
+let reader =
+    getReader();
 
-</body>
-</html>
+
+/* =========================================================
+   COIN BALANCE
+========================================================= */
+
+function getCoins() {
+
+    const value =
+        reader.coins ??
+        reader.coinBalance ??
+        reader.balance ??
+        reader.coinsBalance ??
+        0;
+
+    return Math.max(
+        0,
+        Number(value) || 0
+    );
+}
+
+
+function setCoins(value) {
+
+    value =
+        Math.max(
+            0,
+            Number(value) || 0
+        );
+
+
+    reader.coins = value;
+    reader.coinBalance = value;
+
+
+    saveJSON(
+        "noveloraCurrentReader",
+        reader
+    );
+
+
+    /*
+     * Keep Admin reader record synchronized when possible.
+     */
+
+    const readers =
+        getJSON("noveloraReaders", []);
+
+
+    if (Array.isArray(readers)) {
+
+        const readerId =
+            reader.id ||
+            reader.readerId ||
+            reader.userId;
+
+
+        const readerEmail =
+            reader.email || "";
+
+
+        const index =
+            readers.findIndex(function(item) {
+
+                const itemId =
+                    item.id ||
+                    item.readerId ||
+                    item.userId;
+
+
+                return (
+                    (
+                        readerId &&
+                        String(itemId) ===
+                        String(readerId)
+                    ) ||
+                    (
+                        readerEmail &&
+                        item.email &&
+                        String(item.email).toLowerCase() ===
+                        String(readerEmail).toLowerCase()
+                    )
+                );
+
+            });
+
+
+        if (index !== -1) {
+
+            readers[index].coins =
+                value;
+
+            readers[index].coinBalance
