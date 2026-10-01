@@ -5,92 +5,91 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>The Alpha's Forbidden Hybrid — Novelora</title>
+  <title>Book Details — Novelora</title>
 
   <link rel="stylesheet" href="style.css">
 
   <style>
+
     .book-details-page {
       min-height: 100vh;
-      background:
-        radial-gradient(circle at top left, rgba(255, 105, 180, 0.12), transparent 35%),
-        radial-gradient(circle at bottom right, rgba(180, 70, 150, 0.10), transparent 35%);
     }
 
     .book-details-container {
-      width: min(1150px, 92%);
+      width: min(1100px, 92%);
       margin: 0 auto;
-      padding: 45px 0 100px;
+      padding: 40px 0 100px;
     }
 
     .book-back {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
+      display: inline-block;
+      margin-bottom: 28px;
       text-decoration: none;
-      margin-bottom: 30px;
-      font-weight: 600;
+      font-weight: 700;
     }
 
     .book-hero {
       display: grid;
       grid-template-columns: 280px 1fr;
-      gap: 45px;
-      align-items: start;
-      padding: 35px;
-      border-radius: 28px;
+      gap: 40px;
+      padding: 32px;
+      border-radius: 26px;
       background: rgba(255, 255, 255, 0.04);
       border: 1px solid rgba(255, 255, 255, 0.08);
-      box-shadow: 0 25px 70px rgba(0, 0, 0, 0.25);
     }
 
     .book-cover-large {
       width: 100%;
       aspect-ratio: 2 / 3;
       border-radius: 20px;
-      background:
-        linear-gradient(145deg, #fff, #f6d9ec 45%, #b94d8b);
       display: flex;
       align-items: center;
       justify-content: center;
       text-align: center;
-      color: #191019;
-      font-weight: 900;
-      font-size: 19px;
       padding: 25px;
       box-sizing: border-box;
-      box-shadow: 0 20px 50px rgba(255, 90, 170, 0.2);
+
+      background:
+        linear-gradient(
+          145deg,
+          #ffffff,
+          #f8d8ea 45%,
+          #bd4e8d
+        );
+
+      color: #241522;
+      font-size: 22px;
+      font-weight: 900;
+      line-height: 1.25;
+
+      box-shadow:
+        0 20px 50px rgba(255, 105, 180, 0.20);
     }
 
-    .book-info-label {
-      font-size: 12px;
+    .book-label {
+      font-size: 11px;
       letter-spacing: 2px;
       font-weight: 800;
+      opacity: 0.65;
       margin-bottom: 10px;
-      opacity: 0.7;
     }
 
-    .book-title-large {
-      font-size: clamp(32px, 5vw, 58px);
+    .book-title {
+      font-size: clamp(32px, 5vw, 54px);
       line-height: 1.05;
-      margin: 0 0 14px;
+      margin: 0 0 12px;
     }
 
     .book-author {
-      font-size: 17px;
+      opacity: 0.75;
       margin-bottom: 20px;
-      opacity: 0.8;
-    }
-
-    .book-author strong {
-      opacity: 1;
     }
 
     .book-meta {
       display: flex;
       flex-wrap: wrap;
-      gap: 10px;
-      margin: 20px 0;
+      gap: 9px;
+      margin-bottom: 24px;
     }
 
     .book-meta span {
@@ -105,61 +104,50 @@
     .book-description {
       line-height: 1.8;
       opacity: 0.82;
-      max-width: 760px;
-      margin: 25px 0;
+      margin-bottom: 25px;
     }
 
     .book-actions {
       display: flex;
       flex-wrap: wrap;
       gap: 12px;
-      margin-top: 25px;
     }
 
     .book-action {
       border: none;
-      text-decoration: none;
       cursor: pointer;
+      text-decoration: none;
       padding: 14px 22px;
       border-radius: 14px;
       font-weight: 800;
       font-size: 14px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
     }
 
-    .book-action-primary {
+    .primary-action {
       background: linear-gradient(135deg, #ff69b4, #d94d93);
       color: white;
-      box-shadow: 0 12px 30px rgba(255, 105, 180, 0.22);
     }
 
-    .book-action-secondary {
+    .secondary-action {
       background: rgba(255, 255, 255, 0.06);
       color: inherit;
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.10);
     }
 
-    .book-section {
+    .chapters-section {
       margin-top: 55px;
     }
 
-    .book-section-heading {
-      margin-bottom: 22px;
-    }
-
-    .book-section-heading small {
-      display: block;
+    .section-small {
       font-size: 11px;
       letter-spacing: 2px;
       font-weight: 800;
-      opacity: 0.65;
+      opacity: 0.6;
       margin-bottom: 7px;
     }
 
-    .book-section-heading h2 {
-      margin: 0;
+    .chapters-section h2 {
+      margin: 0 0 22px;
       font-size: 30px;
     }
 
@@ -172,13 +160,18 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 20px;
-      padding: 18px 20px;
-      border-radius: 16px;
+      gap: 15px;
+
+      padding: 17px 20px;
+
+      border-radius: 15px;
+
       background: rgba(255, 255, 255, 0.04);
       border: 1px solid rgba(255, 255, 255, 0.07);
+
       text-decoration: none;
       color: inherit;
+
       transition: 0.2s ease;
     }
 
@@ -191,16 +184,18 @@
     .chapter-left {
       display: flex;
       align-items: center;
-      gap: 15px;
+      gap: 14px;
     }
 
     .chapter-number {
       width: 42px;
       height: 42px;
       border-radius: 12px;
+
       display: flex;
       align-items: center;
       justify-content: center;
+
       background: rgba(255, 105, 180, 0.12);
       font-weight: 900;
       flex-shrink: 0;
@@ -208,12 +203,12 @@
 
     .chapter-title {
       font-weight: 800;
-      margin-bottom: 4px;
     }
 
-    .chapter-status {
+    .chapter-subtitle {
       font-size: 12px;
-      opacity: 0.65;
+      opacity: 0.6;
+      margin-top: 4px;
     }
 
     .chapter-price {
@@ -222,23 +217,20 @@
       white-space: nowrap;
     }
 
-    .free-label {
+    .free {
       color: #ff8bc5;
     }
 
-    .paid-label {
+    .paid {
       color: #ffd36b;
     }
 
-    .book-note {
-      margin-top: 18px;
-      padding: 17px 20px;
-      border-radius: 15px;
-      background: rgba(255, 105, 180, 0.06);
-      border: 1px solid rgba(255, 105, 180, 0.12);
-      font-size: 13px;
-      line-height: 1.6;
-      opacity: 0.8;
+    .empty-chapters {
+      padding: 35px;
+      text-align: center;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.04);
+      opacity: 0.75;
     }
 
     @media (max-width: 750px) {
@@ -250,7 +242,6 @@
 
       .book-hero {
         grid-template-columns: 1fr;
-        gap: 28px;
         padding: 22px;
       }
 
@@ -259,7 +250,7 @@
         margin: 0 auto;
       }
 
-      .book-title-large {
+      .book-title {
         font-size: 36px;
       }
 
@@ -269,13 +260,18 @@
 
       .book-action {
         width: 100%;
+        text-align: center;
+        box-sizing: border-box;
       }
 
       .chapter-item {
-        padding: 15px;
+        padding: 14px;
       }
+
     }
+
   </style>
+
 </head>
 
 
@@ -293,8 +289,11 @@
     <nav class="reader-nav">
 
       <a href="library.html">📚 Library</a>
+
       <a href="coins.html">🪙 Coins</a>
+
       <a href="trending.html">🔥 Trending</a>
+
       <a href="free-books.html">🆓 Free Books</a>
 
     </nav>
@@ -314,7 +313,8 @@
   </header>
 
 
-  <!-- BOOK DETAILS -->
+
+  <!-- BOOK CONTENT -->
 
   <main class="book-details-container">
 
@@ -324,80 +324,76 @@
     </a>
 
 
-    <!-- BOOK HERO -->
-
     <section class="book-hero">
 
 
       <!-- COVER -->
 
-      <div class="book-cover-large">
-        THE ALPHA'S
-        <br>
-        FORBIDDEN
-        <br>
-        HYBRID
+      <div
+        id="bookCover"
+        class="book-cover-large"
+      >
+        BOOK
       </div>
+
 
 
       <!-- INFORMATION -->
 
       <div>
 
-        <div class="book-info-label">
-          FEATURED ROMANCE
+        <div
+          id="bookLabel"
+          class="book-label"
+        >
+          NOVELORA STORY
         </div>
 
-        <h1 class="book-title-large">
-          The Alpha's Forbidden Hybrid
+
+        <h1
+          id="bookTitle"
+          class="book-title"
+        >
+          Loading book...
         </h1>
 
-        <p class="book-author">
-          By <strong>Moonlight Writer</strong>
+
+        <p
+          id="bookAuthor"
+          class="book-author"
+        >
         </p>
 
 
-        <div class="book-meta">
-
-          <span>❤️ Romance</span>
-          <span>🐺 Werewolf</span>
-          <span>🔞 16+</span>
-          <span>📖 Ongoing</span>
-
+        <div
+          id="bookMeta"
+          class="book-meta"
+        >
         </div>
 
 
-        <p class="book-description">
-
-          She was never supposed to exist.
-
-          Born from a forbidden bloodline, she has spent her entire
-          life hiding the secret that could destroy the supernatural
-          world.
-
-          But when the powerful Alpha King discovers what she really is,
-          hiding becomes impossible.
-
-          Now she must choose between running from the man who could
-          destroy her—or trusting the only person capable of protecting
-          her.
-
+        <p
+          id="bookDescription"
+          class="book-description"
+        >
         </p>
 
 
         <div class="book-actions">
 
           <a
-            href="chapter.html?book=alpha-hybrid&chapter=1"
-            class="book-action book-action-primary"
+            id="startReading"
+            href="#"
+            class="book-action primary-action"
           >
             📖 Start Reading
           </a>
 
+
           <button
             type="button"
-            class="book-action book-action-secondary"
-            onclick="addBookToLibrary()"
+            class="book-action secondary-action"
+            onclick="addCurrentBookToLibrary()"
           >
             ＋ Add to Library
           </button>
@@ -409,210 +405,31 @@
     </section>
 
 
+
     <!-- CHAPTERS -->
 
-    <section class="book-section">
+    <section class="chapters-section">
 
-      <div class="book-section-heading">
-
-        <small>
-          THE STORY
-        </small>
-
-        <h2>
-          Chapters
-        </h2>
-
+      <div class="section-small">
+        THE STORY
       </div>
 
-
-      <div class="chapter-list">
-
-
-        <!-- CHAPTER 1 -->
-
-        <a
-          href="chapter.html?book=alpha-hybrid&chapter=1"
-          class="chapter-item"
-        >
-
-          <div class="chapter-left">
-
-            <div class="chapter-number">
-              1
-            </div>
-
-            <div>
-
-              <div class="chapter-title">
-                The Nightmare
-              </div>
-
-              <div class="chapter-status">
-                Start the story
-              </div>
-
-            </div>
-
-          </div>
-
-          <div class="chapter-price free-label">
-            FREE
-          </div>
-
-        </a>
-
-
-        <!-- CHAPTER 2 -->
-
-        <a
-          href="chapter.html?book=alpha-hybrid&chapter=2"
-          class="chapter-item"
-        >
-
-          <div class="chapter-left">
-
-            <div class="chapter-number">
-              2
-            </div>
-
-            <div>
-
-              <div class="chapter-title">
-                The Stranger
-              </div>
-
-              <div class="chapter-status">
-                Continue reading
-              </div>
-
-            </div>
-
-          </div>
-
-          <div class="chapter-price paid-label">
-            🪙 5
-          </div>
-
-        </a>
-
-
-        <!-- CHAPTER 3 -->
-
-        <a
-          href="chapter.html?book=alpha-hybrid&chapter=3"
-          class="chapter-item"
-        >
-
-          <div class="chapter-left">
-
-            <div class="chapter-number">
-              3
-            </div>
-
-            <div>
-
-              <div class="chapter-title">
-                The Alpha King
-              </div>
-
-              <div class="chapter-status">
-                Locked
-              </div>
-
-            </div>
-
-          </div>
-
-          <div class="chapter-price paid-label">
-            🪙 5
-          </div>
-
-        </a>
-
-
-        <!-- CHAPTER 4 -->
-
-        <a
-          href="chapter.html?book=alpha-hybrid&chapter=4"
-          class="chapter-item"
-        >
-
-          <div class="chapter-left">
-
-            <div class="chapter-number">
-              4
-            </div>
-
-            <div>
-
-              <div class="chapter-title">
-                Forbidden Blood
-              </div>
-
-              <div class="chapter-status">
-                Locked
-              </div>
-
-            </div>
-
-          </div>
-
-          <div class="chapter-price paid-label">
-            🪙 5
-          </div>
-
-        </a>
-
-
-        <!-- CHAPTER 5 -->
-
-        <a
-          href="chapter.html?book=alpha-hybrid&chapter=5"
-          class="chapter-item"
-        >
-
-          <div class="chapter-left">
-
-            <div class="chapter-number">
-              5
-            </div>
-
-            <div>
-
-              <div class="chapter-title">
-                The Mark
-              </div>
-
-              <div class="chapter-status">
-                Locked
-              </div>
-
-            </div>
-
-          </div>
-
-          <div class="chapter-price paid-label">
-            🪙 5
-          </div>
-
-        </a>
-
-
-      </div>
-
-
-      <div class="book-note">
-
-        🪙 Paid chapters currently cost <strong>5 coins</strong>.
-        Your coins will only be deducted when you unlock a chapter.
-
+      <h2>
+        Chapters
+      </h2>
+
+
+      <div
+        id="chapterList"
+        class="chapter-list"
+      >
       </div>
 
     </section>
 
 
   </main>
+
 
 
   <!-- MOBILE NAVIGATION -->
@@ -647,61 +464,390 @@
   </nav>
 
 
-  <!-- LIBRARY -->
 
   <script>
 
-    function addBookToLibrary() {
+    /*
+      DEMO BOOK DATA
 
-      const book = {
+      These are temporary.
+      Later this will come directly
+      from the Novelora database/admin system.
+    */
 
-        id: "alpha-hybrid",
+    const demoBooks = {
+
+      "alpha-hybrid": {
 
         title: "The Alpha's Forbidden Hybrid",
 
+        author: "Moonlight Writer",
+
         genre: "Romance",
 
-        cover: "",
+        secondGenre: "Werewolf",
 
-        author: "Moonlight Writer"
+        rating: "16+",
 
-      };
+        status: "Ongoing",
 
+        description:
+          "She was never supposed to exist. Born from a forbidden bloodline, she has spent her entire life hiding the secret that could destroy the supernatural world. But when the powerful Alpha King discovers what she really is, hiding becomes impossible.",
 
-      let library =
-        JSON.parse(
-          localStorage.getItem("noveloraLibrary")
-        ) || [];
+        coverText:
+          "THE ALPHA'S<br>FORBIDDEN<br>HYBRID"
 
-
-      const exists =
-        library.some(function(item) {
-
-          return item.id === book.id;
-
-        });
+      },
 
 
-      if (exists) {
+      "billionaire-bride": {
 
-        alert("This book is already in your library.");
+        title: "The Billionaire's Secret Bride",
+
+        author: "Novelora Writer",
+
+        genre: "Billionaire",
+
+        secondGenre: "Romance",
+
+        rating: "16+",
+
+        status: "Ongoing",
+
+        description:
+          "A secret marriage, a powerful billionaire and a love neither of them expected.",
+
+        coverText:
+          "THE<br>BILLIONAIRE'S<br>SECRET BRIDE"
+
+      },
+
+
+      "crown-of-the-moon": {
+
+        title: "Crown of the Moon",
+
+        author: "Moonlight Writer",
+
+        genre: "Fantasy",
+
+        secondGenre: "Romance",
+
+        rating: "13+",
+
+        status: "Ongoing",
+
+        description:
+          "A kingdom ruled by destiny, where a forgotten princess discovers that her bloodline may determine the fate of an entire realm.",
+
+        coverText:
+          "CROWN<br>OF THE<br>MOON"
+
+      },
+
+
+      "girl-behind-the-mask": {
+
+        title: "The Girl Behind the Mask",
+
+        author: "Novelora Writer",
+
+        genre: "Mystery",
+
+        secondGenre: "Drama",
+
+        rating: "16+",
+
+        status: "Ongoing",
+
+        description:
+          "Everyone has something to hide. But when one girl removes her mask, the truth could change everything.",
+
+        coverText:
+          "THE GIRL<br>BEHIND<br>THE MASK"
+
+      }
+
+    };
+
+
+
+    /*
+      GET BOOK ID FROM URL
+    */
+
+    const params =
+      new URLSearchParams(window.location.search);
+
+    const bookId =
+      params.get("id") || "alpha-hybrid";
+
+
+    const book =
+      demoBooks[bookId];
+
+
+
+    /*
+      IF BOOK DOES NOT EXIST
+    */
+
+    if (!book) {
+
+      document.getElementById("bookTitle").textContent =
+        "Book Not Found";
+
+      document.getElementById("bookDescription").textContent =
+        "Sorry, this story could not be found.";
+
+      document.getElementById("chapterList").innerHTML =
+
+        '<div class="empty-chapters">Book not found.</div>';
+
+    }
+
+
+    else {
+
+
+      /*
+        PAGE TITLE
+      */
+
+      document.title =
+        book.title + " — Novelora";
+
+
+      /*
+        BOOK INFORMATION
+      */
+
+      document.getElementById("bookTitle").textContent =
+        book.title;
+
+
+      document.getElementById("bookAuthor").innerHTML =
+        "By <strong>" + book.author + "</strong>";
+
+
+      document.getElementById("bookDescription").textContent =
+        book.description;
+
+
+      document.getElementById("bookCover").innerHTML =
+        book.coverText;
+
+
+      /*
+        BOOK META
+      */
+
+      document.getElementById("bookMeta").innerHTML =
+
+        "<span>❤️ " + book.genre + "</span>" +
+
+        "<span>✨ " + book.secondGenre + "</span>" +
+
+        "<span>🔞 " + book.rating + "</span>" +
+
+        "<span>📖 " + book.status + "</span>";
+
+
+      /*
+        START READING
+      */
+
+      document.getElementById("startReading").href =
+
+        "chapter.html?book=" +
+
+        encodeURIComponent(bookId) +
+
+        "&chapter=1";
+
+
+      /*
+        CHAPTERS
+
+        Temporary demo chapters.
+        We will replace these with
+        real admin-published chapters.
+      */
+
+      const chapters = [
+
+        {
+          number: 1,
+          title: "Chapter 1",
+          description: "Begin the story",
+          free: true
+        },
+
+        {
+          number: 2,
+          title: "Chapter 2",
+          description: "Continue reading",
+          free: false
+        },
+
+        {
+          number: 3,
+          title: "Chapter 3",
+          description: "Continue reading",
+          free: false
+        },
+
+        {
+          number: 4,
+          title: "Chapter 4",
+          description: "Continue reading",
+          free: false
+        },
+
+        {
+          number: 5,
+          title: "Chapter 5",
+          description: "Continue reading",
+          free: false
+        }
+
+      ];
+
+
+      const chapterList =
+        document.getElementById("chapterList");
+
+
+      chapters.forEach(function(chapter) {
+
+
+        const price =
+          chapter.free
+            ? '<span class="chapter-price free">FREE</span>'
+            : '<span class="chapter-price paid">🪙 5</span>';
+
+
+        const status =
+          chapter.free
+            ? "Start reading"
+            : "Locked chapter";
+
+
+        chapterList.innerHTML +=
+
+          '<a href="chapter.html?book=' +
+
+          encodeURIComponent(bookId) +
+
+          '&chapter=' +
+
+          chapter.number +
+
+          '" class="chapter-item">' +
+
+          '<div class="chapter-left">' +
+
+          '<div class="chapter-number">' +
+
+          chapter.number +
+
+          '</div>' +
+
+          '<div>' +
+
+          '<div class="chapter-title">' +
+
+          chapter.title +
+
+          '</div>' +
+
+          '<div class="chapter-subtitle">' +
+
+          status +
+
+          '</div>' +
+
+          '</div>' +
+
+          '</div>' +
+
+          price +
+
+          '</a>';
+
+      });
+
+    }
+
+
+
+    /*
+      ADD BOOK TO LIBRARY
+    */
+
+    function addCurrentBookToLibrary() {
+
+      if (!book) {
 
         return;
 
       }
 
 
-      library.push(book);
+      let library =
+
+        JSON.parse(
+          localStorage.getItem("noveloraLibrary")
+        ) || [];
+
+
+      const exists =
+
+        library.some(function(item) {
+
+          return item.id === bookId;
+
+        });
+
+
+      if (exists) {
+
+        alert(
+          "This book is already in your library."
+        );
+
+        return;
+
+      }
+
+
+      library.push({
+
+        id: bookId,
+
+        title: book.title,
+
+        author: book.author,
+
+        genre: book.genre,
+
+        cover: ""
+
+      });
 
 
       localStorage.setItem(
+
         "noveloraLibrary",
+
         JSON.stringify(library)
+
       );
 
 
       alert(
-        "The Alpha's Forbidden Hybrid has been added to your library!"
+        book.title +
+        " has been added to your library!"
       );
 
     }
