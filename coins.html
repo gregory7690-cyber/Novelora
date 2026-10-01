@@ -3,309 +3,363 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Novelora - Coins</title>
+<title>Novelora — Coins</title>
+
+<link rel="stylesheet" href="style.css">
 
 <style>
-* {
-    box-sizing: border-box;
+/* ================================
+   NOVELORA COINS PAGE
+================================ */
+
+.coins-page {
+    min-height: 100vh;
+    background:
+        radial-gradient(circle at top right, rgba(255, 92, 150, .12), transparent 35%),
+        radial-gradient(circle at bottom left, rgba(255, 45, 120, .08), transparent 35%);
+    padding-bottom: 70px;
+}
+
+.coins-container {
+    width: min(1150px, 92%);
+    margin: 0 auto;
+    padding-top: 35px;
+}
+
+/* HEADER */
+
+.coins-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.coins-header h1 {
     margin: 0;
-    padding: 0;
+    font-size: 34px;
 }
 
-body {
-    font-family: Arial, sans-serif;
-    background: #fff7fb;
-    color: #222;
-}
-
-header {
-    background: #fff;
-    border-bottom: 1px solid #f0d9e5;
-    padding: 15px 5%;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    position: sticky;
-    top: 0;
-    z-index: 10;
-}
-
-.logo {
-    color: #e83e8c;
-    font-size: 25px;
-    font-weight: bold;
-}
-
-.back {
-    text-decoration: none;
-    color: #e83e8c;
-    font-weight: bold;
-}
-
-.container {
-    max-width: 1000px;
-    margin: 30px auto;
-    padding: 0 20px 50px;
-}
-
-h1 {
-    text-align: center;
-    font-size: 32px;
-    margin-bottom: 8px;
-}
-
-.subtitle {
-    text-align: center;
-    color: #777;
-    margin-bottom: 25px;
+.coins-header p {
+    margin: 8px 0 0;
+    opacity: .7;
 }
 
 /* BALANCE */
 
-.balance {
-    background: linear-gradient(135deg, #e83e8c, #b91f68);
-    color: white;
-    border-radius: 22px;
-    padding: 30px;
-    text-align: center;
-    margin-bottom: 25px;
-    box-shadow: 0 10px 25px rgba(232, 62, 140, .18);
+.coin-balance-card {
+    background: linear-gradient(135deg, rgba(255, 77, 145, .18), rgba(255,255,255,.04));
+    border: 1px solid rgba(255, 105, 160, .25);
+    border-radius: 24px;
+    padding: 28px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 30px;
+    box-shadow: 0 15px 45px rgba(0,0,0,.18);
 }
 
-.balance small {
-    opacity: .9;
+.balance-label {
+    font-size: 14px;
+    opacity: .65;
 }
 
-.balance h2 {
+.balance-number {
+    font-size: 40px;
+    font-weight: 800;
+    margin-top: 5px;
+}
+
+.balance-coin {
     font-size: 42px;
-    margin: 8px 0;
 }
 
-.balance span {
-    font-size: 18px;
-}
+@media(max-width:650px) {
+    .coin-balance-card {
+        padding: 22px;
+    }
 
-/* SECTIONS */
-
-.section-title {
-    font-size: 22px;
-    margin: 30px 0 15px;
+    .balance-number {
+        font-size: 32px;
+    }
 }
 
 /* REWARDS */
 
-.rewards {
+.reward-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 15px;
+    gap: 16px;
+    margin-bottom: 35px;
 }
 
-.reward {
-    background: white;
-    border: 1px solid #f0d9e5;
-    border-radius: 17px;
+.reward-card {
+    background: rgba(255,255,255,.045);
+    border: 1px solid rgba(255,255,255,.08);
+    border-radius: 20px;
     padding: 20px;
-    text-align: center;
 }
 
 .reward-icon {
-    font-size: 30px;
-    margin-bottom: 8px;
+    font-size: 27px;
 }
 
-.reward h3 {
-    margin-bottom: 6px;
+.reward-card h3 {
+    margin: 12px 0 5px;
 }
 
-.reward p {
-    color: #777;
-    font-size: 14px;
-    line-height: 1.5;
+.reward-card p {
+    margin: 0;
+    font-size: 13px;
+    opacity: .65;
 }
 
-.reward button {
-    margin-top: 14px;
+.reward-button {
     width: 100%;
-    border: none;
-    border-radius: 10px;
+    margin-top: 15px;
     padding: 11px;
-    background: #e83e8c;
-    color: white;
-    font-weight: bold;
+    border: none;
+    border-radius: 12px;
     cursor: pointer;
+    background: linear-gradient(135deg, #ff4f91, #ff79ad);
+    color: white;
+    font-weight: 700;
 }
 
-.reward button:disabled {
-    background: #ccc;
+.reward-button:disabled {
+    opacity: .45;
     cursor: not-allowed;
 }
 
-/* COIN PACKAGES */
-
-.packages {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 15px;
+@media(max-width:800px) {
+    .reward-grid {
+        grid-template-columns: 1fr;
+    }
 }
 
-.package {
-    background: white;
-    border: 1px solid #f0d9e5;
-    border-radius: 18px;
-    padding: 22px;
-    text-align: center;
+/* PACKAGES */
+
+.section-title {
+    margin: 0 0 17px;
+    font-size: 23px;
+}
+
+.packages-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 17px;
+}
+
+.coin-package {
     position: relative;
+    background: rgba(255,255,255,.045);
+    border: 1px solid rgba(255,255,255,.09);
+    border-radius: 20px;
+    padding: 22px;
     transition: .2s ease;
 }
 
-.package:hover {
+.coin-package:hover {
     transform: translateY(-3px);
-    box-shadow: 0 10px 25px rgba(232, 62, 140, .08);
+    border-color: rgba(255, 91, 150, .4);
 }
 
-.package.selected {
-    border: 2px solid #e83e8c;
-    background: #fff7fb;
+.coin-package.selected {
+    border-color: #ff5c99;
+    box-shadow: 0 0 0 2px rgba(255,92,153,.12);
 }
 
-.package.popular {
-    border: 2px solid #e83e8c;
+.package-coins {
+    font-size: 24px;
+    font-weight: 800;
 }
 
-.popular-label {
-    position: absolute;
-    top: -11px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: #e83e8c;
-    color: white;
-    padding: 4px 12px;
-    border-radius: 20px;
+.package-price {
+    margin-top: 8px;
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.package-usd {
     font-size: 12px;
-    font-weight: bold;
+    opacity: .5;
+    margin-top: 3px;
 }
 
-.coin-number {
-    font-size: 28px;
-    font-weight: bold;
-    margin: 8px 0;
-}
-
-.coin-label {
-    color: #e83e8c;
-    font-weight: bold;
-}
-
-.price {
-    font-size: 22px;
-    font-weight: bold;
-    margin: 12px 0;
-}
-
-.package button {
+.buy-button {
     width: 100%;
+    margin-top: 18px;
     padding: 12px;
     border: none;
-    border-radius: 10px;
-    background: #e83e8c;
+    border-radius: 13px;
+    background: linear-gradient(135deg, #ff4c8b, #ff79ad);
     color: white;
-    font-weight: bold;
+    font-weight: 800;
     cursor: pointer;
+}
+
+.buy-button:hover {
+    filter: brightness(1.08);
+}
+
+@media(max-width:850px) {
+    .packages-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media(max-width:550px) {
+    .packages-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* REGION NOTICE */
+
+.region-card {
+    margin-top: 35px;
+    padding: 22px;
+    border-radius: 20px;
+    background: rgba(255,255,255,.04);
+    border: 1px solid rgba(255,255,255,.08);
+}
+
+.region-card h2 {
+    margin: 0 0 7px;
+    font-size: 20px;
+}
+
+.region-card p {
+    margin: 0;
+    opacity: .68;
+    font-size: 14px;
 }
 
 /* PAYMENT */
 
-.payment {
-    background: white;
-    border: 1px solid #f0d9e5;
-    border-radius: 18px;
-    padding: 22px;
+.payment-section {
+    margin-top: 35px;
+    padding: 28px;
+    border-radius: 25px;
+    background: rgba(255,255,255,.045);
+    border: 1px solid rgba(255,255,255,.09);
+    scroll-margin-top: 30px;
 }
 
-.selected-package {
-    display: none;
-    background: #fff0f7;
-    border: 1px solid #f3c6dc;
-    border-radius: 14px;
-    padding: 16px;
-    margin-bottom: 18px;
+.payment-selected {
+    padding: 15px;
+    border-radius: 15px;
+    background: rgba(255,92,153,.08);
+    border: 1px solid rgba(255,92,153,.18);
+    margin-bottom: 20px;
 }
 
-.selected-package.show {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 15px;
-}
-
-.selected-package strong {
-    color: #e83e8c;
-}
-
-.payment-options {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 10px;
-}
-
-.payment-option {
-    border: 2px solid #eee;
-    border-radius: 12px;
-    padding: 15px 8px;
-    text-align: center;
-    cursor: pointer;
-    background: white;
-    transition: .2s ease;
-}
-
-.payment-option:hover {
-    border-color: #f1a8c8;
-}
-
-.payment-option.active {
-    border-color: #e83e8c;
-    background: #fff0f7;
-}
-
-.payment-option span {
+.payment-selected strong {
     display: block;
-    font-size: 25px;
-    margin-bottom: 6px;
+    font-size: 18px;
 }
 
-/* PAYMENT DETAILS */
-
-.payment-details {
-    display: none;
-    margin-top: 20px;
-    padding-top: 20px;
-    border-top: 1px solid #f0d9e5;
-}
-
-.payment-details.show {
-    display: block;
-}
-
-.payment-details h3 {
-    margin-bottom: 7px;
-}
-
-.payment-details > p {
-    color: #777;
+.payment-selected span {
+    opacity: .7;
     font-size: 13px;
-    margin-bottom: 18px;
+}
+
+/* PAYMENT METHODS */
+
+.payment-methods {
+    display: grid;
+    gap: 12px;
+}
+
+.payment-method {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 17px;
+    border-radius: 16px;
+    border: 1px solid rgba(255,255,255,.08);
+    background: rgba(255,255,255,.025);
+    cursor: pointer;
+    transition: .2s;
+}
+
+.payment-method:hover {
+    border-color: rgba(255,92,153,.3);
+}
+
+.payment-method.active {
+    border-color: #ff5c99;
+    background: rgba(255,92,153,.08);
+}
+
+.payment-method input {
+    accent-color: #ff5c99;
+}
+
+.payment-method-icon {
+    font-size: 25px;
+}
+
+.payment-method-content strong {
+    display: block;
+}
+
+.payment-method-content small {
+    display: block;
+    opacity: .58;
+    margin-top: 3px;
+}
+
+/* LOCAL PAYMENT */
+
+.local-methods {
+    margin-top: 12px;
+    padding: 18px;
+    border-radius: 17px;
+    background: rgba(255,255,255,.035);
+    border: 1px solid rgba(255,255,255,.07);
+    display: none;
+}
+
+.local-methods.show {
+    display: block;
+}
+
+.local-methods h3 {
+    margin-top: 0;
+}
+
+.local-method-list {
+    display: grid;
+    gap: 9px;
+}
+
+.local-method-option {
+    padding: 13px;
+    border-radius: 12px;
+    background: rgba(255,255,255,.04);
+}
+
+/* CARD FORM */
+
+.card-form {
+    margin-top: 20px;
+    display: none;
+}
+
+.card-form.show {
+    display: block;
 }
 
 .form-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 14px;
+    gap: 13px;
 }
 
 .form-group {
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 7px;
 }
 
 .form-group.full {
@@ -314,184 +368,23 @@ h1 {
 
 .form-group label {
     font-size: 13px;
-    font-weight: bold;
+    opacity: .7;
 }
 
-.form-group input,
-.form-group select {
-    width: 100%;
-    border: 1px solid #e5d5dd;
-    border-radius: 10px;
-    padding: 12px;
-    font-size: 14px;
-    outline: none;
-    background: white;
-}
-
-.form-group input:focus,
-.form-group select:focus {
-    border-color: #e83e8c;
-    box-shadow: 0 0 0 3px rgba(232, 62, 140, .08);
-}
-
-.form-help {
-    font-size: 12px;
-    color: #888;
-}
-
-.transfer-box,
-.ussd-box,
-.other-box {
-    background: #fff8fb;
-    border: 1px solid #f0d9e5;
-    border-radius: 14px;
-    padding: 17px;
-    margin-bottom: 16px;
-    line-height: 1.7;
-}
-
-.transfer-box strong,
-.ussd-box strong {
-    color: #e83e8c;
-}
-
-.pay-button {
-    width: 100%;
-    border: none;
-    border-radius: 11px;
-    padding: 14px;
-    background: #e83e8c;
-    color: white;
-    font-size: 15px;
-    font-weight: bold;
-    cursor: pointer;
-    margin-top: 18px;
-}
-
-.pay-button:disabled {
-    background: #ccc;
-    cursor: not-allowed;
-}
-
-.payment-message {
-    display: none;
-    margin-top: 15px;
+.form-group input {
     padding: 13px;
-    border-radius: 10px;
-    font-size: 13px;
-    line-height: 1.5;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,.1);
+    background: rgba(0,0,0,.18);
+    color: inherit;
+    outline: none;
 }
 
-.payment-message.show {
-    display: block;
+.form-group input:focus {
+    border-color: #ff5c99;
 }
 
-.payment-message.error {
-    background: #fff0f0;
-    color: #b42323;
-    border: 1px solid #f3caca;
-}
-
-.payment-message.info {
-    background: #fff8e8;
-    color: #8a6500;
-    border: 1px solid #f0dfad;
-}
-
-.payment-note {
-    margin-top: 15px;
-    color: #777;
-    font-size: 13px;
-    line-height: 1.5;
-}
-
-/* GEMS */
-
-.gems {
-    background: #fff;
-    border: 1px solid #f0d9e5;
-    border-radius: 18px;
-    padding: 22px;
-}
-
-.gem-box {
-    background: #fff5d9;
-    border-radius: 14px;
-    padding: 18px;
-    margin-top: 12px;
-}
-
-.gem-box strong {
-    color: #b17a00;
-}
-
-/* HISTORY */
-
-.history {
-    background: white;
-    border: 1px solid #f0d9e5;
-    border-radius: 18px;
-    padding: 22px;
-}
-
-.history-row {
-    display: flex;
-    justify-content: space-between;
-    gap: 15px;
-    padding: 14px 0;
-    border-bottom: 1px solid #eee;
-}
-
-.history-row:last-child {
-    border-bottom: none;
-}
-
-.green {
-    color: #179447;
-    font-weight: bold;
-}
-
-.gold {
-    color: #b17a00;
-    font-weight: bold;
-}
-
-.red {
-    color: #c62828;
-    font-weight: bold;
-}
-
-.empty-history {
-    text-align: center;
-    color: #888;
-    padding: 15px 0;
-}
-
-footer {
-    text-align: center;
-    color: #999;
-    font-size: 13px;
-    padding: 30px 0;
-}
-
-/* MOBILE */
-
-@media (max-width: 700px) {
-    .rewards,
-    .packages {
-        grid-template-columns: 1fr 1fr;
-    }
-
-    .payment-options {
-        grid-template-columns: 1fr 1fr;
-    }
-
-    h1 {
-        font-size: 27px;
-    }
-}
-
-@media (max-width: 550px) {
+@media(max-width:600px) {
     .form-grid {
         grid-template-columns: 1fr;
     }
@@ -501,558 +394,1472 @@ footer {
     }
 }
 
-@media (max-width: 450px) {
-    .rewards,
-    .packages {
-        grid-template-columns: 1fr;
-    }
+/* PAY BUTTON */
 
-    .balance h2 {
-        font-size: 36px;
-    }
+.complete-payment {
+    width: 100%;
+    margin-top: 22px;
+    padding: 15px;
+    border: none;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #ff4d8e, #ff79ae);
+    color: white;
+    font-size: 16px;
+    font-weight: 800;
+    cursor: pointer;
+}
 
-    .selected-package.show {
-        flex-direction: column;
-        align-items: flex-start;
-    }
+.complete-payment:disabled {
+    opacity: .5;
+    cursor: not-allowed;
+}
+
+.payment-note {
+    text-align: center;
+    font-size: 12px;
+    opacity: .5;
+    margin-top: 13px;
+}
+
+/* ACTIVITY */
+
+.activity-section {
+    margin-top: 35px;
+}
+
+.activity-list {
+    display: grid;
+    gap: 10px;
+}
+
+.activity-item {
+    padding: 15px;
+    border-radius: 14px;
+    background: rgba(255,255,255,.035);
+    border: 1px solid rgba(255,255,255,.07);
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+}
+
+.activity-item small {
+    opacity: .5;
+}
+
+/* NOTICE */
+
+.notice {
+    margin-top: 15px;
+    padding: 13px;
+    border-radius: 12px;
+    display: none;
+    font-size: 13px;
+}
+
+.notice.show {
+    display: block;
+}
+
+.notice.error {
+    background: rgba(255,70,90,.1);
+    border: 1px solid rgba(255,70,90,.2);
+}
+
+.notice.info {
+    background: rgba(90,150,255,.1);
+    border: 1px solid rgba(90,150,255,.2);
 }
 </style>
 </head>
 
-<body>
+<body class="reader-page coins-page">
 
-<header>
-    <div class="logo">Novelora</div>
-    <a href="reader-dashboard.html" class="back">← Dashboard</a>
+<header class="reader-navbar">
+
+    <div class="reader-logo">
+        <a href="reader-dashboard.html">Novelora</a>
+    </div>
+
+    <nav class="reader-nav">
+        <a href="library.html">📚 Library</a>
+        <a href="coins.html" class="active">🪙 Coins</a>
+        <a href="trending.html">🔥 Trending</a>
+        <a href="free-books.html">🆓 Free Books</a>
+    </nav>
+
 </header>
 
-<div class="container">
 
-    <h1>🪙 Novelora Coins</h1>
-    <p class="subtitle">Unlock stories, earn rewards and keep reading.</p>
+<main class="coins-container">
+
+    <section class="coins-header">
+        <h1>🪙 Novelora Coins</h1>
+        <p>Unlock chapters, support authors, and keep reading.</p>
+    </section>
+
 
     <!-- BALANCE -->
 
-    <div class="balance">
-        <small>Your current balance</small>
-        <h2 id="coinBalance">0</h2>
-        <span>🪙 Coins</span>
-    </div>
+    <section class="coin-balance-card">
+
+        <div>
+            <div class="balance-label">Your Coin Balance</div>
+            <div class="balance-number">
+                <span id="coinBalance">0</span> Coins
+            </div>
+        </div>
+
+        <div class="balance-coin">🪙</div>
+
+    </section>
+
 
     <!-- REWARDS -->
 
-    <h2 class="section-title">🎁 Earn Free Coins</h2>
+    <h2 class="section-title">Earn Free Coins</h2>
 
-    <div class="rewards">
+    <section class="reward-grid">
 
-        <div class="reward">
-            <div class="reward-icon">📅</div>
-            <h3>Daily Check-In</h3>
-            <p id="dailyDescription">Check in every day and receive coins.</p>
-            <button id="dailyButton" onclick="claimDaily()">Claim</button>
+        <div class="reward-card">
+
+            <div class="reward-icon">🎁</div>
+
+            <h3>Daily Login</h3>
+
+            <p>
+                Claim your daily Novelora reward.
+                <strong id="dailyRewardAmount">2 coins</strong>
+            </p>
+
+            <button
+                class="reward-button"
+                id="dailyRewardButton"
+                onclick="claimDailyReward()">
+                Claim Reward
+            </button>
+
         </div>
 
-        <div class="reward">
-            <div class="reward-icon">📺</div>
+
+        <div class="reward-card">
+
+            <div class="reward-icon">🎬</div>
+
             <h3>Watch an Ad</h3>
-            <p id="adDescription">Complete a rewarded ad and receive coins.</p>
-            <button id="adButton" onclick="watchAd()">Watch</button>
+
+            <p>
+                Earn
+                <strong id="adRewardAmount">2 coins</strong>
+                per rewarded ad.
+            </p>
+
+            <button
+                class="reward-button"
+                onclick="claimAdReward()">
+                Watch Ad
+            </button>
+
         </div>
 
-        <div class="reward">
-            <div class="reward-icon">📣</div>
-            <h3>Share a Book</h3>
-            <p id="shareDescription">Share a Novelora book and receive coins.</p>
-            <button id="shareButton" onclick="shareBook()">Share</button>
+
+        <div class="reward-card">
+
+            <div class="reward-icon">🔗</div>
+
+            <h3>Share Novelora</h3>
+
+            <p>
+                Earn
+                <strong id="shareRewardAmount">2 coins</strong>
+                when you share.
+            </p>
+
+            <button
+                class="reward-button"
+                onclick="claimShareReward()">
+                Share
+            </button>
+
         </div>
 
-    </div>
+    </section>
+
 
     <!-- COIN PACKAGES -->
 
-    <h2 class="section-title">🪙 Buy Coins</h2>
+    <h2 class="section-title">Buy Coins</h2>
 
-    <div class="packages">
+    <section class="packages-grid" id="packagesGrid">
 
-        <div class="package">
-            <div class="coin-number">5</div>
-            <div class="coin-label">COINS</div>
-            <div class="price">$0.49</div>
-            <button onclick="selectPackage(5, '$0.49', this)">Buy</button>
-        </div>
+        <!-- Generated by JavaScript -->
 
-        <div class="package">
-            <div class="coin-number">20</div>
-            <div class="coin-label">COINS</div>
-            <div class="price">$1.49</div>
-            <button onclick="selectPackage(20, '$1.49', this)">Buy</button>
-        </div>
+    </section>
 
-        <div class="package">
-            <div class="coin-number">50</div>
-            <div class="coin-label">COINS</div>
-            <div class="price">$2.99</div>
-            <button onclick="selectPackage(50, '$2.99', this)">Buy</button>
-        </div>
 
-        <div class="package popular">
-            <div class="popular-label">POPULAR</div>
-            <div class="coin-number">100</div>
-            <div class="coin-label">COINS</div>
-            <div class="price">$5.99</div>
-            <button onclick="selectPackage(100, '$5.99', this)">Buy</button>
-        </div>
+    <!-- REGION -->
 
-        <div class="package">
-            <div class="coin-number">300</div>
-            <div class="coin-label">COINS</div>
-            <div class="price">$14.99</div>
-            <button onclick="selectPackage(300, '$14.99', this)">Buy</button>
-        </div>
+    <section class="region-card">
 
-        <div class="package">
-            <div class="coin-number">700</div>
-            <div class="coin-label">COINS</div>
-            <div class="price">$29.99</div>
-            <button onclick="selectPackage(700, '$29.99', this)">Buy</button>
-        </div>
+        <h2>🌍 Local & Regional Payment Methods</h2>
 
-        <div class="package">
-            <div class="coin-number">1,500</div>
-            <div class="coin-label">COINS</div>
-            <div class="price">$59.99</div>
-            <button onclick="selectPackage(1500, '$59.99', this)">Buy</button>
-        </div>
+        <p>
+            Novelora can show prices in the currency supported in your
+            country and provide payment methods available in your region.
+            You don't need to manually convert your money to dollars.
+        </p>
 
-        <div class="package">
-            <div class="coin-number">4,000</div>
-            <div class="coin-label">COINS</div>
-            <div class="price">$149.99</div>
-            <button onclick="selectPackage(4000, '$149.99', this)">Buy</button>
-        </div>
+    </section>
 
-        <div class="package">
-            <div class="coin-number">10,000</div>
-            <div class="coin-label">COINS</div>
-            <div class="price">$299.99</div>
-            <button onclick="selectPackage(10000, '$299.99', this)">Buy</button>
-        </div>
-
-    </div>
 
     <!-- PAYMENT -->
 
-    <h2 class="section-title">💳 Payment Method</h2>
+    <section class="payment-section" id="paymentSection">
 
-    <div class="payment">
+        <h2 class="section-title">Choose Your Payment Method</h2>
 
-        <div id="selectedPackage" class="selected-package">
-            <div>
-                <small>Selected package</small><br>
-                <strong id="selectedCoins">0 Coins</strong>
-            </div>
+        <div class="payment-selected">
 
-            <strong id="selectedPrice">$0.00</strong>
-        </div>
+            <strong id="selectedPackageText">
+                Select a coin package above
+            </strong>
 
-        <div class="payment-options">
-
-            <div class="payment-option active" onclick="choosePayment('card', this)">
-                <span>💳</span>
-                Card
-            </div>
-
-            <div class="payment-option" onclick="choosePayment('bank', this)">
-                <span>🏦</span>
-                Bank Transfer
-            </div>
-
-            <div class="payment-option" onclick="choosePayment('ussd', this)">
-                <span>📱</span>
-                USSD
-            </div>
-
-            <div class="payment-option" onclick="choosePayment('other', this)">
-                <span>🌍</span>
-                Other
-            </div>
+            <span id="selectedPackageSubtext">
+                Your selected package will appear here.
+            </span>
 
         </div>
 
-        <!-- CARD -->
 
-        <div id="cardDetails" class="payment-details show">
+        <div class="payment-methods">
 
-            <h3>💳 Card Details</h3>
+            <!-- CARD -->
 
-            <p>
-                Enter your payment details when real card payments
-                are connected. Card information is not saved by this page.
+            <label class="payment-method" id="cardMethod">
+
+                <input
+                    type="radio"
+                    name="paymentMethod"
+                    value="card"
+                    onchange="selectPaymentMethod('card')">
+
+                <div class="payment-method-icon">💳</div>
+
+                <div class="payment-method-content">
+
+                    <strong>Debit/Credit Card</strong>
+
+                    <small>
+                        Pay directly with your bank card.
+                    </small>
+
+                </div>
+
+            </label>
+
+
+            <!-- GOOGLE -->
+
+            <label class="payment-method" id="googleMethod">
+
+                <input
+                    type="radio"
+                    name="paymentMethod"
+                    value="google"
+                    onchange="selectPaymentMethod('google')">
+
+                <div class="payment-method-icon">▶️</div>
+
+                <div class="payment-method-content">
+
+                    <strong>Google Play Billing</strong>
+
+                    <small>
+                        Available when using the Android Novelora app.
+                    </small>
+
+                </div>
+
+            </label>
+
+
+            <!-- APPLE -->
+
+            <label class="payment-method" id="appleMethod">
+
+                <input
+                    type="radio"
+                    name="paymentMethod"
+                    value="apple"
+                    onchange="selectPaymentMethod('apple')">
+
+                <div class="payment-method-icon"></div>
+
+                <div class="payment-method-content">
+
+                    <strong>Apple App Store Billing</strong>
+
+                    <small>
+                        Available when using the iOS Novelora app.
+                    </small>
+
+                </div>
+
+            </label>
+
+
+            <!-- PAYPAL -->
+
+            <label class="payment-method" id="paypalMethod">
+
+                <input
+                    type="radio"
+                    name="paymentMethod"
+                    value="paypal"
+                    onchange="selectPaymentMethod('paypal')">
+
+                <div class="payment-method-icon">🅿️</div>
+
+                <div class="payment-method-content">
+
+                    <strong>PayPal or Supported Payment Provider</strong>
+
+                    <small>
+                        Continue through a supported payment provider.
+                    </small>
+
+                </div>
+
+            </label>
+
+
+            <!-- LOCAL -->
+
+            <label class="payment-method" id="localMethod">
+
+                <input
+                    type="radio"
+                    name="paymentMethod"
+                    value="local"
+                    onchange="selectPaymentMethod('local')">
+
+                <div class="payment-method-icon">🌍</div>
+
+                <div class="payment-method-content">
+
+                    <strong>Local & Regional Payment Methods</strong>
+
+                    <small id="localMethodDescription">
+                        Pay using supported methods available in your country.
+                    </small>
+
+                </div>
+
+            </label>
+
+        </div>
+
+
+        <!-- LOCAL METHODS -->
+
+        <div class="local-methods" id="localMethods">
+
+            <h3 id="localMethodsTitle">
+                🌍 Payment methods available in your region
+            </h3>
+
+            <p id="localCurrencyText">
+                Your local currency will be displayed automatically.
             </p>
+
+            <div
+                class="local-method-list"
+                id="localMethodList">
+            </div>
+
+        </div>
+
+
+        <!-- CARD DETAILS -->
+
+        <div class="card-form" id="cardForm">
 
             <div class="form-grid">
 
                 <div class="form-group full">
-                    <label for="cardName">Cardholder Name</label>
+
+                    <label>Cardholder Name</label>
+
                     <input
                         type="text"
                         id="cardName"
-                        placeholder="Name on card"
                         autocomplete="cc-name"
-                    >
+                        placeholder="Name on card">
+
                 </div>
 
+
                 <div class="form-group full">
-                    <label for="cardNumber">Card Number</label>
+
+                    <label>Card Number</label>
+
                     <input
                         type="text"
                         id="cardNumber"
-                        placeholder="1234 5678 9012 3456"
-                        inputmode="numeric"
                         autocomplete="cc-number"
-                        maxlength="19"
-                    >
+                        inputmode="numeric"
+                        placeholder="Card number">
+
                 </div>
 
+
                 <div class="form-group">
-                    <label for="expiry">Expiry Date</label>
+
+                    <label>Expiry</label>
+
                     <input
                         type="text"
-                        id="expiry"
-                        placeholder="MM/YY"
-                        inputmode="numeric"
+                        id="cardExpiry"
                         autocomplete="cc-exp"
-                        maxlength="5"
-                    >
+                        placeholder="MM/YY">
+
                 </div>
 
+
                 <div class="form-group">
-                    <label for="cvv">CVV</label>
+
+                    <label>CVV</label>
+
                     <input
                         type="password"
-                        id="cvv"
-                        placeholder="123"
-                        inputmode="numeric"
+                        id="cardCvv"
                         autocomplete="cc-csc"
-                        maxlength="4"
-                    >
+                        inputmode="numeric"
+                        placeholder="CVV">
+
                 </div>
 
             </div>
 
-            <button class="pay-button" onclick="startPayment()">
-                Continue to Secure Payment
-            </button>
-
         </div>
 
-        <!-- BANK TRANSFER -->
 
-        <div id="bankDetails" class="payment-details">
-
-            <h3>🏦 Bank Transfer</h3>
-
-            <p>
-                Your real bank-transfer details will be supplied by the
-                payment provider/backend when payment processing is connected.
-            </p>
-
-            <div class="transfer-box">
-                <strong>Payment account</strong><br>
-                Bank: <span id="bankName">Not connected yet</span><br>
-                Account Name: <span id="accountName">Novelora Payments</span><br>
-                Account Number: <span id="accountNumber">••••••••••</span>
-            </div>
-
-            <div class="form-grid">
-
-                <div class="form-group full">
-                    <label for="transferReference">
-                        Transfer Reference
-                    </label>
-
-                    <input
-                        type="text"
-                        id="transferReference"
-                        placeholder="Enter your payment reference"
-                    >
-                </div>
-
-            </div>
-
-            <button class="pay-button" onclick="startPayment()">
-                Continue with Bank Transfer
-            </button>
-
+        <div
+            class="notice"
+            id="paymentNotice">
         </div>
 
-        <!-- USSD -->
 
-        <div id="ussdDetails" class="payment-details">
+        <button
+            class="complete-payment"
+            id="completePaymentButton"
+            onclick="continuePayment()"
+            disabled>
+            Select a Payment Method
+        </button>
 
-            <h3>📱 USSD Payment</h3>
 
-            <p>
-                Select your bank and enter the phone number connected to
-                your bank account.
-            </p>
-
-            <div class="form-grid">
-
-                <div class="form-group">
-                    <label for="ussdBank">Bank</label>
-
-                    <select id="ussdBank">
-                        <option value="">Select bank</option>
-                        <option>Access Bank</option>
-                        <option>GTBank</option>
-                        <option>First Bank</option>
-                        <option>UBA</option>
-                        <option>Zenith Bank</option>
-                        <option>Fidelity Bank</option>
-                        <option>Opay</option>
-                        <option>Other</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="ussdPhone">Phone Number</label>
-
-                    <input
-                        type="tel"
-                        id="ussdPhone"
-                        placeholder="08012345678"
-                        autocomplete="tel"
-                    >
-                </div>
-
-            </div>
-
-            <div class="ussd-box">
-                <strong>USSD processing</strong><br>
-                The payment provider will generate the appropriate
-                USSD instruction when the backend is connected.
-            </div>
-
-            <button class="pay-button" onclick="startPayment()">
-                Continue with USSD
-            </button>
-
+        <div class="payment-note">
+            🔒 Payment details are not stored by this page.
+            Actual payment processing will be handled securely by the
+            connected payment provider.
         </div>
 
-        <!-- OTHER -->
+    </section>
 
-        <div id="otherDetails" class="payment-details">
 
-            <h3>🌍 Other Payment Options</h3>
+    <!-- ACTIVITY -->
 
-            <p>
-                Additional payment methods can be connected here later
-                without changing the Coins page.
-            </p>
+    <section class="activity-section">
 
-            <div class="other-box">
-                <strong>Payment provider</strong><br>
-                No alternative provider is connected yet.
-                Once the backend is ready, available methods will appear here.
-            </div>
+        <h2 class="section-title">Recent Activity</h2>
 
-            <button class="pay-button" onclick="startPayment()">
-                Continue
-            </button>
-
+        <div
+            class="activity-list"
+            id="activityList">
         </div>
 
-        <div id="paymentMessage" class="payment-message"></div>
+    </section>
 
-        <p class="payment-note">
-            🔒 Payment details should be processed by a secure payment provider.
-            Novelora does not save card numbers, CVV or bank credentials in
-            this browser.
-        </p>
-
-    </div>
-
-    <!-- GEMS -->
-
-    <h2 class="section-title">💎 Gems</h2>
-
-    <div class="gems">
-
-        <p>
-            Gems are separate from Coins. Readers can use Gems to support
-            their favorite authors and books.
-        </p>
-
-        <div class="gem-box">
-            💎 <strong>Author Support</strong><br>
-            Send Gems to authors when you love their work.
-        </div>
-
-    </div>
-
-    <!-- HISTORY -->
-
-    <h2 class="section-title">📜 Recent Activity</h2>
-
-    <div class="history" id="history">
-        <div class="empty-history">
-            No coin activity yet.
-        </div>
-    </div>
-
-</div>
-
-<footer>
-    © 2026 Novelora — Your next story awaits.
-</footer>
+</main>
 
 
 <script>
 
-"use strict";
+/* =========================================
+   NOVELORA COINS
+========================================= */
 
-/* =========================================================
-   STORAGE
-========================================================= */
 
-function getJSON(key, fallback) {
+/* -----------------------------------------
+   COIN PACKAGES
+----------------------------------------- */
 
-    try {
-
-        const value = localStorage.getItem(key);
-
-        if (!value) {
-            return fallback;
-        }
-
-        return JSON.parse(value);
-
-    } catch (error) {
-
-        return fallback;
+const coinPackages = [
+    {
+        coins: 5,
+        usd: 0.49
+    },
+    {
+        coins: 20,
+        usd: 1.49
+    },
+    {
+        coins: 50,
+        usd: 2.99
+    },
+    {
+        coins: 100,
+        usd: 5.99
+    },
+    {
+        coins: 300,
+        usd: 14.99
+    },
+    {
+        coins: 700,
+        usd: 29.99
+    },
+    {
+        coins: 1500,
+        usd: 59.99
+    },
+    {
+        coins: 4000,
+        usd: 149.99
+    },
+    {
+        coins: 10000,
+        usd: 299.99
     }
+];
+
+
+/* -----------------------------------------
+   REGION CURRENCY
+----------------------------------------- */
+
+/*
+   This is the frontend region layer.
+
+   In the real production version, the backend/payment
+   provider should determine the actual supported currency
+   and payment methods.
+
+   USD remains the base price internally.
+
+   The reader sees their regional currency.
+*/
+
+const regionCurrencyMap = {
+
+    NG: {
+        currency: "NGN",
+        symbol: "₦",
+        name: "Nigerian Naira",
+        flag: "🇳🇬",
+        rate: null,
+        methods: [
+            "Debit/Credit Card",
+            "Supported Nigerian bank/payment methods"
+        ]
+    },
+
+    US: {
+        currency: "USD",
+        symbol: "$",
+        name: "US Dollar",
+        flag: "🇺🇸",
+        rate: 1,
+        methods: [
+            "Debit/Credit Card",
+            "Supported regional payment methods"
+        ]
+    },
+
+    GB: {
+        currency: "GBP",
+        symbol: "£",
+        name: "British Pound",
+        flag: "🇬🇧",
+        rate: null,
+        methods: [
+            "Debit/Credit Card",
+            "Supported UK payment methods"
+        ]
+    },
+
+    CA: {
+        currency: "CAD",
+        symbol: "CA$",
+        name: "Canadian Dollar",
+        flag: "🇨🇦",
+        rate: null,
+        methods: [
+            "Debit/Credit Card",
+            "Supported Canadian payment methods"
+        ]
+    },
+
+    AU: {
+        currency: "AUD",
+        symbol: "A$",
+        name: "Australian Dollar",
+        flag: "🇦🇺",
+        rate: null,
+        methods: [
+            "Debit/Credit Card",
+            "Supported Australian payment methods"
+        ]
+    },
+
+    EU: {
+        currency: "EUR",
+        symbol: "€",
+        name: "Euro",
+        flag: "🇪🇺",
+        rate: null,
+        methods: [
+            "Debit/Credit Card",
+            "Supported European payment methods"
+        ]
+    },
+
+    IN: {
+        currency: "INR",
+        symbol: "₹",
+        name: "Indian Rupee",
+        flag: "🇮🇳",
+        rate: null,
+        methods: [
+            "Debit/Credit Card",
+            "Supported Indian payment methods"
+        ]
+    },
+
+    ZA: {
+        currency: "ZAR",
+        symbol: "R",
+        name: "South African Rand",
+        flag: "🇿🇦",
+        rate: null,
+        methods: [
+            "Debit/Credit Card",
+            "Supported South African payment methods"
+        ]
+    },
+
+    GH: {
+        currency: "GHS",
+        symbol: "GH₵",
+        name: "Ghanaian Cedi",
+        flag: "🇬🇭",
+        rate: null,
+        methods: [
+            "Debit/Credit Card",
+            "Supported Ghanaian payment methods"
+        ]
+    },
+
+    KE: {
+        currency: "KES",
+        symbol: "KSh",
+        name: "Kenyan Shilling",
+        flag: "🇰🇪",
+        rate: null,
+        methods: [
+            "Debit/Credit Card",
+            "Supported Kenyan payment methods"
+        ]
+    }
+};
+
+
+/* -----------------------------------------
+   GET REGION
+----------------------------------------- */
+
+function detectRegion() {
+
+    /*
+       Production:
+       This should be replaced with the payment
+       provider/backend's verified country.
+
+       For now we use browser language as a
+       frontend fallback.
+    */
+
+    const language =
+        navigator.language ||
+        navigator.userLanguage ||
+        "en-US";
+
+    const country =
+        language.split("-")[1]?.toUpperCase();
+
+    if (country === "NG") return "NG";
+    if (country === "GB") return "GB";
+    if (country === "US") return "US";
+    if (country === "CA") return "CA";
+    if (country === "AU") return "AU";
+    if (country === "IN") return "IN";
+    if (country === "ZA") return "ZA";
+    if (country === "GH") return "GH";
+    if (country === "KE") return "KE";
+
+    /*
+       Eurozone fallback.
+    */
+
+    const euroCountries = [
+        "DE","FR","ES","IT","PT","NL",
+        "BE","IE","AT","FI","GR","LU",
+        "SK","SI","EE","LV","LT","CY",
+        "MT","HR"
+    ];
+
+    if (euroCountries.includes(country)) {
+        return "EU";
+    }
+
+    return "US";
 }
 
 
-function saveJSON(key, value) {
+let currentRegion = detectRegion();
+let selectedPackage = null;
+let selectedPaymentMethod = null;
 
-    localStorage.setItem(
-        key,
-        JSON.stringify(value)
-    );
+
+/* -----------------------------------------
+   CURRENT REGION
+----------------------------------------- */
+
+function getRegionData() {
+
+    return regionCurrencyMap[currentRegion]
+        || regionCurrencyMap.US;
+
 }
 
 
-/* =========================================================
-   READER
-========================================================= */
+/* -----------------------------------------
+   FORMAT PRICE
+----------------------------------------- */
 
-function getReader() {
+function formatLocalPrice(usd) {
 
-    let reader =
-        getJSON("noveloraCurrentReader", null);
+    const region = getRegionData();
 
-    if (reader) {
-        return reader;
-    }
+    /*
+       USD requires no conversion.
+    */
 
+    if (region.currency === "USD") {
 
-    reader =
-        getJSON("noveloraReader", null);
-
-    if (reader) {
-        return reader;
-    }
-
-
-    const readers =
-        getJSON("noveloraReaders", []);
-
-
-    if (
-        Array.isArray(readers) &&
-        readers.length
-    ) {
-
-        return readers[0];
+        return "$" + usd.toFixed(2);
 
     }
 
 
     /*
-     * Temporary local reader for the current frontend.
-     * Real authentication/backend will replace this.
-     */
+       IMPORTANT:
+       These temporary rates are NOT payment rates.
 
-    reader = {
-        id: "reader_demo",
-        username: "Reader",
-        email: "",
-        coins: 20,
-        createdAt: new Date().toISOString()
+       They only allow the interface to demonstrate
+       regional display before a real payment backend
+       is connected.
+
+       Production should receive the actual localized
+       price directly from the payment provider/backend.
+    */
+
+    const temporaryRates = {
+
+        NGN: 1500,
+        GBP: 0.74,
+        CAD: 1.37,
+        AUD: 1.53,
+        EUR: 0.85,
+        INR: 88,
+        ZAR: 17.2,
+        GHS: 12.5,
+        KES: 129
+
     };
 
+    const rate =
+        temporaryRates[region.currency]
+        || 1;
 
-    saveJSON(
-        "noveloraCurrentReader",
-        reader
-    );
+    const amount =
+        usd * rate;
 
+    return region.symbol +
+        amount.toLocaleString(
+            undefined,
+            {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            }
+        );
 
-    return reader;
 }
 
 
-let reader =
-    getReader();
+/* -----------------------------------------
+   RENDER PACKAGES
+----------------------------------------- */
 
+function renderPackages() {
 
-/* =========================================================
-   COIN BALANCE
-========================================================= */
+    const grid =
+        document.getElementById("packagesGrid");
 
-function getCoins() {
+    const region =
+        getRegionData();
 
-    const value =
-        reader.coins ??
-        reader.coinBalance ??
-        reader.balance ??
-        reader.coinsBalance ??
-        0;
+    grid.innerHTML = "";
 
-    return Math.max(
-        0,
-        Number(value) || 0
-    );
+    coinPackages.forEach((pkg, index) => {
+
+        const card =
+            document.createElement("div");
+
+        card.className =
+            "coin-package";
+
+        card.id =
+            "package-" + index;
+
+        card.innerHTML = `
+
+            <div class="package-coins">
+                🪙 ${pkg.coins.toLocaleString()} Coins
+            </div>
+
+            <div class="package-price">
+                ${formatLocalPrice(pkg.usd)}
+            </div>
+
+            <div class="package-usd">
+                Base value: $${pkg.usd.toFixed(2)}
+            </div>
+
+            <button
+                class="buy-button"
+                onclick="choosePackage(${index})">
+                Buy Coins
+            </button>
+
+        `;
+
+        grid.appendChild(card);
+
+    });
+
 }
 
 
-function setCoins(value) {
+/* -----------------------------------------
+   CHOOSE PACKAGE
+----------------------------------------- */
 
-    value =
-        Math.max(
-            0,
-            Number(value) || 0
+function choosePackage(index) {
+
+    selectedPackage =
+        coinPackages[index];
+
+    document
+        .querySelectorAll(".coin-package")
+        .forEach(card => {
+            card.classList.remove("selected");
+        });
+
+    const selectedCard =
+        document.getElementById(
+            "package-" + index
+        );
+
+    if (selectedCard) {
+        selectedCard.classList.add("selected");
+    }
+
+
+    const region =
+        getRegionData();
+
+
+    document.getElementById(
+        "selectedPackageText"
+    ).textContent =
+        `${selectedPackage.coins.toLocaleString()} Coins — ${formatLocalPrice(selectedPackage.usd)}`;
+
+
+    document.getElementById(
+        "selectedPackageSubtext"
+    ).textContent =
+        `Payment will be displayed in ${region.name} (${region.currency}) where supported.`;
+
+
+    /*
+       THIS is the important part:
+
+       Buy button takes the reader to payment
+       selection instead of doing nothing/fake purchase.
+    */
+
+    document
+        .getElementById("paymentSection")
+        .scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+        });
+
+
+    showNotice(
+        "info",
+        "Choose how you want to pay for your selected coin package."
+    );
+
+}
+
+
+/* -----------------------------------------
+   PAYMENT METHOD
+----------------------------------------- */
+
+function selectPaymentMethod(method) {
+
+    selectedPaymentMethod =
+        method;
+
+
+    document
+        .querySelectorAll(".payment-method")
+        .forEach(item => {
+            item.classList.remove("active");
+        });
+
+
+    const methodElement =
+        document.getElementById(
+            method + "Method"
+        );
+
+    if (methodElement) {
+        methodElement.classList.add("active");
+    }
+
+
+    document
+        .getElementById("cardForm")
+        .classList.remove("show");
+
+    document
+        .getElementById("localMethods")
+        .classList.remove("show");
+
+
+    const button =
+        document.getElementById(
+            "completePaymentButton"
         );
 
 
-    reader.coins = value;
-    reader.coinBalance = value;
+    if (!selectedPackage) {
+
+        button.disabled = true;
+
+        button.textContent =
+            "Select a Coin Package";
+
+        return;
+
+    }
 
 
-    saveJSON(
-        "noveloraCurrentReader",
-        reader
-    );
+    if (method === "card") {
+
+        document
+            .getElementById("cardForm")
+            .classList.add("show");
+
+        button.disabled = false;
+
+        button.textContent =
+            `Continue to Pay ${formatLocalPrice(selectedPackage.usd)}`;
+
+    }
+
+
+    else if (method === "google") {
+
+        button.disabled = false;
+
+        button.textContent =
+            "Continue with Google Play";
+
+    }
+
+
+    else if (method === "apple") {
+
+        button.disabled = false;
+
+        button.textContent =
+            "Continue with Apple";
+
+    }
+
+
+    else if (method === "paypal") {
+
+        button.disabled = false;
+
+        button.textContent =
+            "Continue to Payment Provider";
+
+    }
+
+
+    else if (method === "local") {
+
+        renderLocalMethods();
+
+        button.disabled = false;
+
+        button.textContent =
+            `Continue with Local Payment`;
+
+    }
+
+}
+
+
+/* -----------------------------------------
+   LOCAL PAYMENT METHODS
+----------------------------------------- */
+
+function renderLocalMethods() {
+
+    const region =
+        getRegionData();
+
+    const container =
+        document.getElementById(
+            "localMethodList"
+        );
+
+    document
+        .getElementById("localMethods")
+        .classList.add("show");
+
+
+    document.getElementById(
+        "localMethodsTitle"
+    ).textContent =
+        `${region.flag} Payment methods available in your region`;
+
+
+    document.getElementById(
+        "localCurrencyText"
+    ).textContent =
+        `Your package will be priced in ${region.name} (${region.currency}) when supported.`;
+
+
+    container.innerHTML = "";
+
+
+    region.methods.forEach(method => {
+
+        const item =
+            document.createElement("div");
+
+        item.className =
+            "local-method-option";
+
+        item.textContent =
+            method;
+
+        container.appendChild(item);
+
+    });
+
+}
+
+
+/* -----------------------------------------
+   PAYMENT
+----------------------------------------- */
+
+function continuePayment() {
+
+    if (!selectedPackage) {
+
+        showNotice(
+            "error",
+            "Please select a coin package first."
+        );
+
+        return;
+
+    }
+
+
+    if (!selectedPaymentMethod) {
+
+        showNotice(
+            "error",
+            "Please choose a payment method."
+        );
+
+        return;
+
+    }
 
 
     /*
-     * Keep Admin reader record synchronized when possible.
-     */
+       We deliberately DO NOT add coins here.
 
-    const readers =
-        getJSON("noveloraReaders", []);
+       A real payment provider must confirm the
+       transaction first.
+    */
+
+    if (selectedPaymentMethod === "card") {
+
+        const name =
+            document.getElementById(
+                "cardName"
+            ).value.trim();
+
+        const number =
+            document.getElementById(
+                "cardNumber"
+            ).value.trim();
+
+        const expiry =
+            document.getElementById(
+                "cardExpiry"
+            ).value.trim();
+
+        const cvv =
+            document.getElementById(
+                "cardCvv"
+            ).value.trim();
+
+
+        if (!name ||
+            !number ||
+            !expiry ||
+            !cvv) {
+
+            showNotice(
+                "error",
+                "Please complete your card details."
+            );
+
+            return;
+
+        }
+
+
+        showNotice(
+            "info",
+            "Card checkout is ready for connection to the secure payment provider. No coins have been added yet."
+        );
+
+        return;
+
+    }
+
+
+    if (selectedPaymentMethod === "google") {
+
+        showNotice(
+            "info",
+            "Google Play Billing will open here when Novelora is packaged as an Android app."
+        );
+
+        return;
+
+    }
+
+
+    if (selectedPaymentMethod === "apple") {
+
+        showNotice(
+            "info",
+            "Apple App Store Billing will open here when Novelora is available as an iOS app."
+        );
+
+        return;
+
+    }
+
+
+    if (selectedPaymentMethod === "paypal") {
+
+        showNotice(
+            "info",
+            "Payment-provider checkout will open here after the secure payment backend is connected."
+        );
+
+        return;
+
+    }
+
+
+    if (selectedPaymentMethod === "local") {
+
+        showNotice(
+            "info",
+            `Local payment checkout will use supported methods for ${getRegionData().name}.`
+        );
+
+        return;
+
+    }
+
+}
+
+
+/* -----------------------------------------
+   NOTICE
+----------------------------------------- */
+
+function showNotice(type, message) {
+
+    const notice =
+        document.getElementById(
+            "paymentNotice"
+        );
+
+    notice.className =
+        "notice show " + type;
+
+    notice.textContent =
+        message;
+
+}
+
+
+/* -----------------------------------------
+   READER
+----------------------------------------- */
+
+function getCurrentReader() {
+
+    const possibleKeys = [
+        "noveloraCurrentReader",
+        "noveloraReader"
+    ];
+
+    for (const key of possibleKeys) {
+
+        const raw =
+            localStorage.getItem(key);
+
+        if (!raw) continue;
+
+        try {
+
+            const parsed =
+                JSON.parse(raw);
+
+            if (parsed) {
+                return parsed;
+            }
+
+        } catch(e) {}
+
+    }
+
+
+    const readersRaw =
+        localStorage.getItem(
+            "noveloraReaders"
+        );
+
+    if (readersRaw) {
+
+        try {
+
+            const readers =
+                JSON.parse(readersRaw);
+
+            if (Array.isArray(readers) &&
+                readers.length) {
+
+                return readers[0];
+
+            }
+
+        } catch(e) {}
+
+    }
+
+
+    return null;
+
+}
+
+
+/* -----------------------------------------
+   BALANCE
+----------------------------------------- */
+
+function getBalance() {
+
+    const reader =
+        getCurrentReader();
+
+    if (!reader) return 0;
+
+    return Number(
+        reader.coins ||
+        reader.coinBalance ||
+        0
+    );
+
+}
+
+
+function renderBalance() {
+
+    document.getElementById(
+        "coinBalance"
+    ).textContent =
+        getBalance().toLocaleString();
+
+}
+
+
+/* -----------------------------------------
+   REWARD SETTINGS
+----------------------------------------- */
+
+function loadRewardSettings() {
+
+    let settings = {};
+
+    const raw =
+        localStorage.getItem(
+            "noveloraRewardSettings"
+        );
+
+    if (raw) {
+
+        try {
+            settings =
+                JSON.parse(raw);
+        } catch(e) {}
+
+    }
+
+
+    const daily =
+        Number(
+            settings.dailyLogin ??
+            settings.dailyLoginReward ??
+            2
+        );
+
+    const ad =
+        Number(
+            settings.adReward ??
+            settings.rewardedAd ??
+            2
+        );
+
+    const share =
+        Number(
+            settings.shareReward ??
+            2
+        );
+
+
+    document.getElementById(
+        "dailyRewardAmount"
+    ).textContent =
+        daily + " coins";
+
+
+    document.getElementById(
+        "adRewardAmount"
+    ).textContent =
+        ad + " coins";
+
+
+    document.getElementById(
+        "shareRewardAmount"
+    ).textContent =
+        share + " coins";
+
+}
+
+
+/* -----------------------------------------
+   ADD COINS
+----------------------------------------- */
+
+function addCoins(amount, reason) {
+
+    const reader =
+        getCurrentReader();
+
+    if (!reader) {
+
+        showNotice(
+            "error",
+            "Please log in before claiming rewards."
+        );
+
+        return false;
+
+    }
+
+
+    const current =
+        Number(
+            reader.coins ||
+            reader.coinBalance ||
+            0
+        );
+
+
+    reader.coins =
+        current + Number(amount);
+
+
+    reader.coinBalance =
+        reader.coins;
+
+
+    localStorage.setItem(
+        "noveloraCurrentReader",
+        JSON.stringify(reader)
+    );
+
+
+    localStorage.setItem(
+        "noveloraReader",
+        JSON.stringify(reader)
+    );
+
+
+    let readers = [];
+
+    try {
+
+        readers =
+            JSON.parse(
+                localStorage.getItem(
+                    "noveloraReaders"
+                ) || "[]"
+            );
+
+    } catch(e) {}
 
 
     if (Array.isArray(readers)) {
@@ -1060,42 +1867,399 @@ function setCoins(value) {
         const readerId =
             reader.id ||
             reader.readerId ||
-            reader.userId;
-
-
-        const readerEmail =
-            reader.email || "";
+            reader.email;
 
 
         const index =
-            readers.findIndex(function(item) {
-
-                const itemId =
-                    item.id ||
-                    item.readerId ||
-                    item.userId;
-
-
-                return (
-                    (
-                        readerId &&
-                        String(itemId) ===
-                        String(readerId)
-                    ) ||
-                    (
-                        readerEmail &&
-                        item.email &&
-                        String(item.email).toLowerCase() ===
-                        String(readerEmail).toLowerCase()
-                    )
-                );
-
-            });
+            readers.findIndex(r =>
+                String(
+                    r.id ||
+                    r.readerId ||
+                    r.email
+                ) === String(readerId)
+            );
 
 
         if (index !== -1) {
 
-            readers[index].coins =
-                value;
+            readers[index] =
+                {
+                    ...readers[index],
+                    coins: reader.coins,
+                    coinBalance: reader.coins
+                };
 
-            readers[index].coinBalance
+            localStorage.setItem(
+                "noveloraReaders",
+                JSON.stringify(readers)
+            );
+
+        }
+
+    }
+
+
+    const historyRaw =
+        localStorage.getItem(
+            "noveloraRewardHistory"
+        );
+
+    let history = [];
+
+    try {
+        history =
+            JSON.parse(historyRaw || "[]");
+    } catch(e) {}
+
+
+    history.unshift({
+
+        id:
+            "reward_" +
+            Date.now(),
+
+        readerId:
+            reader.id ||
+            reader.readerId ||
+            reader.email ||
+            "",
+
+        amount:
+            Number(amount),
+
+        reason:
+            reason,
+
+        date:
+            new Date().toISOString()
+
+    });
+
+
+    localStorage.setItem(
+        "noveloraRewardHistory",
+        JSON.stringify(history)
+    );
+
+
+    renderBalance();
+    renderActivity();
+
+    return true;
+
+}
+
+
+/* -----------------------------------------
+   DAILY REWARD
+----------------------------------------- */
+
+function claimDailyReward() {
+
+    const today =
+        new Date()
+        .toISOString()
+        .slice(0,10);
+
+
+    const key =
+        "noveloraDailyReward_" +
+        today;
+
+
+    if (localStorage.getItem(key)) {
+
+        showNotice(
+            "info",
+            "You have already claimed today's daily reward."
+        );
+
+        return;
+
+    }
+
+
+    let settings = {};
+
+    try {
+
+        settings =
+            JSON.parse(
+                localStorage.getItem(
+                    "noveloraRewardSettings"
+                ) || "{}"
+            );
+
+    } catch(e) {}
+
+
+    const amount =
+        Number(
+            settings.dailyLogin ??
+            settings.dailyLoginReward ??
+            2
+        );
+
+
+    if (
+        addCoins(
+            amount,
+            "Daily Login Reward"
+        )
+    ) {
+
+        localStorage.setItem(
+            key,
+            "claimed"
+        );
+
+
+        document.getElementById(
+            "dailyRewardButton"
+        ).disabled = true;
+
+
+        document.getElementById(
+            "dailyRewardButton"
+        ).textContent =
+            "Claimed ✓";
+
+
+        showNotice(
+            "info",
+            `You received ${amount} free coins!`
+        );
+
+    }
+
+}
+
+
+/* -----------------------------------------
+   AD REWARD
+----------------------------------------- */
+
+function claimAdReward() {
+
+    showNotice(
+        "info",
+        "A real rewarded-ad provider will be connected here. Coins should only be granted after the provider confirms the completed ad."
+    );
+
+}
+
+
+/* -----------------------------------------
+   SHARE REWARD
+----------------------------------------- */
+
+function claimShareReward() {
+
+    const shareText =
+        "I'm reading amazing stories on Novelora 📚💕";
+
+
+    if (navigator.share) {
+
+        navigator.share({
+            title: "Novelora",
+            text: shareText,
+            url: window.location.origin
+        })
+        .then(() => {
+
+            let settings = {};
+
+            try {
+
+                settings =
+                    JSON.parse(
+                        localStorage.getItem(
+                            "noveloraRewardSettings"
+                        ) || "{}"
+                    );
+
+            } catch(e) {}
+
+
+            const amount =
+                Number(
+                    settings.shareReward ??
+                    2
+                );
+
+
+            addCoins(
+                amount,
+                "Share Reward"
+            );
+
+        })
+        .catch(() => {});
+
+    } else {
+
+        showNotice(
+            "info",
+            "Sharing will be connected to the reward system here."
+
+        );
+
+    }
+
+}
+
+
+/* -----------------------------------------
+   ACTIVITY
+----------------------------------------- */
+
+function renderActivity() {
+
+    const list =
+        document.getElementById(
+            "activityList"
+        );
+
+
+    let history = [];
+
+    try {
+
+        history =
+            JSON.parse(
+                localStorage.getItem(
+                    "noveloraRewardHistory"
+                ) || "[]"
+            );
+
+    } catch(e) {}
+
+
+    if (!history.length) {
+
+        list.innerHTML = `
+            <div class="activity-item">
+                <span>No coin activity yet.</span>
+            </div>
+        `;
+
+        return;
+
+    }
+
+
+    list.innerHTML =
+        history
+        .slice(0,10)
+        .map(item => {
+
+            const date =
+                item.date
+                    ? new Date(item.date)
+                        .toLocaleDateString()
+                    : "";
+
+            const amount =
+                Number(item.amount || 0);
+
+
+            return `
+
+                <div class="activity-item">
+
+                    <div>
+
+                        <strong>
+                            ${escapeHtml(
+                                item.reason ||
+                                "Coin activity"
+                            )}
+                        </strong>
+
+                        <br>
+
+                        <small>
+                            ${date}
+                        </small>
+
+                    </div>
+
+                    <strong>
+                        +${amount} 🪙
+                    </strong>
+
+                </div>
+
+            `;
+
+        })
+        .join("");
+
+}
+
+
+/* -----------------------------------------
+   ESCAPE
+----------------------------------------- */
+
+function escapeHtml(value) {
+
+    return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+
+}
+
+
+/* -----------------------------------------
+   INIT
+----------------------------------------- */
+
+function initCoinsPage() {
+
+    renderPackages();
+
+    renderBalance();
+
+    loadRewardSettings();
+
+    renderActivity();
+
+
+    const today =
+        new Date()
+        .toISOString()
+        .slice(0,10);
+
+
+    if (
+        localStorage.getItem(
+            "noveloraDailyReward_" +
+            today
+        )
+    ) {
+
+        document.getElementById(
+            "dailyRewardButton"
+        ).disabled = true;
+
+        document.getElementById(
+            "dailyRewardButton"
+        ).textContent =
+            "Claimed ✓";
+
+    }
+
+}
+
+
+initCoinsPage();
+
+</script>
+
+</body>
+</html>
