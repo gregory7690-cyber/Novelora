@@ -1,0 +1,435 @@
+<!DOCTYPE html><html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Help & Support — Novelora</title><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="supabase-config.js"></script><style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #080508;
+    color: #fff;
+}
+
+.support-page {
+    min-height: 100vh;
+    padding: 25px 18px 60px;
+}
+
+.support-container {
+    width: min(900px, 100%);
+    margin: auto;
+}
+
+.topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 28px;
+}
+
+.back-btn {
+    border: 1px solid rgba(255,105,180,.3);
+    background: #120b11;
+    color: #fff;
+    padding: 10px 16px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.logo {
+    color: #ff69b4;
+    font-size: 22px;
+    font-weight: 800;
+}
+
+.hero {
+    text-align: center;
+    padding: 35px 20px;
+    border-radius: 24px;
+    background: linear-gradient(145deg, #180c16, #0d080c);
+    border: 1px solid rgba(255,105,180,.2);
+    box-shadow: 0 0 35px rgba(255,105,180,.08);
+    margin-bottom: 25px;
+}
+
+.hero-icon {
+    font-size: 42px;
+    margin-bottom: 10px;
+}
+
+.hero h1 {
+    margin: 0 0 10px;
+    font-size: clamp(28px, 6vw, 42px);
+}
+
+.hero p {
+    margin: 0;
+    color: #bdb4bb;
+    line-height: 1.6;
+}
+
+.search-box {
+    margin-top: 22px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #050505;
+    border: 1px solid rgba(255,105,180,.35);
+    border-radius: 15px;
+    padding: 13px 16px;
+}
+
+.search-box span {
+    font-size: 18px;
+}
+
+.search-box input {
+    width: 100%;
+    border: none;
+    outline: none;
+    background: transparent;
+    color: #fff;
+    font-size: 15px;
+}
+
+.search-box input::placeholder {
+    color: #777;
+}
+
+.section-title {
+    font-size: 20px;
+    margin: 30px 0 14px;
+}
+
+.help-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+}
+
+.help-card {
+    background: #100a0f;
+    border: 1px solid rgba(255,255,255,.08);
+    border-radius: 18px;
+    padding: 20px;
+    cursor: pointer;
+    transition: .2s ease;
+}
+
+.help-card:hover {
+    border-color: rgba(255,105,180,.4);
+    transform: translateY(-2px);
+}
+
+.help-card .icon {
+    font-size: 27px;
+    margin-bottom: 12px;
+}
+
+.help-card strong {
+    display: block;
+    margin-bottom: 6px;
+}
+
+.help-card span {
+    color: #aaa;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.faq-list {
+    display: grid;
+    gap: 10px;
+}
+
+.faq {
+    background: #100a0f;
+    border: 1px solid rgba(255,255,255,.08);
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+.faq button {
+    width: 100%;
+    border: 0;
+    background: transparent;
+    color: #fff;
+    padding: 17px;
+    text-align: left;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+    font-size: 14px;
+}
+
+.faq-answer {
+    display: none;
+    padding: 0 17px 17px;
+    color: #aaa;
+    line-height: 1.6;
+    font-size: 13px;
+}
+
+.faq.open .faq-answer {
+    display: block;
+}
+
+.faq.open .faq-arrow {
+    transform: rotate(90deg);
+}
+
+.contact-card {
+    margin-top: 25px;
+    padding: 24px;
+    border-radius: 20px;
+    background: linear-gradient(145deg, #190b15, #0d080c);
+    border: 1px solid rgba(255,105,180,.22);
+}
+
+.contact-card p {
+    color: #aaa;
+    line-height: 1.6;
+    font-size: 14px;
+}
+
+.contact-btn {
+    display: inline-block;
+    margin-top: 8px;
+    background: #ff69b4;
+    color: #160812;
+    border: none;
+    border-radius: 12px;
+    padding: 12px 18px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.no-results {
+    display: none;
+    text-align: center;
+    color: #888;
+    padding: 25px;
+}
+
+@media (max-width: 600px) {
+    .help-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .support-page {
+        padding: 18px 13px 45px;
+    }
+
+    .hero {
+        padding: 28px 16px;
+    }
+}
+</style></head><body><div class="support-page">
+<div class="support-container"><div class="topbar">
+    <button class="back-btn" onclick="window.location.href='profile.html'">
+        ← Back
+    </button>
+
+    <div class="logo">Novelora</div>
+</div>
+
+<section class="hero">
+    <div class="hero-icon">❓</div>
+    <h1>How can we help?</h1>
+    <p>
+        Find answers to common questions about your Novelora account,
+        reading, coins, books and community.
+    </p>
+
+    <div class="search-box">
+        <span>🔍</span>
+        <input
+            type="text"
+            id="helpSearch"
+            placeholder="Search for help..."
+        >
+    </div>
+</section>
+
+<h2 class="section-title">Browse Help</h2>
+
+<div class="help-grid">
+
+    <div class="help-card" data-search="account login signup email password">
+        <div class="icon">👤</div>
+        <strong>Account & Login</strong>
+        <span>Help with signing in, creating an account and passwords.</span>
+    </div>
+
+    <div class="help-card" data-search="coins payment buy coins purchase money">
+        <div class="icon">🪙</div>
+        <strong>Coins & Payments</strong>
+        <span>Learn about coins, purchases and chapter unlocking.</span>
+    </div>
+
+    <div class="help-card" data-search="books chapters reading novel">
+        <div class="icon">📚</div>
+        <strong>Books & Reading</strong>
+        <span>Help with books, chapters, reading progress and your library.</span>
+    </div>
+
+    <div class="help-card" data-search="community comments replies likes report">
+        <div class="icon">💬</div>
+        <strong>Community</strong>
+        <span>Learn about comments, replies, likes and reporting.</span>
+    </div>
+
+</div>
+
+<h2 class="section-title">Frequently Asked Questions</h2>
+
+<div class="faq-list">
+
+    <div class="faq" data-search="forgot password reset">
+        <button onclick="toggleFaq(this)">
+            <span>What if I forget my password?</span>
+            <span class="faq-arrow">›</span>
+        </button>
+        <div class="faq-answer">
+            Go to the Novelora login page and select
+            <strong>Forgot Password</strong>. You can request a password
+            reset link using the email connected to your account.
+        </div>
+    </div>
+
+    <div class="faq" data-search="coins chapter unlock">
+        <button onclick="toggleFaq(this)">
+            <span>How do coins work?</span>
+            <span class="faq-arrow">›</span>
+        </button>
+        <div class="faq-answer">
+            Coins are used to unlock paid chapters and can also be earned
+            through eligible Novelora rewards and promotions.
+        </div>
+    </div>
+
+    <div class="faq" data-search="library save book">
+        <button onclick="toggleFaq(this)">
+            <span>How do I add a book to my Library?</span>
+            <span class="faq-arrow">›</span>
+        </button>
+        <div class="faq-answer">
+            Open a book and select <strong>Add to Library</strong>.
+            The book will then appear in your Library so you can easily
+            return to it later.
+        </div>
+    </div>
+
+    <div class="faq" data-search="comment reply like">
+        <button onclick="toggleFaq(this)">
+            <span>Can I reply to another reader's comment?</span>
+            <span class="faq-arrow">›</span>
+        </button>
+        <div class="faq-answer">
+            Yes. Novelora's community allows readers to comment, reply
+            to comments and like community interactions.
+        </div>
+    </div>
+
+    <div class="faq" data-search="report comment community">
+        <button onclick="toggleFaq(this)">
+            <span>How do I report inappropriate content?</span>
+            <span class="faq-arrow">›</span>
+        </button>
+        <div class="faq-answer">
+            Use the report option available on the relevant community
+            content. Reports can then be reviewed by Novelora moderation.
+        </div>
+    </div>
+
+    <div class="faq" data-search="notifications updates">
+        <button onclick="toggleFaq(this)">
+            <span>Why am I receiving notifications?</span>
+            <span class="faq-arrow">›</span>
+        </button>
+        <div class="faq-answer">
+            Notifications may include new chapter updates, rewards,
+            promotions and other important Novelora updates.
+        </div>
+    </div>
+
+</div>
+
+<div class="no-results" id="noResults">
+    No help articles matched your search.
+</div>
+
+<section class="contact-card">
+    <h2>Still need help? 💗</h2>
+
+    <p>
+        If you cannot find the answer you're looking for, you can contact
+        Novelora Support. A proper support form and support inbox can be
+        connected to the Novelora backend later.
+    </p>
+
+    <button class="contact-btn" onclick="contactSupport()">
+        📩 Contact Support
+    </button>
+</section>
+
+</div>
+</div><script>
+function toggleFaq(button) {
+    const faq = button.closest(".faq");
+    faq.classList.toggle("open");
+}
+
+const searchInput = document.getElementById("helpSearch");
+const cards = document.querySelectorAll(".help-card");
+const faqs = document.querySelectorAll(".faq");
+const noResults = document.getElementById("noResults");
+
+searchInput.addEventListener("input", function () {
+
+    const query = this.value.toLowerCase().trim();
+    let matches = 0;
+
+    cards.forEach(card => {
+        const text = (
+            card.innerText + " " +
+            card.dataset.search
+        ).toLowerCase();
+
+        const match = !query || text.includes(query);
+
+        card.style.display = match ? "" : "none";
+
+        if (match) matches++;
+    });
+
+    faqs.forEach(faq => {
+        const text = (
+            faq.innerText + " " +
+            faq.dataset.search
+        ).toLowerCase();
+
+        const match = !query || text.includes(query);
+
+        faq.style.display = match ? "" : "none";
+
+        if (match) matches++;
+    });
+
+    noResults.style.display =
+        query && matches === 0 ? "block" : "none";
+});
+
+function contactSupport() {
+    alert(
+        "Novelora Support contact will be connected here when the support backend is enabled."
+    );
+}
+</script></body>
+</html>
