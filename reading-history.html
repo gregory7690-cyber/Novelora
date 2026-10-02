@@ -1,0 +1,780 @@
+<!DOCTYPE html><html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Novelora - Reading History</title><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="supabase-config.js"></script><style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #fff7fb;
+    color: #222;
+}
+
+header {
+    background: #fff;
+    border-bottom: 1px solid #f0d9e5;
+    padding: 15px 5%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.logo {
+    color: #e83e8c;
+    font-size: 25px;
+    font-weight: bold;
+}
+
+.back {
+    text-decoration: none;
+    color: #e83e8c;
+    font-weight: bold;
+}
+
+.container {
+    max-width: 900px;
+    margin: 30px auto;
+    padding: 0 20px 60px;
+}
+
+.loading {
+    position: fixed;
+    inset: 0;
+    background: #fff7fb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    color: #e83e8c;
+    font-weight: bold;
+}
+
+.loading.hidden {
+    display: none;
+}
+
+.hero {
+    background: linear-gradient(135deg, #e83e8c, #b91f68);
+    color: white;
+    border-radius: 22px;
+    padding: 30px 25px;
+    margin-bottom: 25px;
+    box-shadow: 0 12px 30px rgba(232, 62, 140, .15);
+}
+
+.hero h1 {
+    font-size: 27px;
+    margin-bottom: 8px;
+}
+
+.hero p {
+    opacity: .9;
+    line-height: 1.5;
+}
+
+.section-title {
+    margin: 25px 0 15px;
+    font-size: 21px;
+}
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+}
+
+.stat {
+    background: white;
+    border: 1px solid #f0d9e5;
+    border-radius: 18px;
+    padding: 22px 12px;
+    text-align: center;
+}
+
+.stat-icon {
+    font-size: 27px;
+    margin-bottom: 8px;
+}
+
+.stat-number {
+    font-size: 27px;
+    font-weight: bold;
+    color: #e83e8c;
+}
+
+.stat-label {
+    color: #777;
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+.history {
+    background: white;
+    border: 1px solid #f0d9e5;
+    border-radius: 18px;
+    overflow: hidden;
+}
+
+.history-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 17px;
+    border-bottom: 1px solid #eee;
+}
+
+.history-item:last-child {
+    border-bottom: none;
+}
+
+.book-cover {
+    width: 55px;
+    height: 75px;
+    border-radius: 8px;
+    background: #ffe1ef;
+    color: #e83e8c;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    font-weight: bold;
+    flex-shrink: 0;
+    overflow: hidden;
+}
+
+.book-cover img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.history-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.book-title {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.chapter-title {
+    color: #666;
+    font-size: 13px;
+    margin-bottom: 6px;
+}
+
+.last-read {
+    color: #999;
+    font-size: 12px;
+}
+
+.open-book {
+    text-decoration: none;
+    color: #e83e8c;
+    font-weight: bold;
+    font-size: 13px;
+}
+
+.empty {
+    background: white;
+    border: 1px solid #f0d9e5;
+    border-radius: 18px;
+    padding: 45px 25px;
+    text-align: center;
+    color: #777;
+}
+
+.empty-icon {
+    font-size: 45px;
+    margin-bottom: 12px;
+}
+
+.empty h3 {
+    color: #333;
+    margin-bottom: 8px;
+}
+
+.explore {
+    display: inline-block;
+    margin-top: 18px;
+    padding: 11px 20px;
+    background: #e83e8c;
+    color: white;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.error {
+    background: #fff;
+    border: 1px solid #f0d9e5;
+    border-radius: 18px;
+    padding: 30px;
+    text-align: center;
+    color: #c62828;
+}
+
+@media (max-width: 700px) {
+
+    .stats {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .hero h1 {
+        font-size: 23px;
+    }
+
+    .history-item {
+        padding: 14px;
+    }
+
+    .open-book {
+        display: none;
+    }
+}
+</style></head><body><div class="loading" id="loading">
+    Loading your reading history...
+</div><header>
+    <div class="logo">Novelora</div><a href="profile.html" class="back">
+    ← Profile
+</a>
+
+</header><div class="container"><section class="hero">
+    <h1>🕘 Reading History</h1>
+
+    <p>
+        Keep track of the books and chapters you've been reading on Novelora.
+    </p>
+</section>
+
+<h2 class="section-title">📊 Reading Overview</h2>
+
+<div class="stats">
+
+    <div class="stat">
+        <div class="stat-icon">📚</div>
+
+        <div class="stat-number" id="booksStarted">
+            0
+        </div>
+
+        <div class="stat-label">
+            Books Started
+        </div>
+    </div>
+
+    <div class="stat">
+        <div class="stat-icon">📖</div>
+
+        <div class="stat-number" id="chaptersRead">
+            0
+        </div>
+
+        <div class="stat-label">
+            Chapters Read
+        </div>
+    </div>
+
+    <div class="stat">
+        <div class="stat-icon">🔥</div>
+
+        <div class="stat-number" id="readingStreak">
+            0
+        </div>
+
+        <div class="stat-label">
+            Day Streak
+        </div>
+    </div>
+
+    <div class="stat">
+        <div class="stat-icon">🕘</div>
+
+        <div class="stat-number" id="lastRead">
+            —
+        </div>
+
+        <div class="stat-label">
+            Last Read
+        </div>
+    </div>
+
+</div>
+
+<h2 class="section-title">📖 Recently Read</h2>
+
+<div id="historyContainer">
+    <div class="empty">
+        <div class="empty-icon">📚</div>
+
+        <h3>No reading history yet</h3>
+
+        <p>
+            Books and chapters you read will appear here.
+        </p>
+
+        <a href="reader-dashboard.html" class="explore">
+            Explore Books
+        </a>
+    </div>
+</div>
+
+</div><script>
+
+let currentUser = null;
+
+
+/* =========================
+   AUTH
+========================= */
+
+async function loadReadingHistory() {
+
+    try {
+
+        const {
+            data: {
+                session
+            },
+            error: sessionError
+        } = await supabaseClient.auth.getSession();
+
+        if (sessionError || !session) {
+
+            window.location.href = "login.html";
+            return;
+        }
+
+        currentUser = session.user;
+
+        await loadHistory();
+
+        document
+            .getElementById("loading")
+            .classList.add("hidden");
+
+    } catch (error) {
+
+        console.error("Reading history error:", error);
+
+        document
+            .getElementById("loading")
+            .classList.add("hidden");
+
+        document.getElementById("historyContainer").innerHTML = `
+            <div class="error">
+                Unable to load your reading history.
+                Please try again later.
+            </div>
+        `;
+    }
+}
+
+
+/* =========================
+   LOAD READING PROGRESS
+========================= */
+
+async function loadHistory() {
+
+    const {
+        data: progress,
+        error: progressError
+    } = await supabaseClient
+        .from("reading_progress")
+        .select("id, book_id, chapter_id, progress, last_read_at")
+        .eq("user_id", currentUser.id)
+        .order("last_read_at", {
+            ascending: false
+        });
+
+    if (progressError) {
+        throw progressError;
+    }
+
+    const history = progress || [];
+
+    /*
+     * Books started
+     */
+
+    const uniqueBooks = new Set(
+        history
+            .map(item => item.book_id)
+            .filter(Boolean)
+    );
+
+    document.getElementById("booksStarted").textContent =
+        uniqueBooks.size.toLocaleString();
+
+
+    /*
+     * Reading-progress rows represent the reader's
+     * saved chapter/book reading progress.
+     */
+
+    document.getElementById("chaptersRead").textContent =
+        history.length.toLocaleString();
+
+
+    /*
+     * Reading streak
+     */
+
+    const streak = calculateReadingStreak(history);
+
+    document.getElementById("readingStreak").textContent =
+        streak.toLocaleString();
+
+
+    /*
+     * Last read
+     */
+
+    if (history.length > 0 && history[0].last_read_at) {
+
+        document.getElementById("lastRead").textContent =
+            formatShortDate(history[0].last_read_at);
+
+    }
+
+
+    /*
+     * No history
+     */
+
+    if (history.length === 0) {
+        return;
+    }
+
+
+    /*
+     * Get book IDs.
+     */
+
+    const bookIds = [
+        ...new Set(
+            history
+                .map(item => item.book_id)
+                .filter(Boolean)
+        )
+    ];
+
+
+    /*
+     * Get books from Supabase.
+     */
+
+    let books = [];
+
+    if (bookIds.length > 0) {
+
+        const {
+            data: bookData,
+            error: booksError
+        } = await supabaseClient
+            .from("books")
+            .select("id, title, cover_url")
+            .in("id", bookIds);
+
+        if (booksError) {
+            throw booksError;
+        }
+
+        books = bookData || [];
+    }
+
+
+    /*
+     * Get chapter IDs.
+     */
+
+    const chapterIds = [
+        ...new Set(
+            history
+                .map(item => item.chapter_id)
+                .filter(Boolean)
+        )
+    ];
+
+
+    /*
+     * Get chapter information.
+     */
+
+    let chapters = [];
+
+    if (chapterIds.length > 0) {
+
+        const {
+            data: chapterData,
+            error: chaptersError
+        } = await supabaseClient
+            .from("chapters")
+            .select("id, book_id, chapter_number, title")
+            .in("id", chapterIds);
+
+        if (chaptersError) {
+            throw chaptersError;
+        }
+
+        chapters = chapterData || [];
+    }
+
+
+    renderHistory(history, books, chapters);
+}
+
+
+/* =========================
+   RENDER HISTORY
+========================= */
+
+function renderHistory(history, books, chapters) {
+
+    const container =
+        document.getElementById("historyContainer");
+
+    container.innerHTML = "";
+
+    /*
+     * Show the latest 20 reading records.
+     */
+
+    history.slice(0, 20).forEach(item => {
+
+        const book =
+            books.find(book => book.id === item.book_id);
+
+        const chapter =
+            chapters.find(chapter => chapter.id === item.chapter_id);
+
+        const title =
+            book?.title || "Unknown Book";
+
+        const chapterText =
+            chapter
+                ? `Chapter ${chapter.chapter_number}${chapter.title ? " — " + escapeHtml(chapter.title) : ""}`
+                : "Reading progress";
+
+        const cover =
+            book?.cover_url
+                ? `<img src="${escapeHtml(book.cover_url)}" alt="Book cover">`
+                : "📖";
+
+        const itemElement =
+            document.createElement("div");
+
+        itemElement.className = "history-item";
+
+        itemElement.innerHTML = `
+            <div class="book-cover">
+                ${cover}
+            </div>
+
+            <div class="history-info">
+
+                <div class="book-title">
+                    ${escapeHtml(title)}
+                </div>
+
+                <div class="chapter-title">
+                    ${chapterText}
+                </div>
+
+                <div class="last-read">
+                    Last read ${formatDate(item.last_read_at)}
+                </div>
+
+            </div>
+
+            <a
+                href="book-details.html?id=${encodeURIComponent(item.book_id)}"
+                class="open-book"
+            >
+                Open →
+            </a>
+        `;
+
+        container.appendChild(itemElement);
+    });
+}
+
+
+/* =========================
+   READING STREAK
+========================= */
+
+function calculateReadingStreak(history) {
+
+    const dates = new Set();
+
+    history.forEach(item => {
+
+        if (!item.last_read_at) {
+            return;
+        }
+
+        const date =
+            new Date(item.last_read_at);
+
+        if (isNaN(date.getTime())) {
+            return;
+        }
+
+        dates.add(
+            date.toISOString().slice(0, 10)
+        );
+    });
+
+
+    if (dates.size === 0) {
+        return 0;
+    }
+
+
+    const sortedDates =
+        [...dates].sort().reverse();
+
+
+    const today =
+        new Date();
+
+    const todayString =
+        today.toISOString().slice(0, 10);
+
+    const yesterday =
+        new Date(today);
+
+    yesterday.setDate(
+        yesterday.getDate() - 1
+    );
+
+    const yesterdayString =
+        yesterday.toISOString().slice(0, 10);
+
+
+    /*
+     * A streak must include today or yesterday.
+     */
+
+    if (
+        sortedDates[0] !== todayString &&
+        sortedDates[0] !== yesterdayString
+    ) {
+        return 0;
+    }
+
+
+    let streak = 0;
+
+    let expectedDate =
+        new Date(
+            sortedDates[0] + "T00:00:00"
+        );
+
+
+    for (const dateString of sortedDates) {
+
+        const expectedString =
+            expectedDate
+                .toISOString()
+                .slice(0, 10);
+
+        if (dateString !== expectedString) {
+            break;
+        }
+
+        streak++;
+
+        expectedDate.setDate(
+            expectedDate.getDate() - 1
+        );
+    }
+
+    return streak;
+}
+
+
+/* =========================
+   DATE FORMATTING
+========================= */
+
+function formatDate(value) {
+
+    if (!value) {
+        return "unknown date";
+    }
+
+    const date = new Date(value);
+
+    if (isNaN(date.getTime())) {
+        return "unknown date";
+    }
+
+    return date.toLocaleString(
+        undefined,
+        {
+            day: "numeric",
+            month: "short",
+            year: "numeric",
+            hour: "numeric",
+            minute: "2-digit"
+        }
+    );
+}
+
+
+function formatShortDate(value) {
+
+    if (!value) {
+        return "—";
+    }
+
+    const date = new Date(value);
+
+    if (isNaN(date.getTime())) {
+        return "—";
+    }
+
+    return date.toLocaleDateString(
+        undefined,
+        {
+            day: "numeric",
+            month: "short"
+        }
+    );
+}
+
+
+/* =========================
+   HTML ESCAPE
+========================= */
+
+function escapeHtml(value) {
+
+    return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+
+/* =========================
+   START
+========================= */
+
+loadReadingHistory();
+
+</script></body>
+</html>
