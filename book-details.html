@@ -970,116 +970,36 @@
     params.get("id");
 
 
-  const adminBooks =
-    JSON.parse(
-      localStorage.getItem(
-        "noveloraAdminBooks"
-      )
-    ) || [];
+  let book = null;
 
-
-  let book =
-    adminBooks.find(function(item) {
-
-      return String(
-        item.id ||
-        item.bookId ||
-        item.bookID
-      ) === String(bookId);
-
-    });
-
-
-  /*
-   * DEMO BOOKS
-   */
-
-  const demoBooks = {
-
-    "alpha-hybrid": {
-      id: "alpha-hybrid",
-      title: "The Alpha's Forbidden Hybrid",
-      author: "Moonlight Writer",
-      genre: "Romance",
-      secondGenre: "Werewolf",
-      rating: "16+",
-      status: "Ongoing",
-      description:
-        "She was never supposed to exist. Born from a forbidden bloodline, she has spent her entire life hiding the secret that could destroy the supernatural world.",
-      cover: ""
-    },
-
-    "billionaire-bride": {
-      id: "billionaire-bride",
-      title: "The Billionaire's Secret Bride",
-      author: "Novelora Writer",
-      genre: "Billionaire",
-      secondGenre: "Romance",
-      rating: "16+",
-      status: "Ongoing",
-      description:
-        "A secret marriage, a powerful billionaire and a love neither of them expected.",
-      cover: ""
-    },
-
-    "crown-of-the-moon": {
-      id: "crown-of-the-moon",
-      title: "Crown of the Moon",
-      author: "Moonlight Writer",
-      genre: "Fantasy",
-      secondGenre: "Romance",
-      rating: "13+",
-      status: "Ongoing",
-      description:
-        "A kingdom ruled by destiny, where a forgotten princess discovers that her bloodline may determine the fate of an entire realm.",
-      cover: ""
-    },
-
-    "girl-behind-the-mask": {
-      id: "girl-behind-the-mask",
-      title: "The Girl Behind the Mask",
-      author: "Novelora Writer",
-      genre: "Mystery",
-      secondGenre: "Drama",
-      rating: "16+",
-      status: "Ongoing",
-      description:
-        "Everyone has something to hide. But when one girl removes her mask, the truth could change everything.",
-      cover: ""
-    }
-
-  };
-
-
-  if (!book) {
-    book = demoBooks[bookId];
+async function loadBook() {
+  if (!bookId) {
+    document.getElementById("bookTitle").textContent = "Book not found";
+    return;
   }
 
+  const { data, error } = await supabaseClient
+    .from("books")
+    .select("*")
+    .eq("id", bookId)
+    .single();
 
-Dashboard
-   ↓
-book-details.html?id=SUPABASE-UUID
-   ↓
-Supabase:
-.from("books")
-.select("*")
-.eq("id", bookId)
-.single()
-   ↓
-BOOK FOUND ✅
-   ↓
-cover_url
-promotional_blurb
-description
-genre
-author
-   ↓
-Then separately:
-chapters
-.where(book_id = bookId)
+  if (error || !data) {
+    console.error("Book loading error:", error);
 
+    document.getElementById("bookTitle").textContent = "Book not found";
+    document.getElementById("bookDescription").textContent =
+      "This book could not be loaded.";
+    return;
+  }
 
-  else {
+  book = data;
+
+  renderBook();
+}
+
+function renderBook() {
+  
 
     const title =
       book.title ||
@@ -1160,9 +1080,10 @@ chapters
      */
 
     const cover =
-      book.coverImage ||
-      book.cover ||
-      "";
+  book.cover_url ||
+  book.coverImage ||
+  book.cover ||
+  "";
 
 
     if (cover) {
@@ -1229,9 +1150,19 @@ chapters
 
 
     document.getElementById(
-      "bookMeta"
-    ).innerHTML =
-      metaHTML;
+  "bookMeta"
+).innerHTML =
+  [
+    genre,
+    secondGenre,
+    rating,
+    status
+  ]
+  .filter(Boolean)
+  .map(function(item) {
+    return "<span>" + item + "</span>";
+  })
+  .join("");
 
 
     /*
