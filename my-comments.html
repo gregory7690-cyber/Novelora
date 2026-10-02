@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Novelora - My Community Activity</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #fff7fb;
+    color: #222;
+}
+
+header {
+    background: #fff;
+    border-bottom: 1px solid #f0d9e5;
+    padding: 15px 5%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.logo {
+    color: #e83e8c;
+    font-size: 25px;
+    font-weight: bold;
+}
+
+.back {
+    text-decoration: none;
+    color: #e83e8c;
+    font-weight: bold;
+}
+
+.container {
+    max-width: 850px;
+    margin: 30px auto;
+    padding: 0 20px 60px;
+}
+
+.hero {
+    background: linear-gradient(135deg, #e83e8c, #b91f68);
+    color: white;
+    border-radius: 22px;
+    padding: 30px 25px;
+    margin-bottom: 25px;
+    box-shadow: 0 12px 30px rgba(232, 62, 140, .15);
+}
+
+.hero h1 {
+    font-size: 27px;
+    margin-bottom: 8px;
+}
+
+.hero p {
+    opacity: .9;
+    line-height: 1.5;
+}
+
+.stats-title {
+    margin: 25px 0 15px;
+    font-size: 21px;
+}
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+}
+
+.stat {
+    background: white;
+    border: 1px solid #f0d9e5;
+    border-radius: 18px;
+    padding: 25px 18px;
+    text-align: center;
+}
+
+.stat-icon {
+    font-size: 30px;
+    margin-bottom: 10px;
+}
+
+.stat-number {
+    font-size: 30px;
+    font-weight: bold;
+    color: #e83e8c;
+}
+
+.stat-label {
+    color: #777;
+    font-size: 13px;
+    margin-top: 6px;
+}
+
+.message {
+    background: white;
+    border: 1px solid #f0d9e5;
+    border-radius: 18px;
+    padding: 25px;
+    margin-top: 25px;
+    text-align: center;
+    color: #666;
+    line-height: 1.6;
+}
+
+.loading {
+    position: fixed;
+    inset: 0;
+    background: #fff7fb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    color: #e83e8c;
+    font-weight: bold;
+}
+
+.loading.hidden {
+    display: none;
+}
+
+.error {
+    color: #d93025;
+    text-align: center;
+    margin-top: 30px;
+}
+
+@media (max-width: 600px) {
+
+    .container {
+        margin-top: 20px;
+    }
+
+    .hero {
+        padding: 25px 20px;
+    }
+
+    .hero h1 {
+        font-size: 23px;
+    }
+
+    .stats {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="loading" id="loading">
+    Loading your community activity...
+</div>
+
+<header>
+    <div class="logo">Novelora</div>
+
+    <a href="profile.html" class="back">
+        ← Profile
+    </a>
+</header>
+
+<div class="container">
+
+    <section class="hero">
+        <h1>💬 My Community Activity</h1>
+
+        <p>
+            See your overall activity across the Novelora community.
+            Your actual comments and replies are not displayed here.
+        </p>
+    </section>
+
+    <h2 class="stats-title">📊 Your Community Stats</h2>
+
+    <div class="stats">
+
+        <div class="stat">
+            <div class="stat-icon">💬</div>
+
+            <div class="stat-number" id="commentsMade">
+                0
+            </div>
+
+            <div class="stat-label">
+                Comments Made
+            </div>
+        </div>
+
+        <div class="stat">
+            <div class="stat-icon">↩️</div>
+
+            <div class="stat-number" id="repliesMade">
+                0
+            </div>
+
+            <div class="stat-label">
+                Replies Made
+            </div>
+        </div>
+
+        <div class="stat">
+            <div class="stat-icon">❤️</div>
+
+            <div class="stat-number" id="likesReceived">
+                0
+            </div>
+
+            <div class="stat-label">
+                Likes Received
+            </div>
+        </div>
+
+        <div class="stat">
+            <div class="stat-icon">📚</div>
+
+            <div class="stat-number" id="booksCommented">
+                0
+            </div>
+
+            <div class="stat-label">
+                Books Commented On
+            </div>
+        </div>
+
+    </div>
+
+    <div class="message" id="activityMessage">
+        Loading your community activity...
+    </div>
+
+</div>
+
+<script>
+
+let currentUser = null;
+
+
+/* =========================
+   AUTH
+========================= */
+
+async function loadCommunityStats() {
+
+    try {
+
+        const {
+            data: {
+                session
+            },
+            error: sessionError
+        } = await supabaseClient.auth.getSession();
+
+        if (sessionError || !session) {
+
+            window.location.href = "login.html";
+            return;
+        }
+
+        currentUser = session.user;
+
+        await loadStats();
+
+        document
+            .getElementById("loading")
+            .classList.add("hidden");
+
+    } catch (error) {
+
+        console.error(error);
+
+        document
+            .getElementById("loading")
+            .classList.add("hidden");
+
+        document.getElementById("activityMessage").innerHTML =
+            "Unable to load your community activity. Please try again later.";
+    }
+}
+
+
+/* =========================
+   LOAD REAL STATS
+========================= */
+
+async function loadStats() {
+
+    /*
+     * Get all comments made by this reader.
+     */
+
+    const {
+        data: comments,
+        error: commentsError
+    } = await supabaseClient
+        .from("comments")
+        .select("id, book_id, parent_id")
+        .eq("user_id", currentUser.id)
+        .neq("status", "deleted");
+
+    if (commentsError) {
+        throw commentsError;
+    }
+
+
+    const allComments = comments || [];
+
+
+    /*
+     * A comment with a parent_id is a reply.
+     */
+
+    const replies = allComments.filter(
+        comment => comment.parent_id !== null
+    );
+
+
+    /*
+     * Top-level comments have no parent.
+     */
+
+    const normalComments = allComments.filter(
+        comment => comment.parent_id === null
+    );
+
+
+    /*
+     * Count unique books commented on.
+     */
+
+    const uniqueBooks = new Set(
+        allComments
+            .map(comment => comment.book_id)
+            .filter(Boolean)
+    );
+
+
+    /*
+     * Get the comments' IDs so we can
+     * count likes received.
+     */
+
+    const commentIds = allComments.map(
+        comment => comment.id
+    );
+
+
+    let likesReceived = 0;
+
+
+    if (commentIds.length > 0) {
+
+        const {
+            data: likes,
+            error: likesError
+        } = await supabaseClient
+            .from("comment_likes")
+            .select("id, comment_id")
+            .in("comment_id", commentIds);
+
+        if (likesError) {
+            throw likesError;
+        }
+
+        likesReceived = (likes || []).length;
+    }
+
+
+    /*
+     * Display the real numbers.
+     */
+
+    document.getElementById("commentsMade").textContent =
+        normalComments.length.toLocaleString();
+
+    document.getElementById("repliesMade").textContent =
+        replies.length.toLocaleString();
+
+    document.getElementById("likesReceived").textContent =
+        likesReceived.toLocaleString();
+
+    document.getElementById("booksCommented").textContent =
+        uniqueBooks.size.toLocaleString();
+
+
+    /*
+     * Friendly summary message.
+     */
+
+    const totalActivity =
+        normalComments.length + replies.length;
+
+    const message =
+        document.getElementById("activityMessage");
+
+    if (totalActivity === 0) {
+
+        message.innerHTML =
+            "You haven't joined the conversation yet. 💗<br>" +
+            "Start reading and share your thoughts with the Novelora community!";
+
+    } else {
+
+        message.innerHTML =
+            `You've made <strong>${totalActivity.toLocaleString()}</strong> community contributions across <strong>${uniqueBooks.size.toLocaleString()}</strong> book${uniqueBooks.size === 1 ? "" : "s"}. 💕`;
+    }
+}
+
+
+/* =========================
+   START
+========================= */
+
+loadCommunityStats();
+
+</script>
+
+</body>
+</html>
