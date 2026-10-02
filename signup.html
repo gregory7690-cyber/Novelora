@@ -1,175 +1,307 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">  <title>Create Account — Novelora</title>  <link rel="stylesheet" href="style.css">  <style>
+    .password-wrapper {
+      position: relative;
+      width: 100%;
+    }
 
-  <title>Create Account — Novelora</title>
+    .password-wrapper input {
+      width: 100%;
+      padding-right: 48px;
+      box-sizing: border-box;
+    }
 
-  <link rel="stylesheet" href="style.css">
-</head>
+    .password-toggle {
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      border: none;
+      background: transparent;
+      color: #aaa;
+      cursor: pointer;
+      font-size: 18px;
+      padding: 4px;
+      line-height: 1;
+    }
 
-<body class="auth-page">
+    .password-toggle:hover {
+      color: #ff69b4;
+    }
 
-  <div class="auth-container">
+    .auth-button:disabled {
+      opacity: 0.7;
+      cursor: wait;
+    }
+  </style></head><body class="auth-page">  <div class="auth-container"><!-- LOGO -->
+<a href="index.html" class="auth-logo">
+  Novelora
+</a>
 
-    <!-- LOGO -->
-    <a href="index.html" class="auth-logo">
-      Novelora
-    </a>
-
-    <p class="auth-tagline">
-      Your next story awaits.
-    </p>
-
-
-    <!-- SIGN UP CARD -->
-    <div class="auth-card">
-
-      <h1>Create Account</h1>
-
-      <p class="auth-subtitle">
-        Join Novelora and start discovering your next favorite story.
-      </p>
-
-
-      <!-- GOOGLE SIGN UP -->
-      <button class="google-login" type="button">
-        <span class="google-icon">G</span>
-        Continue with Google
-      </button>
-
-
-      <div class="auth-divider">
-        <span>OR</span>
-      </div>
-
-
-      <!-- USERNAME -->
-      <label for="signup-username">
-        Username
-      </label>
-
-      <input
-        type="text"
-        id="signup-username"
-        placeholder="Enter your username"
-      >
+<p class="auth-tagline">
+  Your next story awaits.
+</p>
 
 
-      <!-- EMAIL -->
-      <label for="signup-email">
-        Email
-      </label>
+<!-- SIGN UP CARD -->
+<div class="auth-card">
 
-      <input
-        type="email"
-        id="signup-email"
-        placeholder="Enter your email"
-      >
+  <h1>Create Account</h1>
+
+  <p class="auth-subtitle">
+    Join Novelora and start discovering your next favorite story.
+  </p>
 
 
-      <!-- PASSWORD -->
-      <label for="signup-password">
-        Password
-      </label>
-
-      <input
-        type="password"
-        id="signup-password"
-        placeholder="Create a password"
-      >
+  <!-- GOOGLE SIGN UP -->
+  <button class="google-login" type="button">
+    <span class="google-icon">G</span>
+    Continue with Google
+  </button>
 
 
-      <!-- CONFIRM PASSWORD -->
-      <label for="signup-confirm-password">
-        Confirm Password
-      </label>
-
-      <input
-        type="password"
-        id="signup-confirm-password"
-        placeholder="Confirm your password"
-      >
+  <div class="auth-divider">
+    <span>OR</span>
+  </div>
 
 
-      <!-- CREATE ACCOUNT -->
-      <button class="auth-button" type="button">
-        Create Account
-      </button>
+  <!-- USERNAME -->
+  <label for="signup-username">
+    Username
+  </label>
+
+  <input
+    type="text"
+    id="signup-username"
+    placeholder="Enter your username"
+    autocomplete="username"
+  >
 
 
-      <!-- LOGIN -->
-      <p class="auth-switch">
-        Already have an account?
-        <a href="login.html">
-          Log In
-        </a>
-      </p>
+  <!-- EMAIL -->
+  <label for="signup-email">
+    Email
+  </label>
 
-    </div>
+  <input
+    type="email"
+    id="signup-email"
+    placeholder="Enter your email"
+    autocomplete="email"
+  >
 
 
-    <!-- BACK HOME -->
-    <a href="index.html" class="back-home">
-      ← Back to Novelora
-    </a>
+  <!-- PASSWORD -->
+  <label for="signup-password">
+    Password
+  </label>
+
+  <div class="password-wrapper">
+
+    <input
+      type="password"
+      id="signup-password"
+      placeholder="Create a password"
+      autocomplete="new-password"
+    >
+
+    <button
+      type="button"
+      class="password-toggle"
+      id="password-toggle"
+      aria-label="Show password"
+    >
+      👁
+    </button>
 
   </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="supabase-config.js"></script>
 
-<script>
-const createAccountButton = document.querySelector(".auth-button");
+  <!-- CONFIRM PASSWORD -->
+  <label for="signup-confirm-password">
+    Confirm Password
+  </label>
 
-createAccountButton.addEventListener("click", async function () {
-  const username = document.getElementById("signup-username").value.trim();
-  const email = document.getElementById("signup-email").value.trim();
-  const password = document.getElementById("signup-password").value;
-  const confirmPassword = document.getElementById("signup-confirm-password").value;
+  <div class="password-wrapper">
 
-  if (!username || !email || !password || !confirmPassword) {
-    alert("Please fill in all fields.");
-    return;
-  }
+    <input
+      type="password"
+      id="signup-confirm-password"
+      placeholder="Confirm your password"
+      autocomplete="new-password"
+    >
 
-  if (password !== confirmPassword) {
-    alert("Passwords do not match.");
-    return;
-  }
+    <button
+      type="button"
+      class="password-toggle"
+      id="confirm-password-toggle"
+      aria-label="Show confirmation password"
+    >
+      👁
+    </button>
 
-  if (password.length < 6) {
-    alert("Password must be at least 6 characters.");
-    return;
-  }
+  </div>
 
-  createAccountButton.disabled = true;
-  createAccountButton.textContent = "Creating Account...";
 
-  const { data, error } = await supabaseClient.auth.signUp({
-    email: email,
-    password: password,
-    options: {
-      data: {
-        username: username
+  <!-- CREATE ACCOUNT -->
+  <button class="auth-button" type="button" id="create-account-button">
+    Create Account
+  </button>
+
+
+  <!-- LOGIN -->
+  <p class="auth-switch">
+    Already have an account?
+    <a href="login.html">
+      Log In
+    </a>
+  </p>
+
+</div>
+
+
+<!-- BACK HOME -->
+<a href="index.html" class="back-home">
+  ← Back to Novelora
+</a>
+
+  </div>  <!-- SUPABASE -->  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>  <script src="supabase-config.js"></script>  <script>
+    /* ================================
+       SHOW / HIDE PASSWORD
+    ================================= */
+
+    const passwordInput = document.getElementById("signup-password");
+    const passwordToggle = document.getElementById("password-toggle");
+
+    passwordToggle.addEventListener("click", function () {
+
+      if (passwordInput.type === "password") {
+        passwordInput.type = "text";
+        passwordToggle.textContent = "🙈";
+        passwordToggle.setAttribute("aria-label", "Hide password");
+      } else {
+        passwordInput.type = "password";
+        passwordToggle.textContent = "👁";
+        passwordToggle.setAttribute("aria-label", "Show password");
       }
-    }
-  });
 
-  if (error) {
-    alert(error.message);
-    createAccountButton.disabled = false;
-    createAccountButton.textContent = "Create Account";
-    return;
-  }
+    });
 
-  if (data.user) {
-    alert("Account created successfully! Please check your email to verify your account.");
-    window.location.href = "login.html";
-  }
-});
-</script>
 
-</body>
+    /* ================================
+       SHOW / HIDE CONFIRM PASSWORD
+    ================================= */
+
+    const confirmPasswordInput =
+      document.getElementById("signup-confirm-password");
+
+    const confirmPasswordToggle =
+      document.getElementById("confirm-password-toggle");
+
+    confirmPasswordToggle.addEventListener("click", function () {
+
+      if (confirmPasswordInput.type === "password") {
+        confirmPasswordInput.type = "text";
+        confirmPasswordToggle.textContent = "🙈";
+        confirmPasswordToggle.setAttribute(
+          "aria-label",
+          "Hide confirmation password"
+        );
+      } else {
+        confirmPasswordInput.type = "password";
+        confirmPasswordToggle.textContent = "👁";
+        confirmPasswordToggle.setAttribute(
+          "aria-label",
+          "Show confirmation password"
+        );
+      }
+
+    });
+
+
+    /* ================================
+       SUPABASE SIGNUP
+    ================================= */
+
+    const createAccountButton =
+      document.getElementById("create-account-button");
+
+    createAccountButton.addEventListener("click", async function () {
+
+      const username =
+        document.getElementById("signup-username").value.trim();
+
+      const email =
+        document.getElementById("signup-email").value.trim();
+
+      const password =
+        document.getElementById("signup-password").value;
+
+      const confirmPassword =
+        document.getElementById("signup-confirm-password").value;
+
+
+      if (!username || !email || !password || !confirmPassword) {
+        alert("Please fill in all fields.");
+        return;
+      }
+
+
+      if (password.length < 6) {
+        alert("Password must be at least 6 characters.");
+        return;
+      }
+
+
+      if (password !== confirmPassword) {
+        alert("Passwords do not match.");
+        return;
+      }
+
+
+      createAccountButton.disabled = true;
+      createAccountButton.textContent = "Creating Account...";
+
+
+      const { data, error } =
+        await supabaseClient.auth.signUp({
+
+          email: email,
+
+          password: password,
+
+          options: {
+            data: {
+              username: username
+            }
+          }
+
+        });
+
+
+      if (error) {
+
+        alert(error.message);
+
+        createAccountButton.disabled = false;
+        createAccountButton.textContent = "Create Account";
+
+        return;
+      }
+
+
+      if (data.user) {
+
+        alert(
+          "Account created successfully! Please check your email to verify your account."
+        );
+
+        window.location.href = "login.html";
+
+      }
+
+    });
+  </script></body>
 </html>
