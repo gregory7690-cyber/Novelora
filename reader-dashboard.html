@@ -695,6 +695,10 @@
     }
 
 
+    /* =========================================================
+       ADD TO LIBRARY — HIGH CONTRAST
+       ========================================================= */
+
     .add-library-dashboard {
 
       width: 100%;
@@ -705,13 +709,13 @@
 
       border:
         1px solid
-        rgba(255, 79, 163, 0.22);
+        rgba(255, 255, 255, 0.28);
 
       background:
-        rgba(255, 79, 163, 0.07);
+        #181318;
 
       color:
-        rgba(255, 255, 255, 0.82);
+        #ffffff;
 
       font-size: 12px;
 
@@ -719,10 +723,16 @@
 
       cursor: pointer;
 
+      box-shadow:
+        0 5px 14px
+        rgba(0, 0, 0, 0.3);
+
       transition:
         background 0.2s ease,
         border-color 0.2s ease,
-        color 0.2s ease;
+        color 0.2s ease,
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
 
     }
 
@@ -730,13 +740,28 @@
     .add-library-dashboard:hover {
 
       background:
-        rgba(255, 79, 163, 0.16);
+        #ff4fa3;
 
       border-color:
-        rgba(255, 79, 163, 0.5);
+        #ff4fa3;
 
       color:
         #ffffff;
+
+      transform:
+        translateY(-1px);
+
+      box-shadow:
+        0 7px 18px
+        rgba(255, 79, 163, 0.25);
+
+    }
+
+
+    .add-library-dashboard:active {
+
+      transform:
+        translateY(0);
 
     }
 
