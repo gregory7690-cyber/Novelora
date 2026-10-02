@@ -153,6 +153,14 @@
       font-size: 8px;
       font-weight: 700;
       letter-spacing: 0.5px;
+      overflow: hidden;
+    }
+
+    .search-result-cover img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 7px;
     }
 
     .search-result-info {
@@ -212,6 +220,73 @@
     }
 
     /* =========================================================
+       DATABASE BOOKS
+       ========================================================= */
+
+    .database-book-cover {
+      width: 100%;
+      aspect-ratio: 2 / 3;
+      border-radius: 12px;
+      overflow: hidden;
+      background:
+        linear-gradient(
+          145deg,
+          rgba(255, 105, 180, 0.38),
+          rgba(255, 255, 255, 0.08)
+        );
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #ffffff;
+      font-size: 10px;
+      font-weight: 700;
+      text-align: center;
+      letter-spacing: 0.5px;
+    }
+
+    .database-book-cover img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .database-book-cover span {
+      padding: 8px;
+    }
+
+    .database-book-description {
+      margin: 0;
+      color: rgba(255, 255, 255, 0.62);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .database-book-empty {
+      width: 100%;
+      padding: 35px 20px;
+      text-align: center;
+      color: rgba(255, 255, 255, 0.6);
+      box-sizing: border-box;
+    }
+
+    .database-book-empty .empty-icon {
+      font-size: 30px;
+      margin-bottom: 10px;
+    }
+
+    .database-book-empty h3 {
+      margin: 0 0 7px;
+      color: #ffffff;
+    }
+
+    .database-book-empty p {
+      margin: 0;
+      font-size: 13px;
+    }
+
+    /* =========================================================
        LOGGED-IN USER
        ========================================================= */
 
@@ -236,6 +311,7 @@
        ========================================================= */
 
     @media (max-width: 600px) {
+
       .dashboard-search-wrapper {
         margin-bottom: 25px;
       }
@@ -257,6 +333,7 @@
         width: 46px;
         height: 62px;
       }
+
     }
   </style>
 </head>
@@ -264,7 +341,11 @@
 
 <body class="reader-page">
 
-  <!-- AUTH LOADING -->
+
+  <!-- =========================================================
+       AUTH LOADING
+       ========================================================= -->
+
   <div class="auth-loading" id="authLoading">
     Loading your Novelora account...
   </div>
@@ -320,6 +401,7 @@
        ========================================================= -->
 
   <main class="reader-content">
+
 
     <!-- SEARCH -->
 
@@ -461,14 +543,14 @@
 
       <div class="genre-list">
 
-        <a href="#">Romance</a>
-        <a href="#">Werewolf</a>
-        <a href="#">Billionaire</a>
-        <a href="#">Fantasy</a>
-        <a href="#">Mystery</a>
-        <a href="#">Thriller</a>
-        <a href="#">Drama</a>
-        <a href="#">Historical</a>
+        <a href="#" data-genre="Romance">Romance</a>
+        <a href="#" data-genre="Werewolf">Werewolf</a>
+        <a href="#" data-genre="Billionaire">Billionaire</a>
+        <a href="#" data-genre="Fantasy">Fantasy</a>
+        <a href="#" data-genre="Mystery">Mystery</a>
+        <a href="#" data-genre="Thriller">Thriller</a>
+        <a href="#" data-genre="Drama">Drama</a>
+        <a href="#" data-genre="Historical">Historical</a>
 
       </div>
 
@@ -518,7 +600,9 @@
     </section>
 
 
-    <!-- TRENDING -->
+    <!-- =========================================================
+         TRENDING STORIES
+         ========================================================= -->
 
     <section class="dashboard-section">
 
@@ -543,152 +627,24 @@
       </div>
 
 
-      <div class="dashboard-books">
+      <div
+        class="dashboard-books"
+        id="dashboardTrendingBooks"
+      >
 
-        <div class="dashboard-book">
+        <div class="database-book-empty">
 
-          <a
-            href="book-details.html?id=alpha-hybrid"
-            class="dashboard-book-link"
-          >
+          <div class="empty-icon">
+            📚
+          </div>
 
-            <div class="dashboard-book-cover">
-              ROMANCE
-            </div>
-
-            <h3>
-              The Alpha's Forbidden Hybrid
-            </h3>
-
-          </a>
+          <h3>
+            Loading stories...
+          </h3>
 
           <p>
-            A forbidden love story
+            Finding the latest stories for you.
           </p>
-
-          <button
-            class="add-library-dashboard"
-            type="button"
-            onclick="addToLibrary(
-              'alpha-hybrid',
-              &quot;The Alpha's Forbidden Hybrid&quot;,
-              'Romance',
-              ''
-            )"
-          >
-            ＋ Add to Library
-          </button>
-
-        </div>
-
-
-        <div class="dashboard-book">
-
-          <a
-            href="book-details.html?id=billionaire-bride"
-            class="dashboard-book-link"
-          >
-
-            <div class="dashboard-book-cover">
-              BILLIONAIRE
-            </div>
-
-            <h3>
-              The Billionaire's Secret Bride
-            </h3>
-
-          </a>
-
-          <p>
-            Love, secrets and power
-          </p>
-
-          <button
-            class="add-library-dashboard"
-            type="button"
-            onclick="addToLibrary(
-              'billionaire-bride',
-              &quot;The Billionaire's Secret Bride&quot;,
-              'Billionaire',
-              ''
-            )"
-          >
-            ＋ Add to Library
-          </button>
-
-        </div>
-
-
-        <div class="dashboard-book">
-
-          <a
-            href="book-details.html?id=crown-of-the-moon"
-            class="dashboard-book-link"
-          >
-
-            <div class="dashboard-book-cover">
-              FANTASY
-            </div>
-
-            <h3>
-              Crown of the Moon
-            </h3>
-
-          </a>
-
-          <p>
-            A kingdom ruled by destiny
-          </p>
-
-          <button
-            class="add-library-dashboard"
-            type="button"
-            onclick="addToLibrary(
-              'crown-of-the-moon',
-              'Crown of the Moon',
-              'Fantasy',
-              ''
-            )"
-          >
-            ＋ Add to Library
-          </button>
-
-        </div>
-
-
-        <div class="dashboard-book">
-
-          <a
-            href="book-details.html?id=girl-behind-the-mask"
-            class="dashboard-book-link"
-          >
-
-            <div class="dashboard-book-cover">
-              MYSTERY
-            </div>
-
-            <h3>
-              The Girl Behind the Mask
-            </h3>
-
-          </a>
-
-          <p>
-            Everyone has something to hide
-          </p>
-
-          <button
-            class="add-library-dashboard"
-            type="button"
-            onclick="addToLibrary(
-              'girl-behind-the-mask',
-              'The Girl Behind the Mask',
-              'Mystery',
-              ''
-            )"
-          >
-            ＋ Add to Library
-          </button>
 
         </div>
 
@@ -697,7 +653,9 @@
     </section>
 
 
-    <!-- FREE BOOKS -->
+    <!-- =========================================================
+         FREE BOOKS
+         ========================================================= -->
 
     <section class="dashboard-section">
 
@@ -721,30 +679,36 @@
 
       </div>
 
-      <div class="empty-reading">
 
-        <div class="empty-icon">
-          🆓
+      <div
+        class="dashboard-books"
+        id="dashboardFreeBooks"
+      >
+
+        <div class="database-book-empty">
+
+          <div class="empty-icon">
+            🆓
+          </div>
+
+          <h3>
+            Loading free stories...
+          </h3>
+
+          <p>
+            Finding books you can start reading for free.
+          </p>
+
         </div>
-
-        <h3>
-          Free stories await
-        </h3>
-
-        <p>
-          Explore books you can start reading for free.
-        </p>
-
-        <a href="free-books.html" class="dashboard-button">
-          Browse Free Books
-        </a>
 
       </div>
 
     </section>
 
 
-    <!-- RECOMMENDED -->
+    <!-- =========================================================
+         RECOMMENDED
+         ========================================================= -->
 
     <section class="dashboard-section">
 
@@ -764,23 +728,32 @@
 
       </div>
 
-      <div class="empty-reading">
 
-        <div class="empty-icon">
-          ⭐
+      <div
+        class="dashboard-books"
+        id="dashboardRecommendedBooks"
+      >
+
+        <div class="database-book-empty">
+
+          <div class="empty-icon">
+            ⭐
+          </div>
+
+          <h3>
+            Recommendations are coming
+          </h3>
+
+          <p>
+            As more stories are published, we'll show you books you may love.
+          </p>
+
         </div>
-
-        <h3>
-          Recommendations are coming
-        </h3>
-
-        <p>
-          As you read and save stories, we'll show you more books you may love.
-        </p>
 
       </div>
 
     </section>
+
 
   </main>
 
@@ -828,13 +801,22 @@
 
 
   <script>
+
+    /* =========================================================
+       GLOBAL BOOK DATA
+       ========================================================= */
+
+    let publishedBooks = [];
+
+
     /* =========================================================
        AUTHENTICATION
        ========================================================= */
 
     async function loadReaderAccount() {
 
-      const loading = document.getElementById("authLoading");
+      const loading =
+        document.getElementById("authLoading");
 
       try {
 
@@ -843,91 +825,618 @@
           error: sessionError
         } = await supabaseClient.auth.getSession();
 
+
         if (sessionError) {
-          console.error(sessionError);
+
+          console.error(
+            "Session error:",
+            sessionError
+          );
+
           window.location.href = "login.html";
+
           return;
+
         }
+
 
         if (!session || !session.user) {
+
           window.location.href = "login.html";
+
           return;
+
         }
 
-        const user = session.user;
+
+        const user =
+          session.user;
+
 
         const {
           data: profile,
           error: profileError
         } = await supabaseClient
           .from("profiles")
-          .select("username, display_name, coins, role")
+          .select(
+            "username, display_name, coins, role"
+          )
           .eq("id", user.id)
-          .single();
+          .maybeSingle();
+
 
         if (profileError) {
 
-          console.error("Profile error:", profileError);
-
-          /*
-            The authentication itself is still valid.
-            If the profile cannot be loaded, use the
-            username stored during signup.
-          */
-
-          const fallbackName =
-            user.user_metadata?.username ||
-            user.email?.split("@")[0] ||
-            "Reader";
-
-          document.getElementById("dashboardUserName").textContent =
-            fallbackName;
-
-        } else {
-
-          const displayName =
-            profile.display_name ||
-            profile.username ||
-            user.user_metadata?.username ||
-            user.email?.split("@")[0] ||
-            "Reader";
-
-          document.getElementById("dashboardUserName").textContent =
-            displayName;
+          console.error(
+            "Profile error:",
+            profileError
+          );
 
         }
 
+
+        const displayName =
+          profile?.display_name ||
+          profile?.username ||
+          user.user_metadata?.username ||
+          user.email?.split("@")[0] ||
+          "Reader";
+
+
+        document.getElementById(
+          "dashboardUserName"
+        ).textContent = displayName;
+
+
         loading.style.display = "none";
+
+
+        /*
+          Once authentication is confirmed,
+          load the actual published books.
+        */
+
+        await loadPublishedBooks();
+
 
       } catch (error) {
 
-        console.error(error);
+        console.error(
+          "Reader account error:",
+          error
+        );
 
-        window.location.href = "login.html";
+        window.location.href =
+          "login.html";
 
       }
 
     }
 
 
-    loadReaderAccount();
+    /* =========================================================
+       LOAD PUBLISHED BOOKS FROM SUPABASE
+       ========================================================= */
+
+    async function loadPublishedBooks() {
+
+      const trendingContainer =
+        document.getElementById(
+          "dashboardTrendingBooks"
+        );
+
+      const freeContainer =
+        document.getElementById(
+          "dashboardFreeBooks"
+        );
+
+      const recommendedContainer =
+        document.getElementById(
+          "dashboardRecommendedBooks"
+        );
+
+
+      try {
+
+        const {
+          data,
+          error
+        } = await supabaseClient
+          .from("books")
+          .select(`
+            id,
+            title,
+            subtitle,
+            description,
+            cover_url,
+            genre,
+            subgenre,
+            access_type,
+            chapter_price,
+            featured,
+            discoverable,
+            status,
+            views,
+            library_count,
+            created_at
+          `)
+          .eq("status", "published")
+          .order(
+            "created_at",
+            {
+              ascending: false
+            }
+          );
+
+
+        if (error) {
+
+          console.error(
+            "Could not load published books:",
+            error
+          );
+
+          showBookError(
+            trendingContainer,
+            "Unable to load stories."
+          );
+
+          showBookError(
+            freeContainer,
+            "Unable to load free stories."
+          );
+
+          showBookError(
+            recommendedContainer,
+            "Unable to load recommendations."
+          );
+
+          return;
+
+        }
+
+
+        publishedBooks =
+          Array.isArray(data)
+            ? data
+            : [];
+
+
+        /*
+          IMPORTANT:
+          Only Supabase published books
+          are used here.
+
+          No localStorage.
+          No demoBooks.
+        */
+
+
+        renderTrendingBooks(
+          publishedBooks
+        );
+
+
+        renderFreeBooks(
+          publishedBooks
+        );
+
+
+        renderRecommendedBooks(
+          publishedBooks
+        );
+
+
+      } catch (error) {
+
+        console.error(
+          "Book loading error:",
+          error
+        );
+
+        showBookError(
+          trendingContainer,
+          "Unable to load stories."
+        );
+
+        showBookError(
+          freeContainer,
+          "Unable to load free stories."
+        );
+
+        showBookError(
+          recommendedContainer,
+          "Unable to load recommendations."
+        );
+
+      }
+
+    }
+
+
+    /* =========================================================
+       RENDER TRENDING
+       ========================================================= */
+
+    function renderTrendingBooks(books) {
+
+      const container =
+        document.getElementById(
+          "dashboardTrendingBooks"
+        );
+
+
+      if (!books.length) {
+
+        container.innerHTML = `
+          <div class="database-book-empty">
+
+            <div class="empty-icon">
+              📚
+            </div>
+
+            <h3>
+              No stories published yet
+            </h3>
+
+            <p>
+              New stories will appear here when they are published.
+            </p>
+
+          </div>
+        `;
+
+        return;
+
+      }
+
+
+      /*
+        Featured books first,
+        then books with the most views.
+      */
+
+      const sorted =
+        [...books].sort(
+          function(a, b) {
+
+            if (
+              Boolean(a.featured) !==
+              Boolean(b.featured)
+            ) {
+
+              return a.featured
+                ? -1
+                : 1;
+
+            }
+
+            return (
+              Number(b.views || 0) -
+              Number(a.views || 0)
+            );
+
+          }
+        );
+
+
+      renderBookCards(
+        container,
+        sorted.slice(0, 8)
+      );
+
+    }
+
+
+    /* =========================================================
+       RENDER FREE BOOKS
+       ========================================================= */
+
+    function renderFreeBooks(books) {
+
+      const container =
+        document.getElementById(
+          "dashboardFreeBooks"
+        );
+
+
+      const freeBooks =
+        books.filter(
+          function(book) {
+
+            return String(
+              book.access_type || ""
+            ).toLowerCase() === "free";
+
+          }
+        );
+
+
+      if (!freeBooks.length) {
+
+        container.innerHTML = `
+          <div class="database-book-empty">
+
+            <div class="empty-icon">
+              🆓
+            </div>
+
+            <h3>
+              Free stories await
+            </h3>
+
+            <p>
+              Free books will appear here when they are published.
+            </p>
+
+          </div>
+        `;
+
+        return;
+
+      }
+
+
+      renderBookCards(
+        container,
+        freeBooks.slice(0, 8)
+      );
+
+    }
+
+
+    /* =========================================================
+       RECOMMENDED
+       ========================================================= */
+
+    function renderRecommendedBooks(books) {
+
+      const container =
+        document.getElementById(
+          "dashboardRecommendedBooks"
+        );
+
+
+      if (!books.length) {
+
+        container.innerHTML = `
+          <div class="database-book-empty">
+
+            <div class="empty-icon">
+              ⭐
+            </div>
+
+            <h3>
+              Recommendations are coming
+            </h3>
+
+            <p>
+              As stories are published, recommendations will appear here.
+            </p>
+
+          </div>
+        `;
+
+        return;
+
+      }
+
+
+      /*
+        For now, recommended uses the
+        newest published books.
+
+        Later this can use the reader's
+        reading history and preferences.
+      */
+
+      renderBookCards(
+        container,
+        books.slice(0, 4)
+      );
+
+    }
+
+
+    /* =========================================================
+       BOOK CARDS
+       ========================================================= */
+
+    function renderBookCards(
+      container,
+      books
+    ) {
+
+      if (!books.length) {
+
+        container.innerHTML = "";
+
+        return;
+
+      }
+
+
+      let html = "";
+
+
+      books.forEach(
+        function(book) {
+
+          const title =
+            book.title ||
+            "Untitled Book";
+
+
+          const genre =
+            book.genre ||
+            "Story";
+
+
+          const description =
+            book.description ||
+            book.subtitle ||
+            "A new Novelora story.";
+
+
+          const cover =
+            book.cover_url ||
+            "";
+
+
+          const safeTitle =
+            escapeHtml(title);
+
+
+          const safeGenre =
+            escapeHtml(genre);
+
+
+          const safeDescription =
+            escapeHtml(
+              description
+            );
+
+
+          const bookId =
+            encodeURIComponent(
+              book.id
+            );
+
+
+          let coverHtml;
+
+
+          if (cover) {
+
+            coverHtml = `
+              <img
+                src="${escapeAttribute(cover)}"
+                alt="${safeTitle} cover"
+                loading="lazy"
+              >
+            `;
+
+          } else {
+
+            coverHtml = `
+              <span>
+                ${safeGenre}
+              </span>
+            `;
+
+          }
+
+
+          html += `
+
+            <div class="dashboard-book">
+
+              <a
+                href="book-details.html?id=${bookId}"
+                class="dashboard-book-link"
+              >
+
+                <div class="database-book-cover">
+
+                  ${coverHtml}
+
+                </div>
+
+                <h3>
+                  ${safeTitle}
+                </h3>
+
+              </a>
+
+
+              <p class="database-book-description">
+                ${safeDescription}
+              </p>
+
+
+              <button
+                class="add-library-dashboard"
+                type="button"
+                data-book-id="${escapeAttribute(book.id)}"
+                data-book-title="${escapeAttribute(title)}"
+                data-book-genre="${escapeAttribute(genre)}"
+                data-book-cover="${escapeAttribute(cover)}"
+              >
+                ＋ Add to Library
+              </button>
+
+            </div>
+
+          `;
+
+        }
+      );
+
+
+      container.innerHTML =
+        html;
+
+
+      /*
+        Add library buttons
+        after rendering.
+      */
+
+      container
+        .querySelectorAll(
+          ".add-library-dashboard"
+        )
+        .forEach(
+          function(button) {
+
+            button.addEventListener(
+              "click",
+              function() {
+
+                addToLibrary(
+                  button.dataset.bookId,
+                  button.dataset.bookTitle,
+                  button.dataset.bookGenre,
+                  button.dataset.bookCover
+                );
+
+              }
+            );
+
+          }
+        );
+
+    }
 
 
     /* =========================================================
        LIBRARY
        ========================================================= */
 
-    function addToLibrary(id, title, genre, cover) {
+    function addToLibrary(
+      id,
+      title,
+      genre,
+      cover
+    ) {
 
       let savedBooks =
         JSON.parse(
-          localStorage.getItem("noveloraLibrary")
+          localStorage.getItem(
+            "noveloraLibrary"
+          )
         ) || [];
 
+
       const alreadySaved =
-        savedBooks.some(function(book) {
-          return book.id === id;
-        });
+        savedBooks.some(
+          function(book) {
+
+            return book.id === id;
+
+          }
+        );
+
 
       if (alreadySaved) {
 
@@ -936,19 +1445,30 @@
         );
 
         return;
+
       }
 
+
       savedBooks.push({
+
         id: id,
+
         title: title,
+
         genre: genre,
+
         cover: cover
+
       });
+
 
       localStorage.setItem(
         "noveloraLibrary",
-        JSON.stringify(savedBooks)
+        JSON.stringify(
+          savedBooks
+        )
       );
+
 
       alert(
         title +
@@ -962,168 +1482,17 @@
        SEARCH
        ========================================================= */
 
-    const demoBooks = [
-
-      {
-        id: "alpha-hybrid",
-        title: "The Alpha's Forbidden Hybrid",
-        author: "Moonlight Writer",
-        genre: "Romance",
-        subgenre: "Werewolf",
-        tags: [
-          "alpha",
-          "werewolf",
-          "forbidden love",
-          "hybrid",
-          "romance",
-          "mate"
-        ],
-        description:
-          "A forbidden love story."
-      },
-
-      {
-        id: "billionaire-bride",
-        title: "The Billionaire's Secret Bride",
-        author: "Novelora Writer",
-        genre: "Billionaire",
-        subgenre: "Romance",
-        tags: [
-          "billionaire",
-          "secret bride",
-          "marriage",
-          "rich",
-          "romance"
-        ],
-        description:
-          "Love, secrets and power."
-      },
-
-      {
-        id: "crown-of-the-moon",
-        title: "Crown of the Moon",
-        author: "Moonlight Writer",
-        genre: "Fantasy",
-        subgenre: "Romance",
-        tags: [
-          "fantasy",
-          "queen",
-          "kingdom",
-          "magic",
-          "destiny"
-        ],
-        description:
-          "A kingdom ruled by destiny."
-      },
-
-      {
-        id: "girl-behind-the-mask",
-        title: "The Girl Behind the Mask",
-        author: "Novelora Writer",
-        genre: "Mystery",
-        subgenre: "Drama",
-        tags: [
-          "mystery",
-          "secrets",
-          "hidden identity",
-          "drama"
-        ],
-        description:
-          "Everyone has something to hide."
-      }
-
-    ];
-
-
-    function getSearchBooks() {
-
-      let books = [...demoBooks];
-
-      try {
-
-        const adminBooks =
-          JSON.parse(
-            localStorage.getItem("noveloraAdminBooks")
-          ) || [];
-
-        adminBooks.forEach(function(book) {
-
-          if (!book || !book.id) {
-            return;
-          }
-
-          const exists =
-            books.some(function(existing) {
-              return existing.id === book.id;
-            });
-
-          if (!exists) {
-
-            books.push({
-
-              id: book.id,
-
-              title:
-                book.title ||
-                "Untitled Book",
-
-              author:
-                book.penName ||
-                book.author ||
-                "Novelora Author",
-
-              genre:
-                book.genre ||
-                "Romance",
-
-              subgenre:
-                book.subgenre ||
-                "",
-
-              tags:
-                Array.isArray(book.tags)
-                  ? book.tags
-                  : String(book.tags || "")
-                      .split(",")
-                      .map(function(tag) {
-                        return tag.trim();
-                      })
-                      .filter(Boolean),
-
-              description:
-                book.description ||
-                book.tagline ||
-                ""
-
-            });
-
-          }
-
-        });
-
-      } catch (error) {
-
-        console.error(
-          "Could not load admin books:",
-          error
-        );
-
-      }
-
-      return books;
-
-    }
-
-
     const searchInput =
       document.getElementById(
         "dashboardSearchInput"
       );
 
+
     const searchClear =
       document.getElementById(
         "dashboardSearchClear"
       );
+
 
     const searchResults =
       document.getElementById(
@@ -1131,49 +1500,69 @@
       );
 
 
-    function renderSearchResults(query) {
+    function renderSearchResults(
+      query
+    ) {
 
       const cleanQuery =
-        query.trim().toLowerCase();
+        query
+          .trim()
+          .toLowerCase();
+
 
       if (!cleanQuery) {
 
-        searchResults.innerHTML = "";
-        searchResults.classList.remove("show");
-        searchClear.style.display = "none";
+        searchResults.innerHTML =
+          "";
+
+        searchResults.classList.remove(
+          "show"
+        );
+
+        searchClear.style.display =
+          "none";
 
         return;
 
       }
 
-      searchClear.style.display = "flex";
 
-      const books = getSearchBooks();
+      searchClear.style.display =
+        "flex";
+
+
+      /*
+        Search only the actual
+        published Supabase books.
+      */
 
       const matches =
-        books.filter(function(book) {
+        publishedBooks.filter(
+          function(book) {
 
-          const searchableText = [
+            const searchableText = [
 
-            book.title,
+              book.title,
 
-            book.author,
+              book.subtitle,
 
-            book.genre,
+              book.genre,
 
-            book.subgenre,
+              book.subgenre,
 
-            book.description,
+              book.description
 
-            ...(book.tags || [])
+            ]
+              .join(" ")
+              .toLowerCase();
 
-          ]
-            .join(" ")
-            .toLowerCase();
 
-          return searchableText.includes(cleanQuery);
+            return searchableText.includes(
+              cleanQuery
+            );
 
-        });
+          }
+        );
 
 
       if (!matches.length) {
@@ -1198,7 +1587,10 @@
 
         `;
 
-        searchResults.classList.add("show");
+
+        searchResults.classList.add(
+          "show"
+        );
 
         return;
 
@@ -1214,60 +1606,144 @@
       `;
 
 
-      matches.forEach(function(book) {
+      matches.forEach(
+        function(book) {
 
-        html += `
-
-          <a
-            class="search-result"
-            href="book-details.html?id=${encodeURIComponent(book.id)}"
-          >
-
-            <div class="search-result-cover">
-              ${escapeHtml(book.genre || "BOOK")}
-            </div>
-
-            <div class="search-result-info">
-
-              <p class="search-result-title">
-                ${escapeHtml(book.title)}
-              </p>
-
-              <p class="search-result-author">
-                ${escapeHtml(book.author || "Novelora Author")}
-              </p>
-
-              <p class="search-result-meta">
-                ${escapeHtml(book.genre || "Story")}
-              </p>
-
-            </div>
-
-          </a>
-
-        `;
-
-      });
+          const title =
+            book.title ||
+            "Untitled Book";
 
 
-      searchResults.innerHTML = html;
+          const genre =
+            book.genre ||
+            "Story";
 
-      searchResults.classList.add("show");
+
+          const cover =
+            book.cover_url ||
+            "";
+
+
+          let coverHtml;
+
+
+          if (cover) {
+
+            coverHtml = `
+
+              <img
+                src="${escapeAttribute(cover)}"
+                alt="${escapeAttribute(title)} cover"
+              >
+
+            `;
+
+          } else {
+
+            coverHtml =
+              escapeHtml(
+                genre
+              );
+
+          }
+
+
+          html += `
+
+            <a
+              class="search-result"
+              href="book-details.html?id=${encodeURIComponent(book.id)}"
+            >
+
+              <div class="search-result-cover">
+
+                ${coverHtml}
+
+              </div>
+
+
+              <div class="search-result-info">
+
+                <p class="search-result-title">
+                  ${escapeHtml(title)}
+                </p>
+
+
+                <p class="search-result-author">
+                  Novelora Author
+                </p>
+
+
+                <p class="search-result-meta">
+                  ${escapeHtml(genre)}
+                </p>
+
+              </div>
+
+            </a>
+
+          `;
+
+        }
+      );
+
+
+      searchResults.innerHTML =
+        html;
+
+
+      searchResults.classList.add(
+        "show"
+      );
 
     }
 
+
+    /* =========================================================
+       ESCAPE HTML
+       ========================================================= */
 
     function escapeHtml(value) {
 
-      return String(value || "")
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
+      return String(
+        value || ""
+      )
+        .replace(
+          /&/g,
+          "&amp;"
+        )
+        .replace(
+          /</g,
+          "&lt;"
+        )
+        .replace(
+          />/g,
+          "&gt;"
+        )
+        .replace(
+          /"/g,
+          "&quot;"
+        )
+        .replace(
+          /'/g,
+          "&#039;"
+        );
 
     }
 
+
+    function escapeAttribute(value) {
+
+      return escapeHtml(
+        value
+      );
+
+    }
+
+
+    /* =========================================================
+       SEARCH EVENTS
+       ========================================================= */
 
     searchInput.addEventListener(
       "input",
@@ -1285,15 +1761,22 @@
       "click",
       function() {
 
-        searchInput.value = "";
+        searchInput.value =
+          "";
 
-        searchResults.innerHTML = "";
+
+        searchResults.innerHTML =
+          "";
+
 
         searchResults.classList.remove(
           "show"
         );
 
-        searchClear.style.display = "none";
+
+        searchClear.style.display =
+          "none";
+
 
         searchInput.focus();
 
@@ -1310,9 +1793,12 @@
             ".dashboard-search-wrapper"
           );
 
+
         if (
           wrapper &&
-          !wrapper.contains(event.target)
+          !wrapper.contains(
+            event.target
+          )
         ) {
 
           searchResults.classList.remove(
@@ -1324,7 +1810,56 @@
       }
     );
 
+
+    /* =========================================================
+       GENRE FILTER
+       ========================================================= */
+
+    document
+      .querySelectorAll(
+        ".genre-list a[data-genre]"
+      )
+      .forEach(
+        function(link) {
+
+          link.addEventListener(
+            "click",
+            function(event) {
+
+              event.preventDefault();
+
+
+              const genre =
+                link.dataset.genre ||
+                "";
+
+
+              searchInput.value =
+                genre;
+
+
+              renderSearchResults(
+                genre
+              );
+
+
+              searchInput.focus();
+
+            }
+          );
+
+        }
+      );
+
+
+    /* =========================================================
+       START
+       ========================================================= */
+
+    loadReaderAccount();
+
   </script>
 
 </body>
+
 </html>
