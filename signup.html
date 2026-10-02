@@ -117,5 +117,59 @@
 
   </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+
+<script>
+const createAccountButton = document.querySelector(".auth-button");
+
+createAccountButton.addEventListener("click", async function () {
+  const username = document.getElementById("signup-username").value.trim();
+  const email = document.getElementById("signup-email").value.trim();
+  const password = document.getElementById("signup-password").value;
+  const confirmPassword = document.getElementById("signup-confirm-password").value;
+
+  if (!username || !email || !password || !confirmPassword) {
+    alert("Please fill in all fields.");
+    return;
+  }
+
+  if (password !== confirmPassword) {
+    alert("Passwords do not match.");
+    return;
+  }
+
+  if (password.length < 6) {
+    alert("Password must be at least 6 characters.");
+    return;
+  }
+
+  createAccountButton.disabled = true;
+  createAccountButton.textContent = "Creating Account...";
+
+  const { data, error } = await supabaseClient.auth.signUp({
+    email: email,
+    password: password,
+    options: {
+      data: {
+        username: username
+      }
+    }
+  });
+
+  if (error) {
+    alert(error.message);
+    createAccountButton.disabled = false;
+    createAccountButton.textContent = "Create Account";
+    return;
+  }
+
+  if (data.user) {
+    alert("Account created successfully! Please check your email to verify your account.");
+    window.location.href = "login.html";
+  }
+});
+</script>
+
 </body>
 </html>
