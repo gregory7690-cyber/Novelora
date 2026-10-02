@@ -911,7 +911,7 @@ async function saveProfile() {
             })
             .eq("id", currentUser.id)
             .select("username, display_name, avatar_url, coins, role")
-            .single();
+            .maybeSingle();
 
         if (error) {
 
