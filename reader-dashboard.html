@@ -171,7 +171,10 @@
         transparent !important;
 
       color:
-        #ffffff !important;
+        #000000 !important;
+
+      caret-color:
+        #000000 !important;
 
       font-size: 15px;
 
@@ -183,7 +186,7 @@
     #dashboardSearchInput::placeholder {
 
       color:
-        rgba(255, 255, 255, 0.45) !important;
+        rgba(0, 0, 0, 0.45) !important;
 
     }
 
@@ -499,12 +502,6 @@
 
     }
 
-
-    /*
-     * Keep the existing Novelora book-card
-     * class names so the main site's styling
-     * continues to work.
-     */
 
     .dashboard-books {
 
@@ -1896,11 +1893,6 @@
           "none";
 
 
-        /*
-         * Authentication is ready.
-         * Now load real published books.
-         */
-
         await loadPublishedBooks();
 
 
@@ -1957,10 +1949,6 @@
           ? books
           : [];
 
-
-      /*
-       * Sort newest first initially.
-       */
 
       publishedBooks.sort(
         function(a, b) {
@@ -2132,7 +2120,6 @@
 
     /* =========================================================
        TRENDING
-       Featured first + views
        ========================================================= */
 
     function renderTrending() {
@@ -2185,7 +2172,6 @@
 
     /* =========================================================
        HOT
-       Newest + activity
        ========================================================= */
 
     function renderHot() {
@@ -2239,7 +2225,6 @@
 
     /* =========================================================
        READERS' FAVORITES
-       Library count
        ========================================================= */
 
     function renderFavorites() {
@@ -2342,7 +2327,6 @@
 
     /* =========================================================
        RECOMMENDED
-       Newest books for now
        ========================================================= */
 
     function renderRecommended() {
@@ -2477,10 +2461,6 @@
         "dashboard-book-link";
 
 
-      /*
-       * REAL SUPABASE UUID
-       */
-
       link.href =
         "book-details.html?id=" +
         encodeURIComponent(
@@ -2611,7 +2591,6 @@
 
     /* =========================================================
        LIBRARY
-       Supabase
        ========================================================= */
 
     async function addToLibrary(
