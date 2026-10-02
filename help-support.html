@@ -168,6 +168,11 @@ body {
     font-size: 14px;
 }
 
+.faq-arrow {
+    transition: .2s ease;
+    font-size: 20px;
+}
+
 .faq-answer {
     display: none;
     padding: 0 17px 17px;
@@ -185,11 +190,15 @@ body {
 }
 
 .contact-card {
-    margin-top: 25px;
-    padding: 24px;
+    margin-top: 30px;
+    padding: 25px;
     border-radius: 20px;
     background: linear-gradient(145deg, #190b15, #0d080c);
     border: 1px solid rgba(255,105,180,.22);
+}
+
+.contact-card h2 {
+    margin-top: 0;
 }
 
 .contact-card p {
@@ -198,16 +207,18 @@ body {
     font-size: 14px;
 }
 
-.contact-btn {
+.support-email {
     display: inline-block;
-    margin-top: 8px;
-    background: #ff69b4;
-    color: #160812;
-    border: none;
-    border-radius: 12px;
-    padding: 12px 18px;
+    margin-top: 5px;
+    color: #ff69b4;
+    font-size: 16px;
     font-weight: 700;
-    cursor: pointer;
+    text-decoration: none;
+    word-break: break-word;
+}
+
+.support-email:hover {
+    text-decoration: underline;
 }
 
 .no-results {
@@ -229,6 +240,10 @@ body {
     .hero {
         padding: 28px 16px;
     }
+
+    .contact-card {
+        padding: 20px;
+    }
 }
 </style></head><body><div class="support-page">
 <div class="support-container"><div class="topbar">
@@ -241,7 +256,9 @@ body {
 
 <section class="hero">
     <div class="hero-icon">❓</div>
+
     <h1>How can we help?</h1>
+
     <p>
         Find answers to common questions about your Novelora account,
         reading, coins, books and community.
@@ -249,6 +266,7 @@ body {
 
     <div class="search-box">
         <span>🔍</span>
+
         <input
             type="text"
             id="helpSearch"
@@ -264,25 +282,33 @@ body {
     <div class="help-card" data-search="account login signup email password">
         <div class="icon">👤</div>
         <strong>Account & Login</strong>
-        <span>Help with signing in, creating an account and passwords.</span>
+        <span>
+            Help with signing in, creating an account and passwords.
+        </span>
     </div>
 
     <div class="help-card" data-search="coins payment buy coins purchase money">
         <div class="icon">🪙</div>
         <strong>Coins & Payments</strong>
-        <span>Learn about coins, purchases and chapter unlocking.</span>
+        <span>
+            Learn about coins, purchases and chapter unlocking.
+        </span>
     </div>
 
-    <div class="help-card" data-search="books chapters reading novel">
+    <div class="help-card" data-search="books chapters reading novel library">
         <div class="icon">📚</div>
         <strong>Books & Reading</strong>
-        <span>Help with books, chapters, reading progress and your library.</span>
+        <span>
+            Help with books, chapters, reading progress and your library.
+        </span>
     </div>
 
     <div class="help-card" data-search="community comments replies likes report">
         <div class="icon">💬</div>
         <strong>Community</strong>
-        <span>Learn about comments, replies, likes and reporting.</span>
+        <span>
+            Learn about comments, replies, likes and reporting.
+        </span>
     </div>
 
 </div>
@@ -296,6 +322,7 @@ body {
             <span>What if I forget my password?</span>
             <span class="faq-arrow">›</span>
         </button>
+
         <div class="faq-answer">
             Go to the Novelora login page and select
             <strong>Forgot Password</strong>. You can request a password
@@ -308,6 +335,7 @@ body {
             <span>How do coins work?</span>
             <span class="faq-arrow">›</span>
         </button>
+
         <div class="faq-answer">
             Coins are used to unlock paid chapters and can also be earned
             through eligible Novelora rewards and promotions.
@@ -319,6 +347,7 @@ body {
             <span>How do I add a book to my Library?</span>
             <span class="faq-arrow">›</span>
         </button>
+
         <div class="faq-answer">
             Open a book and select <strong>Add to Library</strong>.
             The book will then appear in your Library so you can easily
@@ -331,6 +360,7 @@ body {
             <span>Can I reply to another reader's comment?</span>
             <span class="faq-arrow">›</span>
         </button>
+
         <div class="faq-answer">
             Yes. Novelora's community allows readers to comment, reply
             to comments and like community interactions.
@@ -342,6 +372,7 @@ body {
             <span>How do I report inappropriate content?</span>
             <span class="faq-arrow">›</span>
         </button>
+
         <div class="faq-answer">
             Use the report option available on the relevant community
             content. Reports can then be reviewed by Novelora moderation.
@@ -353,6 +384,7 @@ body {
             <span>Why am I receiving notifications?</span>
             <span class="faq-arrow">›</span>
         </button>
+
         <div class="faq-answer">
             Notifications may include new chapter updates, rewards,
             promotions and other important Novelora updates.
@@ -366,17 +398,20 @@ body {
 </div>
 
 <section class="contact-card">
-    <h2>Still need help? 💗</h2>
+
+    <h2>Need more help? 💗</h2>
 
     <p>
-        If you cannot find the answer you're looking for, you can contact
-        Novelora Support. A proper support form and support inbox can be
-        connected to the Novelora backend later.
+        If you need further assistance, please contact Novelora Support at:
     </p>
 
-    <button class="contact-btn" onclick="contactSupport()">
-        📩 Contact Support
-    </button>
+    <a
+        href="mailto:gregory7690@gmail.com?subject=Novelora%20Support%20Request"
+        class="support-email"
+    >
+        gregory7690@gmail.com
+    </a>
+
 </section>
 
 </div>
@@ -397,6 +432,7 @@ searchInput.addEventListener("input", function () {
     let matches = 0;
 
     cards.forEach(card => {
+
         const text = (
             card.innerText + " " +
             card.dataset.search
@@ -406,10 +442,13 @@ searchInput.addEventListener("input", function () {
 
         card.style.display = match ? "" : "none";
 
-        if (match) matches++;
+        if (match) {
+            matches++;
+        }
     });
 
     faqs.forEach(faq => {
+
         const text = (
             faq.innerText + " " +
             faq.dataset.search
@@ -419,18 +458,13 @@ searchInput.addEventListener("input", function () {
 
         faq.style.display = match ? "" : "none";
 
-        if (match) matches++;
+        if (match) {
+            matches++;
+        }
     });
 
     noResults.style.display =
         query && matches === 0 ? "block" : "none";
 });
-
-function contactSupport() {
-    window.location.href =
-        "mailto:gregory7690@gmail.com?subject=Novelora%20Support%20Request";
-}
-    );
-}
 </script></body>
 </html>
