@@ -3610,6 +3610,665 @@
 
 </script>
 
+  <!-- NOVELORA SUPABASE BOOK DETAILS CONNECTION -->
+<script>
+(function () {
+
+  function loadScript(src) {
+    return new Promise(function (resolve, reject) {
+      const script = document.createElement("script");
+      script.src = src;
+      script.onload = resolve;
+      script.onerror = reject;
+      document.head.appendChild(script);
+    });
+  }
+
+  async function startSupabaseBookConnection() {
+
+    try {
+
+      /* Load Supabase library */
+      if (!window.supabase) {
+        await loadScript(
+          "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
+        );
+      }
+
+      /* Load Novelora Supabase configuration */
+      if (!window.supabaseClient) {
+        await loadScript("supabase-config.js");
+      }
+
+      if (!window.supabaseClient) {
+        throw new Error(
+          "Supabase configuration could not be loaded."
+        );
+      }
+
+      const supabaseClient = window.supabaseClient;
+
+      /* -----------------------------------------
+         GET BOOK ID
+      ----------------------------------------- */
+
+      const params =
+        new URLSearchParams(window.location.search);
+
+      const bookId =
+        params.get("id");
+
+      if (!bookId) {
+        showBookError(
+          "Book Not Found",
+          "No book was selected."
+        );
+        return;
+      }
+
+      /* -----------------------------------------
+         LOAD PUBLISHED BOOK
+      ----------------------------------------- */
+
+      const {
+        data: book,
+        error: bookError
+      } = await supabaseClient
+        .from("books")
+        .select("*")
+        .eq("id", bookId)
+        .eq("status", "published")
+        .maybeSingle();
+
+      if (bookError) {
+        console.error(
+          "Novelora book error:",
+          bookError
+        );
+
+        throw bookError;
+      }
+
+      if (!book) {
+        showBookError(
+          "Book Not Found",
+          "This book could not be found or has not been published yet."
+        );
+        return;
+      }
+
+      /* -----------------------------------------
+         DISPLAY BOOK
+      ----------------------------------------- */
+
+      renderBook(book);
+
+      /* -----------------------------------------
+         LOAD PUBLISHED CHAPTERS
+      ----------------------------------------- */
+
+      const {
+        data: chapters,
+        error: chaptersError
+      } = await supabaseClient
+        .from("chapters")
+        .select("*")
+        .eq("book_id", book.id)
+        .eq("status", "published")
+        .order("chapter_number", {
+          ascending: true
+        });
+
+      if (chaptersError) {
+        console.error(
+          "Novelora chapters error:",
+          chaptersError
+        );
+
+        throw chaptersError;
+      }
+
+      renderChapters(
+        book,
+        Array.isArray(chapters)
+          ? chapters
+          : []
+      );
+
+      /* -----------------------------------------
+         START READING
+      ----------------------------------------- */
+
+      if (chapters && chapters.length) {
+
+        const firstChapter =
+          chapters[0];
+
+        const firstNumber =
+          Number(
+            firstChapter.chapter_number
+          );
+
+        const startReading =
+          document.getElementById(
+            "startReading"
+          );
+
+        if (startReading) {
+
+          startReading.href =
+            "chapter.html?book=" +
+            encodeURIComponent(book.id) +
+            "&chapter=" +
+            encodeURIComponent(firstNumber);
+
+          startReading.style.display =
+            "inline-block";
+        }
+
+      }
+
+      /* -----------------------------------------
+         LIBRARY BUTTON
+      ----------------------------------------- */
+
+      window.addCurrentBookToLibrary =
+        async function () {
+
+          try {
+
+            const {
+              data: {
+                user
+              }
+            } =
+              await supabaseClient.auth.getUser();
+
+            if (!user) {
+
+              alert(
+                "Please log in to add this book to your library."
+              );
+
+              return;
+            }
+
+            const {
+              error
+            } =
+              await supabaseClient
+                .from("library")
+                .insert({
+                  user_id: user.id,
+                  book_id: book.id
+                });
+
+            if (error) {
+
+              /*
+               * If the book is already in the
+               * reader's library, don't treat
+               * that as a serious failure.
+               */
+              if (
+                String(error.code) ===
+                "23505"
+              ) {
+
+                alert(
+                  "This book is already in your library."
+                );
+
+                return;
+              }
+
+              throw error;
+            }
+
+            alert(
+              "Book added to your library."
+            );
+
+          } catch (error) {
+
+            console.error(
+              "Library error:",
+              error
+            );
+
+            alert(
+              "Could not add this book to your library."
+            );
+
+          }
+
+        };
+
+    } catch (error) {
+
+      console.error(
+        "Novelora Supabase connection error:",
+        error
+      );
+
+      showBookError(
+        "Unable to Load Book",
+        "There was a problem connecting to the Novelora database."
+      );
+
+    }
+
+  }
+
+
+  /* =========================================
+     BOOK ERROR
+  ========================================= */
+
+  function showBookError(
+    title,
+    message
+  ) {
+
+    const titleElement =
+      document.getElementById(
+        "bookTitle"
+      );
+
+    const descriptionElement =
+      document.getElementById(
+        "bookDescription"
+      );
+
+    const chapterList =
+      document.getElementById(
+        "chapterList"
+      );
+
+    if (titleElement) {
+      titleElement.textContent =
+        title;
+    }
+
+    if (descriptionElement) {
+      descriptionElement.textContent =
+        message;
+    }
+
+    if (chapterList) {
+
+      chapterList.innerHTML =
+        '<div class="empty-chapters">' +
+        message +
+        "</div>";
+
+    }
+
+  }
+
+
+  /* =========================================
+     RENDER BOOK
+  ========================================= */
+
+  function renderBook(book) {
+
+    const title =
+      book.title ||
+      "Untitled Book";
+
+    const author =
+      book.author ||
+      book.author_name ||
+      book.pen_name ||
+      book.penName ||
+      "Novelora Author";
+
+    const genre =
+      book.genre ||
+      "Romance";
+
+    const secondGenre =
+      book.subgenre ||
+      book.secondary_genre ||
+      "";
+
+    const rating =
+      book.age_rating ||
+      book.ageRating ||
+      "All Ages";
+
+    /*
+     * IMPORTANT:
+     * "status" is the publication status,
+     * so don't display "Published" as the
+     * story status.
+     */
+    const storyStatus =
+      book.story_status ||
+      book.storyStatus ||
+      "Ongoing";
+
+    const description =
+      book.description ||
+      "No description available.";
+
+    const cover =
+      book.cover_url ||
+      book.coverUrl ||
+      book.cover_image ||
+      "";
+
+    document.title =
+      title + " — Novelora";
+
+    const titleElement =
+      document.getElementById(
+        "bookTitle"
+      );
+
+    const authorElement =
+      document.getElementById(
+        "bookAuthor"
+      );
+
+    const descriptionElement =
+      document.getElementById(
+        "bookDescription"
+      );
+
+    const coverElement =
+      document.getElementById(
+        "bookCover"
+      );
+
+    const metaElement =
+      document.getElementById(
+        "bookMeta"
+      );
+
+    if (titleElement) {
+      titleElement.textContent =
+        title;
+    }
+
+    if (authorElement) {
+
+      authorElement.innerHTML =
+        "By <strong>" +
+        escapeHTML(author) +
+        "</strong>";
+
+    }
+
+    if (descriptionElement) {
+
+      descriptionElement.textContent =
+        description;
+
+    }
+
+    /* -----------------------------------------
+       COVER
+    ----------------------------------------- */
+
+    if (coverElement) {
+
+      if (cover) {
+
+        coverElement.style.backgroundImage =
+          "url('" +
+          String(cover).replace(
+            /'/g,
+            "\\'"
+          ) +
+          "')";
+
+        coverElement.style.backgroundSize =
+          "cover";
+
+        coverElement.style.backgroundPosition =
+          "center";
+
+        coverElement.textContent =
+          "";
+
+      } else {
+
+        coverElement.style.backgroundImage =
+          "";
+
+        coverElement.textContent =
+          title.toUpperCase();
+
+      }
+
+    }
+
+    /* -----------------------------------------
+       META
+    ----------------------------------------- */
+
+    if (metaElement) {
+
+      let metaHTML =
+        "<span>❤️ " +
+        escapeHTML(genre) +
+        "</span>";
+
+      if (secondGenre) {
+
+        metaHTML +=
+          "<span>✨ " +
+          escapeHTML(secondGenre) +
+          "</span>";
+
+      }
+
+      metaHTML +=
+        "<span>🔞 " +
+        escapeHTML(rating) +
+        "</span>" +
+        "<span>📖 " +
+        escapeHTML(storyStatus) +
+        "</span>";
+
+      metaElement.innerHTML =
+        metaHTML;
+
+    }
+
+    /* -----------------------------------------
+       REAL SUPABASE BOOK STATS
+    ----------------------------------------- */
+
+    const views =
+      Number(book.views) || 0;
+
+    const libraryCount =
+      Number(book.library_count) || 0;
+
+    const viewsElement =
+      document.getElementById(
+        "bookViews"
+      );
+
+    const libraryElement =
+      document.getElementById(
+        "bookLibraryCount"
+      );
+
+    if (viewsElement) {
+      viewsElement.textContent =
+        views.toLocaleString();
+    }
+
+    if (libraryElement) {
+      libraryElement.textContent =
+        libraryCount.toLocaleString();
+    }
+
+  }
+
+
+  /* =========================================
+     RENDER CHAPTERS
+  ========================================= */
+
+  function renderChapters(
+    book,
+    chapters
+  ) {
+
+    const chapterList =
+      document.getElementById(
+        "chapterList"
+      );
+
+    if (!chapterList) {
+      return;
+    }
+
+    chapterList.innerHTML =
+      "";
+
+    if (!chapters.length) {
+
+      chapterList.innerHTML =
+        '<div class="empty-chapters">' +
+        "📖 No published chapters yet.<br><br>" +
+        "Publish chapters from the Novelora Admin panel and they will appear here." +
+        "</div>";
+
+      return;
+    }
+
+    chapters.forEach(
+      function (chapter) {
+
+        const number =
+          Number(
+            chapter.chapter_number
+          ) || 1;
+
+        const title =
+          chapter.title ||
+          "Chapter " + number;
+
+        const isFree =
+          Boolean(
+            chapter.is_free
+          );
+
+        const price =
+          Number(
+            chapter.coin_price
+          ) || 0;
+
+        const item =
+          document.createElement(
+            "a"
+          );
+
+        item.className =
+          "chapter-item";
+
+        item.href =
+          "chapter.html?book=" +
+          encodeURIComponent(
+            book.id
+          ) +
+          "&chapter=" +
+          encodeURIComponent(
+            number
+          );
+
+        const priceHTML =
+          isFree
+            ? '<span class="chapter-price free">FREE</span>'
+            : '<span class="chapter-price paid">🪙 ' +
+              price +
+              "</span>";
+
+        const subtitle =
+          isFree
+            ? "Free to read"
+            : "Locked • " +
+              price +
+              " coins";
+
+        item.innerHTML =
+          '<div class="chapter-left">' +
+
+            '<div class="chapter-number">' +
+              number +
+            "</div>" +
+
+            "<div>" +
+
+              '<div class="chapter-title">' +
+                escapeHTML(title) +
+              "</div>" +
+
+              '<div class="chapter-subtitle">' +
+                escapeHTML(subtitle) +
+              "</div>" +
+
+            "</div>" +
+
+          "</div>" +
+
+          priceHTML;
+
+        chapterList.appendChild(
+          item
+        );
+
+      }
+    );
+
+  }
+
+
+  /* =========================================
+     SAFE TEXT
+  ========================================= */
+
+  function escapeHTML(value) {
+
+    return String(value)
+      .replace(
+        /&/g,
+        "&amp;"
+      )
+      .replace(
+        /</g,
+        "&lt;"
+      )
+      .replace(
+        />/g,
+        "&gt;"
+      )
+      .replace(
+        /"/g,
+        "&quot;"
+      )
+      .replace(
+        /'/g,
+        "&#039;"
+      );
+
+  }
+
+
+  /* =========================================
+     START
+  ========================================= */
+
+  startSupabaseBookConnection();
+
+})();
+  </script>
 
 </body>
 </html>
