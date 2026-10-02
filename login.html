@@ -103,5 +103,39 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase-config.js"></script>
+
+<script>
+const loginForm = document.querySelector("form");
+
+if (loginForm) {
+  loginForm.addEventListener("submit", async function (event) {
+    event.preventDefault();
+
+    const inputs = loginForm.querySelectorAll("input");
+    const email = inputs[0]?.value.trim();
+    const password = inputs[1]?.value;
+
+    if (!email || !password) {
+      alert("Please enter your email and password.");
+      return;
+    }
+
+    const { data, error } = await supabaseClient.auth.signInWithPassword({
+      email: email,
+      password: password
+    });
+
+    if (error) {
+      alert(error.message);
+      return;
+    }
+
+    if (data.user) {
+      window.location.href = "reader-dashboard.html";
+    }
+  });
+}
+</script>
+
 </body>
 </html>
