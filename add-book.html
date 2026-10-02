@@ -1,1 +1,1097 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Novelora Admin — Add New Book</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #120914;
+    color: #fff;
+    min-height: 100vh;
+}
+
+.page {
+    max-width: 1250px;
+    margin: auto;
+    padding: 25px;
+}
+
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.brand {
+    color: #ff6fb5;
+    font-size: 26px;
+    font-weight: 800;
+}
+
+.back {
+    color: #ff9ccc;
+    text-decoration: none;
+    font-weight: 700;
+}
+
+.layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 330px;
+    gap: 24px;
+}
+
+.card {
+    background: #1d101c;
+    border: 1px solid rgba(255,105,180,.18);
+    border-radius: 20px;
+    padding: 25px;
+    margin-bottom: 20px;
+    box-shadow: 0 15px 40px rgba(0,0,0,.2);
+}
+
+.card h2 {
+    font-size: 19px;
+    margin-bottom: 20px;
+    color: #fff;
+}
+
+.card h2 span {
+    color: #ff6fb5;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.full {
+    grid-column: 1 / -1;
+}
+
+label {
+    display: block;
+    color: #f4dce9;
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 7px;
+}
+
+input,
+textarea,
+select {
+    width: 100%;
+    border: 1px solid #42243a;
+    background: #100811;
+    color: #fff;
+    border-radius: 11px;
+    padding: 13px;
+    outline: none;
+    font-size: 14px;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+    border-color: #ff6fb5;
+    box-shadow: 0 0 0 3px rgba(255,105,180,.08);
+}
+
+textarea {
+    min-height: 130px;
+    resize: vertical;
+}
+
+.cover-box {
+    border: 1px dashed #7b4566;
+    border-radius: 15px;
+    min-height: 220px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background: #100811;
+    margin-bottom: 12px;
+}
+
+.cover-box img {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+}
+
+.cover-placeholder {
+    text-align: center;
+    color: #9f8192;
+    padding: 30px;
+}
+
+.cover-placeholder strong {
+    display: block;
+    color: #ff8ec5;
+    font-size: 18px;
+    margin-bottom: 7px;
+}
+
+.checkbox-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.checkbox {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #140b12;
+    border: 1px solid #3d2235;
+    padding: 12px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.checkbox input {
+    width: auto;
+}
+
+.summary {
+    position: sticky;
+    top: 20px;
+}
+
+.preview-cover {
+    width: 150px;
+    height: 220px;
+    border-radius: 12px;
+    background: linear-gradient(145deg,#351426,#0d080c);
+    margin: 0 auto 18px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #9e7189;
+    text-align: center;
+}
+
+.preview-cover img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.preview-title {
+    text-align: center;
+    font-size: 20px;
+    font-weight: 800;
+    margin-bottom: 7px;
+}
+
+.preview-author {
+    text-align: center;
+    color: #ff8ec5;
+    margin-bottom: 18px;
+}
+
+.preview-description {
+    color: #bda9b5;
+    line-height: 1.6;
+    font-size: 13px;
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+    padding: 12px 0;
+    border-bottom: 1px solid #33202d;
+    font-size: 13px;
+}
+
+.summary-row span:first-child {
+    color: #a98c9d;
+}
+
+.summary-row span:last-child {
+    font-weight: 700;
+}
+
+.actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+button {
+    border: none;
+    border-radius: 11px;
+    padding: 14px 20px;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.btn-primary {
+    flex: 1;
+    background: linear-gradient(135deg,#ff4fa8,#d62d82);
+    color: #fff;
+}
+
+.btn-secondary {
+    background: #2a1726;
+    color: #ffc2df;
+    border: 1px solid #523149;
+}
+
+button:disabled {
+    opacity: .6;
+    cursor: not-allowed;
+}
+
+.status {
+    display: none;
+    padding: 14px;
+    border-radius: 11px;
+    margin-bottom: 20px;
+    font-size: 14px;
+}
+
+.status.show {
+    display: block;
+}
+
+.status.success {
+    background: rgba(56,180,110,.12);
+    border: 1px solid rgba(56,180,110,.35);
+    color: #8ff0b5;
+}
+
+.status.error {
+    background: rgba(255,70,100,.12);
+    border: 1px solid rgba(255,70,100,.35);
+    color: #ff9baa;
+}
+
+.small {
+    color: #987d8d;
+    font-size: 12px;
+    margin-top: 6px;
+}
+
+@media(max-width: 900px) {
+    .layout {
+        grid-template-columns: 1fr;
+    }
+
+    .summary {
+        position: static;
+    }
+}
+
+@media(max-width: 600px) {
+    .page {
+        padding: 15px;
+    }
+
+    .grid {
+        grid-template-columns: 1fr;
+    }
+
+    .full {
+        grid-column: auto;
+    }
+
+    .topbar {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .actions {
+        flex-direction: column;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="page">
+
+    <div class="topbar">
+        <div class="brand">Novelora</div>
+        <a href="index.html" class="back">← Back to Dashboard</a>
+    </div>
+
+    <div id="status" class="status"></div>
+
+    <div class="layout">
+
+        <main>
+
+            <!-- BOOK IDENTITY -->
+            <section class="card">
+
+                <h2>📖 <span>Book Identity</span></h2>
+
+                <div class="grid">
+
+                    <div>
+                        <label>Book Title *</label>
+                        <input id="title" type="text" placeholder="Enter book title">
+                    </div>
+
+                    <div>
+                        <label>Subtitle</label>
+                        <input id="subtitle" type="text" placeholder="Optional subtitle">
+                    </div>
+
+                    <div>
+                        <label>Author *</label>
+                        <input id="author" type="text" placeholder="Author name">
+                    </div>
+
+                    <div>
+                        <label>Pen Name</label>
+                        <input id="penName" type="text" placeholder="Author pen name">
+                    </div>
+
+                    <div class="full">
+                        <label>Tagline</label>
+                        <input id="tagline" type="text" placeholder="A short hook for readers">
+                    </div>
+
+                    <div class="full">
+                        <label>Description *</label>
+                        <textarea id="description" placeholder="Write the book description..."></textarea>
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- COVER -->
+            <section class="card">
+
+                <h2>🎨 <span>Book Cover</span></h2>
+
+                <div class="cover-box" id="coverBox">
+
+                    <div class="cover-placeholder">
+                        <strong>Upload Book Cover</strong>
+                        JPG, PNG or WebP
+                    </div>
+
+                </div>
+
+                <input id="coverInput" type="file" accept="image/png,image/jpeg,image/webp">
+
+                <div class="small">
+                    The selected cover will be stored with this book for the current publishing flow.
+                </div>
+
+            </section>
+
+            <!-- GENRES -->
+            <section class="card">
+
+                <h2>🏷️ <span>Genres & Discovery</span></h2>
+
+                <div class="grid">
+
+                    <div>
+                        <label>Genre *</label>
+                        <select id="genre">
+                            <option value="">Select genre</option>
+                            <option>Romance</option>
+                            <option>Werewolf</option>
+                            <option>Billionaire</option>
+                            <option>Fantasy</option>
+                            <option>Mystery</option>
+                            <option>Thriller</option>
+                            <option>Drama</option>
+                            <option>Historical</option>
+                            <option>Vampire</option>
+                            <option>Paranormal</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label>Subgenre</label>
+                        <input id="subgenre" type="text" placeholder="e.g. Forbidden Romance">
+                    </div>
+
+                    <div>
+                        <label>Tags</label>
+                        <input id="tags" type="text" placeholder="alpha, forbidden love, enemies">
+                    </div>
+
+                    <div>
+                        <label>Search Keywords</label>
+                        <input id="searchKeywords" type="text" placeholder="Words readers may search">
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- STORY -->
+            <section class="card">
+
+                <h2>✍️ <span>Story Information</span></h2>
+
+                <div class="grid">
+
+                    <div>
+                        <label>POV</label>
+                        <select id="pov">
+                            <option value="">Select POV</option>
+                            <option>First Person</option>
+                            <option>Third Person</option>
+                            <option>Multiple POV</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label>Story Status</label>
+                        <select id="storyStatus">
+                            <option>Ongoing</option>
+                            <option>Completed</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label>Estimated Chapters</label>
+                        <input id="estimatedChapters" type="number" min="0" placeholder="e.g. 100">
+                    </div>
+
+                    <div>
+                        <label>Age Rating</label>
+                        <select id="ageRating">
+                            <option>13+</option>
+                            <option>16+</option>
+                            <option>18+</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label>Language</label>
+                        <select id="language">
+                            <option>English</option>
+                            <option>French</option>
+                            <option>Spanish</option>
+                            <option>Portuguese</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label>Setting</label>
+                        <input id="setting" type="text" placeholder="e.g. New York">
+                    </div>
+
+                    <div>
+                        <label>Series Name</label>
+                        <input id="seriesName" type="text">
+                    </div>
+
+                    <div>
+                        <label>Book Number</label>
+                        <input id="bookNumber" type="number" min="1">
+                    </div>
+
+                    <div class="full">
+                        <label>Content Warnings</label>
+                        <input id="contentWarnings" type="text" placeholder="Optional">
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- AUTHOR -->
+            <section class="card">
+
+                <h2>👤 <span>Author Information</span></h2>
+
+                <div class="grid">
+
+                    <div>
+                        <label>Author ID</label>
+                        <input id="authorId" type="text" placeholder="Optional Supabase author ID">
+                    </div>
+
+                    <div>
+                        <label>Author Email</label>
+                        <input id="authorEmail" type="email" placeholder="Optional">
+                    </div>
+
+                    <div class="full">
+                        <label>Author Bio</label>
+                        <textarea id="authorBio" placeholder="Optional author biography"></textarea>
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- PUBLISHING -->
+            <section class="card">
+
+                <h2>🚀 <span>Publishing Settings</span></h2>
+
+                <div class="grid">
+
+                    <div>
+                        <label>Publication Date</label>
+                        <input id="publicationDate" type="date">
+                    </div>
+
+                    <div>
+                        <label>Update Frequency</label>
+                        <select id="updateFrequency">
+                            <option>Daily</option>
+                            <option>Several times a week</option>
+                            <option>Weekly</option>
+                            <option>Biweekly</option>
+                            <option>Irregular</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label>Ownership</label>
+                        <select id="ownership">
+                            <option>Original</option>
+                            <option>Exclusive</option>
+                            <option>Non-exclusive</option>
+                        </select>
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- MONETIZATION -->
+            <section class="card">
+
+                <h2>🪙 <span>Monetization</span></h2>
+
+                <div class="grid">
+
+                    <div>
+                        <label>Access Type</label>
+                        <select id="accessType">
+                            <option value="paid">Paid</option>
+                            <option value="free">Free</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label>Chapter Price (Coins)</label>
+                        <input id="chapterPrice" type="number" min="0" value="5">
+                    </div>
+
+                    <div>
+                        <label>Free Opening Chapters</label>
+                        <input id="freeOpeningChapters" type="number" min="0" value="0">
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- READER FEATURES -->
+            <section class="card">
+
+                <h2>💗 <span>Reader Features</span></h2>
+
+                <div class="checkbox-row">
+
+                    <label class="checkbox">
+                        <input id="featured" type="checkbox">
+                        Featured Book
+                    </label>
+
+                    <label class="checkbox">
+                        <input id="discoverable" type="checkbox" checked>
+                        Discoverable
+                    </label>
+
+                    <label class="checkbox">
+                        <input id="allowComments" type="checkbox" checked>
+                        Comments
+                    </label>
+
+                    <label class="checkbox">
+                        <input id="allowRatings" type="checkbox" checked>
+                        Ratings
+                    </label>
+
+                    <label class="checkbox">
+                        <input id="allowGifts" type="checkbox" checked>
+                        Gifts
+                    </label>
+
+                </div>
+
+            </section>
+
+            <div class="actions">
+
+                <button
+                    class="btn-secondary"
+                    type="button"
+                    onclick="saveBook('draft')"
+                    id="draftButton"
+                >
+                    Save Draft
+                </button>
+
+                <button
+                    class="btn-primary"
+                    type="button"
+                    onclick="saveBook('published')"
+                    id="publishButton"
+                >
+                    Publish Book
+                </button>
+
+            </div>
+
+        </main>
+
+        <!-- RIGHT SIDE -->
+        <aside>
+
+            <div class="card summary">
+
+                <h2>👀 <span>Live Preview</span></h2>
+
+                <div class="preview-cover" id="previewCover">
+                    Cover
+                </div>
+
+                <div class="preview-title" id="previewTitle">
+                    Your Book Title
+                </div>
+
+                <div class="preview-author" id="previewAuthor">
+                    Author Name
+                </div>
+
+                <div class="preview-description" id="previewDescription">
+                    Your book description will appear here.
+                </div>
+
+            </div>
+
+            <div class="card summary">
+
+                <h2>📋 <span>Publishing Summary</span></h2>
+
+                <div class="summary-row">
+                    <span>Status</span>
+                    <span id="summaryStatus">Draft</span>
+                </div>
+
+                <div class="summary-row">
+                    <span>Access</span>
+                    <span id="summaryAccess">Paid</span>
+                </div>
+
+                <div class="summary-row">
+                    <span>Chapter Price</span>
+                    <span id="summaryPrice">5 coins</span>
+                </div>
+
+                <div class="summary-row">
+                    <span>Genre</span>
+                    <span id="summaryGenre">—</span>
+                </div>
+
+                <div class="summary-row">
+                    <span>Featured</span>
+                    <span id="summaryFeatured">No</span>
+                </div>
+
+            </div>
+
+        </aside>
+
+    </div>
+
+</div>
+
+<script>
+
+let coverData = null;
+
+
+/* =========================
+   HELPERS
+========================= */
+
+function value(id) {
+    return document.getElementById(id)?.value?.trim() || "";
+}
+
+function checked(id) {
+    return document.getElementById(id)?.checked || false;
+}
+
+function showStatus(message, type) {
+
+    const box = document.getElementById("status");
+
+    box.textContent = message;
+    box.className = "status show " + type;
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+}
+
+
+/* =========================
+   COVER
+========================= */
+
+document.getElementById("coverInput").addEventListener("change", function() {
+
+    const file = this.files[0];
+
+    if (!file) return;
+
+    const reader = new FileReader();
+
+    reader.onload = function(e) {
+
+        coverData = e.target.result;
+
+        document.getElementById("coverBox").innerHTML =
+            `<img src="${coverData}" alt="Book cover">`;
+
+        document.getElementById("previewCover").innerHTML =
+            `<img src="${coverData}" alt="Book cover">`;
+    };
+
+    reader.readAsDataURL(file);
+});
+
+
+/* =========================
+   LIVE PREVIEW
+========================= */
+
+function updatePreview() {
+
+    document.getElementById("previewTitle").textContent =
+        value("title") || "Your Book Title";
+
+    document.getElementById("previewAuthor").textContent =
+        value("author") || "Author Name";
+
+    document.getElementById("previewDescription").textContent =
+        value("description") ||
+        "Your book description will appear here.";
+
+    document.getElementById("summaryStatus").textContent =
+        "Ready";
+
+    document.getElementById("summaryAccess").textContent =
+        document.getElementById("accessType").value === "free"
+            ? "Free"
+            : "Paid";
+
+    document.getElementById("summaryPrice").textContent =
+        `${value("chapterPrice") || 0} coins`;
+
+    document.getElementById("summaryGenre").textContent =
+        value("genre") || "—";
+
+    document.getElementById("summaryFeatured").textContent =
+        checked("featured") ? "Yes" : "No";
+}
+
+document.querySelectorAll("input, textarea, select").forEach(function(element) {
+    element.addEventListener("input", updatePreview);
+    element.addEventListener("change", updatePreview);
+});
+
+
+/* =========================
+   SAVE BOOK
+========================= */
+
+async function saveBook(status) {
+
+    const title = value("title");
+    const author = value("author");
+    const description = value("description");
+    const genre = value("genre");
+
+    if (!title) {
+        showStatus("Please enter a book title.", "error");
+        return;
+    }
+
+    if (!author) {
+        showStatus("Please enter an author.", "error");
+        return;
+    }
+
+    if (!description) {
+        showStatus("Please enter a book description.", "error");
+        return;
+    }
+
+    if (!genre) {
+        showStatus("Please select a genre.", "error");
+        return;
+    }
+
+    const publishButton =
+        document.getElementById("publishButton");
+
+    const draftButton =
+        document.getElementById("draftButton");
+
+    publishButton.disabled = true;
+    draftButton.disabled = true;
+
+    try {
+
+        const {
+            data: {
+                session
+            },
+            error: sessionError
+        } = await supabaseClient.auth.getSession();
+
+        if (sessionError) {
+            throw sessionError;
+        }
+
+        if (!session) {
+            window.location.href = "login.html";
+            return;
+        }
+
+        const user = session.user;
+
+        /*
+         * Find the author's Supabase author record.
+         * If an author ID was manually supplied, use it.
+         */
+
+        let authorId = value("authorId") || null;
+
+        if (!authorId) {
+
+            const {
+                data: authorRecord,
+                error: authorError
+            } = await supabaseClient
+                .from("authors")
+                .select("id")
+                .eq("user_id", user.id)
+                .maybeSingle();
+
+            if (!authorError && authorRecord) {
+                authorId = authorRecord.id;
+            }
+        }
+
+        /*
+         * Prepare the book record.
+         */
+
+        const book = {
+
+            author_id: authorId,
+
+            title: title,
+
+            subtitle:
+                value("subtitle") || null,
+
+            tagline:
+                value("tagline") || null,
+
+            description:
+                description,
+
+            cover_url:
+                coverData || null,
+
+            genre:
+                genre,
+
+            subgenre:
+                value("subgenre") || null,
+
+            tags:
+                value("tags")
+                    ? value("tags")
+                        .split(",")
+                        .map(tag => tag.trim())
+                        .filter(Boolean)
+                    : [],
+
+            language:
+                value("language") || "English",
+
+            pov:
+                value("pov") || null,
+
+            story_status:
+                value("storyStatus") || "Ongoing",
+
+            age_rating:
+                value("ageRating") || "13+",
+
+            access_type:
+                document.getElementById("accessType").value,
+
+            chapter_price:
+                Number(value("chapterPrice") || 5),
+
+            free_opening_chapters:
+                Number(value("freeOpeningChapters") || 0),
+
+            featured:
+                checked("featured"),
+
+            discoverable:
+                checked("discoverable"),
+
+            allow_comments:
+                checked("allowComments"),
+
+            allow_ratings:
+                checked("allowRatings"),
+
+            allow_gifts:
+                checked("allowGifts"),
+
+            status:
+                status,
+
+            views: 0,
+
+            library_count: 0,
+
+            updated_at:
+                new Date().toISOString()
+        };
+
+
+        /*
+         * Insert into Supabase.
+         */
+
+        const {
+            data,
+            error
+        } = await supabaseClient
+            .from("books")
+            .insert(book)
+            .select()
+            .maybeSingle();
+
+        if (error) {
+            throw error;
+        }
+
+        if (!data) {
+            throw new Error(
+                "The book was saved, but Supabase did not return the new book."
+            );
+        }
+
+        /*
+         * Keep a local activity record for the Admin UI
+         * while the rest of the Admin system is being migrated.
+         */
+
+        const activities =
+            JSON.parse(
+                localStorage.getItem("noveloraAdminActivities") || "[]"
+            );
+
+        activities.unshift({
+
+            id: "activity_" + Date.now(),
+
+            type: "book_created",
+
+            title:
+                status === "published"
+                    ? "Book published"
+                    : "Book saved as draft",
+
+            message:
+                `${title} by ${author}`,
+
+            bookId:
+                data.id,
+
+            createdAt:
+                new Date().toISOString()
+        });
+
+        localStorage.setItem(
+            "noveloraAdminActivities",
+            JSON.stringify(activities)
+        );
+
+
+        showStatus(
+            status === "published"
+                ? "Book published successfully! 📚💗"
+                : "Book saved as a draft! 💗",
+            "success"
+        );
+
+
+        setTimeout(function() {
+
+            window.location.href = "books.html";
+
+        }, 1200);
+
+
+    } catch (error) {
+
+        console.error("Book publishing error:", error);
+
+        showStatus(
+            error.message ||
+            "Unable to save the book.",
+            "error"
+        );
+
+        publishButton.disabled = false;
+        draftButton.disabled = false;
+    }
+}
+
+
+updatePreview();
+
+</script>
+
+</body>
+</html>
