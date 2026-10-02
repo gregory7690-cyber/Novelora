@@ -29,39 +29,30 @@
       gap: 12px;
       padding: 15px 18px;
       border-radius: 18px;
-
       background: #050505;
-
       border: 1px solid rgba(255, 105, 180, 0.35);
-
       box-shadow:
         0 10px 35px rgba(0, 0, 0, 0.45),
         0 0 25px rgba(255, 105, 180, 0.08);
-
       backdrop-filter: blur(14px);
-
       transition: 0.25s ease;
       box-sizing: border-box;
     }
 
     .dashboard-search-box:focus-within {
       border-color: rgba(255, 105, 180, 0.75);
-
       box-shadow:
         0 12px 40px rgba(0, 0, 0, 0.55),
         0 0 30px rgba(255, 105, 180, 0.16);
-
       transform: translateY(-1px);
     }
 
     .dashboard-search-icon {
       width: 25px;
       height: 25px;
-
       display: flex;
       align-items: center;
       justify-content: center;
-
       font-size: 20px;
       flex-shrink: 0;
     }
@@ -69,17 +60,12 @@
     #dashboardSearchInput {
       flex: 1;
       width: 100%;
-
       border: none;
       outline: none;
-
       background: transparent !important;
-
       color: #ffffff !important;
-
       font-size: 15px;
       font-family: inherit;
-
       min-width: 0;
     }
 
@@ -90,25 +76,16 @@
     .dashboard-search-clear {
       width: 30px;
       height: 30px;
-
       border: none;
       border-radius: 50%;
-
       background: rgba(255, 255, 255, 0.08);
-
       color: rgba(255, 255, 255, 0.75);
-
       cursor: pointer;
-
       display: none;
       align-items: center;
       justify-content: center;
-
       font-size: 15px;
-
       flex-shrink: 0;
-
-      transition: 0.2s ease;
     }
 
     .dashboard-search-clear:hover {
@@ -116,35 +93,21 @@
       color: #ffffff;
     }
 
-
-    /* =========================================================
-       SEARCH RESULTS
-       ========================================================= */
-
     .dashboard-search-results {
       position: absolute;
-
       top: calc(100% + 10px);
       left: 0;
       right: 0;
-
       display: none;
-
       max-height: 430px;
       overflow-y: auto;
-
       padding: 10px;
-
       border-radius: 18px;
-
       background: #0a0a0a;
-
       border: 1px solid rgba(255, 105, 180, 0.25);
-
       box-shadow:
         0 20px 50px rgba(0, 0, 0, 0.55),
         0 0 30px rgba(255, 105, 180, 0.08);
-
       backdrop-filter: blur(20px);
     }
 
@@ -152,29 +115,16 @@
       display: block;
     }
 
-
-    /* =========================================================
-       SEARCH RESULT ITEM
-       ========================================================= */
-
     .search-result {
       width: 100%;
-
       display: flex;
       align-items: center;
-
       gap: 13px;
-
       padding: 12px;
-
       border-radius: 14px;
-
       text-decoration: none;
-
       color: inherit;
-
       box-sizing: border-box;
-
       transition: 0.2s ease;
     }
 
@@ -182,141 +132,116 @@
       background: rgba(255, 105, 180, 0.09);
     }
 
-
     .search-result-cover {
       width: 52px;
       height: 70px;
-
       flex-shrink: 0;
-
       border-radius: 9px;
-
       display: flex;
       align-items: center;
       justify-content: center;
-
       text-align: center;
-
       padding: 5px;
-
       box-sizing: border-box;
-
-      background:
-        linear-gradient(
-          145deg,
-          rgba(255, 105, 180, 0.38),
-          rgba(255, 255, 255, 0.08)
-        );
-
+      background: linear-gradient(
+        145deg,
+        rgba(255, 105, 180, 0.38),
+        rgba(255, 255, 255, 0.08)
+      );
       border: 1px solid rgba(255, 255, 255, 0.1);
-
       color: #ffffff;
-
       font-size: 8px;
-
       font-weight: 700;
-
       letter-spacing: 0.5px;
     }
-
 
     .search-result-info {
       min-width: 0;
       flex: 1;
     }
 
-
     .search-result-title {
       margin: 0 0 4px;
-
       color: #ffffff;
-
       font-size: 14px;
-
       font-weight: 700;
-
       line-height: 1.35;
     }
 
-
     .search-result-author {
       margin: 0 0 4px;
-
       color: rgba(255, 255, 255, 0.62);
-
       font-size: 12px;
     }
-
 
     .search-result-meta {
       margin: 0;
-
       color: rgba(255, 105, 180, 0.9);
-
       font-size: 11px;
     }
 
-
     .search-results-heading {
       padding: 8px 12px 10px;
-
       color: rgba(255, 255, 255, 0.45);
-
       font-size: 10px;
-
       font-weight: 700;
-
       text-transform: uppercase;
-
       letter-spacing: 1px;
     }
 
-
     .search-empty {
       padding: 25px 15px;
-
       text-align: center;
-
       color: rgba(255, 255, 255, 0.6);
     }
 
-
     .search-empty-icon {
       font-size: 27px;
-
       margin-bottom: 8px;
     }
 
-
     .search-empty h3 {
       margin: 0 0 5px;
-
       color: #ffffff;
-
       font-size: 14px;
     }
 
-
     .search-empty p {
       margin: 0;
-
       font-size: 12px;
     }
 
+    /* =========================================================
+       LOGGED-IN USER
+       ========================================================= */
+
+    #dashboardUserName {
+      color: #ff69b4;
+    }
+
+    .auth-loading {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: #050505;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #ffffff;
+      font-size: 16px;
+    }
 
     /* =========================================================
-       MOBILE SEARCH
+       MOBILE
        ========================================================= */
 
     @media (max-width: 600px) {
-
       .dashboard-search-wrapper {
         margin-bottom: 25px;
       }
 
       .dashboard-search-box {
         padding: 13px 15px;
-
         border-radius: 16px;
       }
 
@@ -332,14 +257,17 @@
         width: 46px;
         height: 62px;
       }
-
     }
   </style>
-
 </head>
 
 
 <body class="reader-page">
+
+  <!-- AUTH LOADING -->
+  <div class="auth-loading" id="authLoading">
+    Loading your Novelora account...
+  </div>
 
 
   <!-- =========================================================
@@ -351,7 +279,6 @@
     <a href="reader-dashboard.html" class="reader-logo">
       NOVEL<span>ORA</span>
     </a>
-
 
     <nav class="reader-nav">
 
@@ -373,21 +300,13 @@
 
     </nav>
 
-
     <div class="reader-profile">
 
-      <a
-        href="notifications.html"
-        class="notification-btn"
-      >
+      <a href="notifications.html" class="notification-btn">
         🔔
       </a>
 
-
-      <a
-        href="profile.html"
-        class="profile-btn"
-      >
+      <a href="profile.html" class="profile-btn">
         👤
       </a>
 
@@ -396,27 +315,21 @@
   </header>
 
 
-
   <!-- =========================================================
        DASHBOARD CONTENT
        ========================================================= -->
 
   <main class="reader-content">
 
-
-    <!-- =======================================================
-         SEARCH BOX
-         ======================================================= -->
+    <!-- SEARCH -->
 
     <div class="dashboard-search-wrapper">
-
 
       <div class="dashboard-search-box">
 
         <span class="dashboard-search-icon">
           🔍
         </span>
-
 
         <input
           type="search"
@@ -425,7 +338,6 @@
           autocomplete="off"
           aria-label="Search Novelora"
         >
-
 
         <button
           type="button"
@@ -438,7 +350,6 @@
 
       </div>
 
-
       <div
         id="dashboardSearchResults"
         class="dashboard-search-results"
@@ -447,10 +358,7 @@
     </div>
 
 
-
-    <!-- =======================================================
-         WELCOME
-         ======================================================= -->
+    <!-- WELCOME -->
 
     <section class="reader-welcome">
 
@@ -458,11 +366,9 @@
         WELCOME BACK
       </p>
 
-
       <h1>
-        Your next story awaits. 📖
+        Welcome, <span id="dashboardUserName">Reader</span> 📖
       </h1>
-
 
       <p>
         Discover new stories, continue reading, and build your personal library.
@@ -471,112 +377,61 @@
     </section>
 
 
-
-    <!-- =======================================================
-         QUICK FEATURES
-         ======================================================= -->
+    <!-- QUICK FEATURES -->
 
     <section class="quick-features">
 
-
-      <a
-        href="library.html"
-        class="feature-card"
-      >
+      <a href="library.html" class="feature-card">
 
         <span class="feature-icon">
           📚
         </span>
 
-
         <div>
-
-          <h3>
-            My Library
-          </h3>
-
-          <p>
-            Your saved stories
-          </p>
-
+          <h3>My Library</h3>
+          <p>Your saved stories</p>
         </div>
 
       </a>
 
 
-
-      <a
-        href="coins.html"
-        class="feature-card"
-      >
+      <a href="coins.html" class="feature-card">
 
         <span class="feature-icon">
           🪙
         </span>
 
-
         <div>
-
-          <h3>
-            My Coins
-          </h3>
-
-          <p>
-            Manage your coins
-          </p>
-
+          <h3>My Coins</h3>
+          <p>Manage your coins</p>
         </div>
 
       </a>
 
 
-
-      <a
-        href="trending.html"
-        class="feature-card"
-      >
+      <a href="trending.html" class="feature-card">
 
         <span class="feature-icon">
           🔥
         </span>
 
-
         <div>
-
-          <h3>
-            Trending
-          </h3>
-
-          <p>
-            Popular stories
-          </p>
-
+          <h3>Trending</h3>
+          <p>Popular stories</p>
         </div>
 
       </a>
 
 
-
-      <a
-        href="free-books.html"
-        class="feature-card"
-      >
+      <a href="free-books.html" class="feature-card">
 
         <span class="feature-icon">
           🆓
         </span>
 
-
         <div>
-
-          <h3>
-            Free Books
-          </h3>
-
-          <p>
-            Read without coins
-          </p>
-
+          <h3>Free Books</h3>
+          <p>Read without coins</p>
         </div>
 
       </a>
@@ -584,13 +439,9 @@
     </section>
 
 
-
-    <!-- =======================================================
-         GENRES
-         ======================================================= -->
+    <!-- GENRES -->
 
     <section class="dashboard-section">
-
 
       <div class="dashboard-heading">
 
@@ -608,53 +459,25 @@
 
       </div>
 
-
       <div class="genre-list">
 
-        <a href="#">
-          Romance
-        </a>
-
-        <a href="#">
-          Werewolf
-        </a>
-
-        <a href="#">
-          Billionaire
-        </a>
-
-        <a href="#">
-          Fantasy
-        </a>
-
-        <a href="#">
-          Mystery
-        </a>
-
-        <a href="#">
-          Thriller
-        </a>
-
-        <a href="#">
-          Drama
-        </a>
-
-        <a href="#">
-          Historical
-        </a>
+        <a href="#">Romance</a>
+        <a href="#">Werewolf</a>
+        <a href="#">Billionaire</a>
+        <a href="#">Fantasy</a>
+        <a href="#">Mystery</a>
+        <a href="#">Thriller</a>
+        <a href="#">Drama</a>
+        <a href="#">Historical</a>
 
       </div>
 
     </section>
 
 
-
-    <!-- =======================================================
-         CONTINUE READING
-         ======================================================= -->
+    <!-- CONTINUE READING -->
 
     <section class="dashboard-section">
-
 
       <div class="dashboard-heading">
 
@@ -672,28 +495,21 @@
 
       </div>
 
-
       <div class="empty-reading">
 
         <div class="empty-icon">
           📖
         </div>
 
-
         <h3>
           Nothing here yet
         </h3>
-
 
         <p>
           Start reading a story and it will appear here.
         </p>
 
-
-        <a
-          href="trending.html"
-          class="dashboard-button"
-        >
+        <a href="trending.html" class="dashboard-button">
           Discover Stories
         </a>
 
@@ -702,13 +518,9 @@
     </section>
 
 
-
-    <!-- =======================================================
-         TRENDING STORIES
-         ======================================================= -->
+    <!-- TRENDING -->
 
     <section class="dashboard-section">
-
 
       <div class="dashboard-heading">
 
@@ -724,22 +536,14 @@
 
         </div>
 
-
-        <a
-          href="trending.html"
-          class="view-all"
-        >
+        <a href="trending.html" class="view-all">
           View all →
         </a>
 
       </div>
 
 
-
       <div class="dashboard-books">
-
-
-        <!-- BOOK 1 -->
 
         <div class="dashboard-book">
 
@@ -752,18 +556,15 @@
               ROMANCE
             </div>
 
-
             <h3>
               The Alpha's Forbidden Hybrid
             </h3>
 
           </a>
 
-
           <p>
             A forbidden love story
           </p>
-
 
           <button
             class="add-library-dashboard"
@@ -781,9 +582,6 @@
         </div>
 
 
-
-        <!-- BOOK 2 -->
-
         <div class="dashboard-book">
 
           <a
@@ -795,18 +593,15 @@
               BILLIONAIRE
             </div>
 
-
             <h3>
               The Billionaire's Secret Bride
             </h3>
 
           </a>
 
-
           <p>
             Love, secrets and power
           </p>
-
 
           <button
             class="add-library-dashboard"
@@ -824,9 +619,6 @@
         </div>
 
 
-
-        <!-- BOOK 3 -->
-
         <div class="dashboard-book">
 
           <a
@@ -838,18 +630,15 @@
               FANTASY
             </div>
 
-
             <h3>
               Crown of the Moon
             </h3>
 
           </a>
 
-
           <p>
             A kingdom ruled by destiny
           </p>
-
 
           <button
             class="add-library-dashboard"
@@ -867,9 +656,6 @@
         </div>
 
 
-
-        <!-- BOOK 4 -->
-
         <div class="dashboard-book">
 
           <a
@@ -881,18 +667,15 @@
               MYSTERY
             </div>
 
-
             <h3>
               The Girl Behind the Mask
             </h3>
 
           </a>
 
-
           <p>
             Everyone has something to hide
           </p>
-
 
           <button
             class="add-library-dashboard"
@@ -909,19 +692,14 @@
 
         </div>
 
-
       </div>
 
     </section>
 
 
-
-    <!-- =======================================================
-         FREE BOOKS
-         ======================================================= -->
+    <!-- FREE BOOKS -->
 
     <section class="dashboard-section">
-
 
       <div class="dashboard-heading">
 
@@ -937,16 +715,11 @@
 
         </div>
 
-
-        <a
-          href="free-books.html"
-          class="view-all"
-        >
+        <a href="free-books.html" class="view-all">
           View all →
         </a>
 
       </div>
-
 
       <div class="empty-reading">
 
@@ -954,21 +727,15 @@
           🆓
         </div>
 
-
         <h3>
           Free stories await
         </h3>
-
 
         <p>
           Explore books you can start reading for free.
         </p>
 
-
-        <a
-          href="free-books.html"
-          class="dashboard-button"
-        >
+        <a href="free-books.html" class="dashboard-button">
           Browse Free Books
         </a>
 
@@ -977,13 +744,9 @@
     </section>
 
 
-
-    <!-- =======================================================
-         RECOMMENDED
-         ======================================================= -->
+    <!-- RECOMMENDED -->
 
     <section class="dashboard-section">
-
 
       <div class="dashboard-heading">
 
@@ -1001,18 +764,15 @@
 
       </div>
 
-
       <div class="empty-reading">
 
         <div class="empty-icon">
           ⭐
         </div>
 
-
         <h3>
           Recommendations are coming
         </h3>
-
 
         <p>
           As you read and save stories, we'll show you more books you may love.
@@ -1022,9 +782,7 @@
 
     </section>
 
-
   </main>
-
 
 
   <!-- =========================================================
@@ -1038,24 +796,20 @@
       <span>Home</span>
     </a>
 
-
     <a href="library.html">
       📚
       <span>Library</span>
     </a>
-
 
     <a href="trending.html">
       🔥
       <span>Trending</span>
     </a>
 
-
     <a href="free-books.html">
       🆓
       <span>Free</span>
     </a>
-
 
     <a href="profile.html">
       👤
@@ -1065,12 +819,99 @@
   </nav>
 
 
-
   <!-- =========================================================
-       JAVASCRIPT
+       SUPABASE
        ========================================================= -->
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
+
+
   <script>
+    /* =========================================================
+       AUTHENTICATION
+       ========================================================= */
+
+    async function loadReaderAccount() {
+
+      const loading = document.getElementById("authLoading");
+
+      try {
+
+        const {
+          data: { session },
+          error: sessionError
+        } = await supabaseClient.auth.getSession();
+
+        if (sessionError) {
+          console.error(sessionError);
+          window.location.href = "login.html";
+          return;
+        }
+
+        if (!session || !session.user) {
+          window.location.href = "login.html";
+          return;
+        }
+
+        const user = session.user;
+
+        const {
+          data: profile,
+          error: profileError
+        } = await supabaseClient
+          .from("profiles")
+          .select("username, display_name, coins, role")
+          .eq("id", user.id)
+          .single();
+
+        if (profileError) {
+
+          console.error("Profile error:", profileError);
+
+          /*
+            The authentication itself is still valid.
+            If the profile cannot be loaded, use the
+            username stored during signup.
+          */
+
+          const fallbackName =
+            user.user_metadata?.username ||
+            user.email?.split("@")[0] ||
+            "Reader";
+
+          document.getElementById("dashboardUserName").textContent =
+            fallbackName;
+
+        } else {
+
+          const displayName =
+            profile.display_name ||
+            profile.username ||
+            user.user_metadata?.username ||
+            user.email?.split("@")[0] ||
+            "Reader";
+
+          document.getElementById("dashboardUserName").textContent =
+            displayName;
+
+        }
+
+        loading.style.display = "none";
+
+      } catch (error) {
+
+        console.error(error);
+
+        window.location.href = "login.html";
+
+      }
+
+    }
+
+
+    loadReaderAccount();
+
 
     /* =========================================================
        LIBRARY
@@ -1083,14 +924,10 @@
           localStorage.getItem("noveloraLibrary")
         ) || [];
 
-
       const alreadySaved =
         savedBooks.some(function(book) {
-
           return book.id === id;
-
         });
-
 
       if (alreadySaved) {
 
@@ -1099,28 +936,19 @@
         );
 
         return;
-
       }
 
-
       savedBooks.push({
-
         id: id,
-
         title: title,
-
         genre: genre,
-
         cover: cover
-
       });
-
 
       localStorage.setItem(
         "noveloraLibrary",
         JSON.stringify(savedBooks)
       );
-
 
       alert(
         title +
@@ -1130,28 +958,18 @@
     }
 
 
-
     /* =========================================================
-       SEARCH BOOK DATABASE
+       SEARCH
        ========================================================= */
 
     const demoBooks = [
 
       {
         id: "alpha-hybrid",
-
-        title:
-          "The Alpha's Forbidden Hybrid",
-
-        author:
-          "Moonlight Writer",
-
-        genre:
-          "Romance",
-
-        subgenre:
-          "Werewolf",
-
+        title: "The Alpha's Forbidden Hybrid",
+        author: "Moonlight Writer",
+        genre: "Romance",
+        subgenre: "Werewolf",
         tags: [
           "alpha",
           "werewolf",
@@ -1160,36 +978,16 @@
           "romance",
           "mate"
         ],
-
-        keywords: [
-          "alpha",
-          "forbidden",
-          "hybrid",
-          "wolf",
-          "love"
-        ],
-
         description:
           "A forbidden love story."
-
       },
-
 
       {
         id: "billionaire-bride",
-
-        title:
-          "The Billionaire's Secret Bride",
-
-        author:
-          "Novelora Writer",
-
-        genre:
-          "Billionaire",
-
-        subgenre:
-          "Romance",
-
+        title: "The Billionaire's Secret Bride",
+        author: "Novelora Writer",
+        genre: "Billionaire",
+        subgenre: "Romance",
         tags: [
           "billionaire",
           "secret bride",
@@ -1197,36 +995,16 @@
           "rich",
           "romance"
         ],
-
-        keywords: [
-          "billionaire",
-          "bride",
-          "secret",
-          "marriage",
-          "love"
-        ],
-
         description:
           "Love, secrets and power."
-
       },
-
 
       {
         id: "crown-of-the-moon",
-
-        title:
-          "Crown of the Moon",
-
-        author:
-          "Moonlight Writer",
-
-        genre:
-          "Fantasy",
-
-        subgenre:
-          "Romance",
-
+        title: "Crown of the Moon",
+        author: "Moonlight Writer",
+        genre: "Fantasy",
+        subgenre: "Romance",
         tags: [
           "fantasy",
           "queen",
@@ -1234,183 +1012,118 @@
           "magic",
           "destiny"
         ],
-
-        keywords: [
-          "moon",
-          "crown",
-          "kingdom",
-          "queen",
-          "magic"
-        ],
-
         description:
           "A kingdom ruled by destiny."
-
       },
-
 
       {
         id: "girl-behind-the-mask",
-
-        title:
-          "The Girl Behind the Mask",
-
-        author:
-          "Novelora Writer",
-
-        genre:
-          "Mystery",
-
-        subgenre:
-          "Thriller",
-
+        title: "The Girl Behind the Mask",
+        author: "Novelora Writer",
+        genre: "Mystery",
+        subgenre: "Drama",
         tags: [
           "mystery",
-          "thriller",
           "secrets",
           "hidden identity",
           "drama"
         ],
-
-        keywords: [
-          "girl",
-          "mask",
-          "secret",
-          "mystery",
-          "identity"
-        ],
-
         description:
           "Everyone has something to hide."
-
       }
 
     ];
 
 
-
-    /* =========================================================
-       ADD ADMIN BOOKS WHEN AVAILABLE
-       ========================================================= */
-
     function getSearchBooks() {
 
-      let books = [
-        ...demoBooks
-      ];
-
+      let books = [...demoBooks];
 
       try {
 
         const adminBooks =
           JSON.parse(
-            localStorage.getItem(
-              "noveloraAdminBooks"
-            )
+            localStorage.getItem("noveloraAdminBooks")
           ) || [];
 
+        adminBooks.forEach(function(book) {
 
-        adminBooks.forEach(
-          function(book) {
+          if (!book || !book.id) {
+            return;
+          }
 
-            if (!book || !book.id) {
-              return;
-            }
+          const exists =
+            books.some(function(existing) {
+              return existing.id === book.id;
+            });
 
+          if (!exists) {
 
-            const alreadyExists =
-              books.some(
-                function(existingBook) {
+            books.push({
 
-                  return String(
-                    existingBook.id
-                  ) === String(book.id);
+              id: book.id,
 
-                }
-              );
+              title:
+                book.title ||
+                "Untitled Book",
 
+              author:
+                book.penName ||
+                book.author ||
+                "Novelora Author",
 
-            if (!alreadyExists) {
+              genre:
+                book.genre ||
+                "Romance",
 
-              books.push({
+              subgenre:
+                book.subgenre ||
+                "",
 
-                id:
-                  book.id,
+              tags:
+                Array.isArray(book.tags)
+                  ? book.tags
+                  : String(book.tags || "")
+                      .split(",")
+                      .map(function(tag) {
+                        return tag.trim();
+                      })
+                      .filter(Boolean),
 
-                title:
-                  book.title ||
-                  "Untitled Book",
+              description:
+                book.description ||
+                book.tagline ||
+                ""
 
-                author:
-                  book.author ||
-                  book.penName ||
-                  "Unknown Author",
-
-                genre:
-                  book.genre ||
-                  "",
-
-                subgenre:
-                  book.subgenre ||
-                  "",
-
-                tags:
-                  Array.isArray(book.tags)
-                    ? book.tags
-                    : String(
-                        book.tags || ""
-                      ).split(","),
-
-                keywords:
-                  Array.isArray(
-                    book.searchKeywords
-                  )
-                    ? book.searchKeywords
-                    : String(
-                        book.searchKeywords ||
-                        ""
-                      ).split(","),
-
-                description:
-                  book.description ||
-                  "",
-
-                cover:
-                  book.cover ||
-                  book.coverImage ||
-                  ""
-
-              });
-
-            }
+            });
 
           }
-        );
+
+        });
 
       } catch (error) {
 
-        console.log(
-          "Novelora search data is not available yet."
+        console.error(
+          "Could not load admin books:",
+          error
         );
 
       }
-
 
       return books;
 
     }
 
 
-
-    /* =========================================================
-       SEARCH ELEMENTS
-       ========================================================= */
-
     const searchInput =
       document.getElementById(
         "dashboardSearchInput"
       );
 
+    const searchClear =
+      document.getElementById(
+        "dashboardSearchClear"
+      );
 
     const searchResults =
       document.getElementById(
@@ -1418,158 +1131,52 @@
       );
 
 
-    const searchClear =
-      document.getElementById(
-        "dashboardSearchClear"
-      );
-
-
-
-    /* =========================================================
-       NORMALIZE SEARCH
-       ========================================================= */
-
-    function normalizeSearchValue(value) {
-
-      return String(
-        value || ""
-      )
-        .toLowerCase()
-        .trim();
-
-    }
-
-
-
-    function searchableBookText(book) {
-
-      const values = [
-
-        book.title,
-
-        book.author,
-
-        book.penName,
-
-        book.genre,
-
-        book.subgenre,
-
-        book.description,
-
-        book.tagline,
-
-        book.promotionalBlurb,
-
-        book.featuredQuote,
-
-        book.tags,
-
-        book.keywords,
-
-        book.searchKeywords
-
-      ];
-
-
-      return normalizeSearchValue(
-        values
-          .filter(Boolean)
-          .join(" ")
-      );
-
-    }
-
-
-
-    /* =========================================================
-       SEARCH BOOKS
-       ========================================================= */
-
-    function searchBooks(query) {
+    function renderSearchResults(query) {
 
       const cleanQuery =
-        normalizeSearchValue(
-          query
-        );
-
+        query.trim().toLowerCase();
 
       if (!cleanQuery) {
 
         searchResults.innerHTML = "";
-
-        searchResults.classList.remove(
-          "show"
-        );
-
-        searchClear.style.display =
-          "none";
+        searchResults.classList.remove("show");
+        searchClear.style.display = "none";
 
         return;
 
       }
 
+      searchClear.style.display = "flex";
 
-      searchClear.style.display =
-        "flex";
+      const books = getSearchBooks();
 
+      const matches =
+        books.filter(function(book) {
 
-      const books =
-        getSearchBooks();
+          const searchableText = [
 
+            book.title,
 
-      const results =
-        books.filter(
-          function(book) {
+            book.author,
 
-            const searchableText =
-              searchableBookText(
-                book
-              );
+            book.genre,
 
+            book.subgenre,
 
-            const words =
-              cleanQuery.split(
-                /\s+/
-              );
+            book.description,
 
+            ...(book.tags || [])
 
-            return words.every(
-              function(word) {
+          ]
+            .join(" ")
+            .toLowerCase();
 
-                return searchableText.includes(
-                  word
-                );
+          return searchableText.includes(cleanQuery);
 
-              }
-            );
-
-          }
-        );
+        });
 
 
-      renderSearchResults(
-        results,
-        cleanQuery
-      );
-
-    }
-
-
-
-    /* =========================================================
-       DISPLAY RESULTS
-       ========================================================= */
-
-    function renderSearchResults(
-      results,
-      query
-    ) {
-
-      searchResults.innerHTML = "";
-
-
-      if (!results.length) {
+      if (!matches.length) {
 
         searchResults.innerHTML = `
 
@@ -1584,258 +1191,89 @@
             </h3>
 
             <p>
-              We couldn't find anything matching "${escapeHtml(query)}".
+              Try another book, author or genre.
             </p>
 
           </div>
 
         `;
 
-
-        searchResults.classList.add(
-          "show"
-        );
+        searchResults.classList.add("show");
 
         return;
 
       }
 
 
-      const heading =
-        document.createElement(
-          "div"
-        );
+      let html = `
+
+        <div class="search-results-heading">
+          Search results
+        </div>
+
+      `;
 
 
-      heading.className =
-        "search-results-heading";
+      matches.forEach(function(book) {
+
+        html += `
+
+          <a
+            class="search-result"
+            href="book-details.html?id=${encodeURIComponent(book.id)}"
+          >
+
+            <div class="search-result-cover">
+              ${escapeHtml(book.genre || "BOOK")}
+            </div>
+
+            <div class="search-result-info">
+
+              <p class="search-result-title">
+                ${escapeHtml(book.title)}
+              </p>
+
+              <p class="search-result-author">
+                ${escapeHtml(book.author || "Novelora Author")}
+              </p>
+
+              <p class="search-result-meta">
+                ${escapeHtml(book.genre || "Story")}
+              </p>
+
+            </div>
+
+          </a>
+
+        `;
+
+      });
 
 
-      heading.textContent =
-        results.length === 1
-          ? "1 story found"
-          : results.length +
-            " stories found";
+      searchResults.innerHTML = html;
 
-
-      searchResults.appendChild(
-        heading
-      );
-
-
-      results
-        .slice(0, 12)
-        .forEach(
-          function(book) {
-
-            const result =
-              document.createElement(
-                "a"
-              );
-
-
-            result.className =
-              "search-result";
-
-
-            result.href =
-              "book-details.html?id=" +
-              encodeURIComponent(
-                book.id
-              );
-
-
-            const cover =
-              document.createElement(
-                "div"
-              );
-
-
-            cover.className =
-              "search-result-cover";
-
-
-            if (book.cover) {
-
-              cover.style.backgroundImage =
-                "url('" +
-                String(
-                  book.cover
-                ).replace(
-                  /'/g,
-                  "%27"
-                ) +
-                "')";
-
-              cover.style.backgroundSize =
-                "cover";
-
-              cover.style.backgroundPosition =
-                "center";
-
-              cover.textContent = "";
-
-            } else {
-
-              cover.textContent =
-                String(
-                  book.genre ||
-                  "BOOK"
-                ).toUpperCase();
-
-            }
-
-
-            const info =
-              document.createElement(
-                "div"
-              );
-
-
-            info.className =
-              "search-result-info";
-
-
-            const title =
-              document.createElement(
-                "p"
-              );
-
-
-            title.className =
-              "search-result-title";
-
-
-            title.textContent =
-              book.title ||
-              "Untitled Book";
-
-
-            const author =
-              document.createElement(
-                "p"
-              );
-
-
-            author.className =
-              "search-result-author";
-
-
-            author.textContent =
-              book.author
-                ? "By " +
-                  book.author
-                : "Author unavailable";
-
-
-            const meta =
-              document.createElement(
-                "p"
-              );
-
-
-            meta.className =
-              "search-result-meta";
-
-
-            meta.textContent =
-              [
-                book.genre,
-                book.subgenre
-              ]
-                .filter(Boolean)
-                .join(" • ");
-
-
-            info.appendChild(
-              title
-            );
-
-            info.appendChild(
-              author
-            );
-
-
-            if (meta.textContent) {
-
-              info.appendChild(
-                meta
-              );
-
-            }
-
-
-            result.appendChild(
-              cover
-            );
-
-            result.appendChild(
-              info
-            );
-
-
-            searchResults.appendChild(
-              result
-            );
-
-          }
-        );
-
-
-      searchResults.classList.add(
-        "show"
-      );
+      searchResults.classList.add("show");
 
     }
 
-
-
-    /* =========================================================
-       ESCAPE HTML
-       ========================================================= */
 
     function escapeHtml(value) {
 
-      return String(value)
-
-        .replace(
-          /&/g,
-          "&amp;"
-        )
-
-        .replace(
-          /</g,
-          "&lt;"
-        )
-
-        .replace(
-          />/g,
-          "&gt;"
-        )
-
-        .replace(
-          /"/g,
-          "&quot;"
-        )
-
-        .replace(
-          /'/g,
-          "&#039;"
-        );
+      return String(value || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
 
     }
 
-
-
-    /* =========================================================
-       LIVE SEARCH
-       ========================================================= */
 
     searchInput.addEventListener(
       "input",
       function() {
 
-        searchBooks(
+        renderSearchResults(
           searchInput.value
         );
 
@@ -1843,38 +1281,25 @@
     );
 
 
-
-    /* =========================================================
-       CLEAR SEARCH
-       ========================================================= */
-
     searchClear.addEventListener(
       "click",
       function() {
 
-        searchInput.value =
-          "";
+        searchInput.value = "";
 
-        searchResults.innerHTML =
-          "";
+        searchResults.innerHTML = "";
 
         searchResults.classList.remove(
           "show"
         );
 
-        searchClear.style.display =
-          "none";
+        searchClear.style.display = "none";
 
         searchInput.focus();
 
       }
     );
 
-
-
-    /* =========================================================
-       CLOSE RESULTS OUTSIDE SEARCH
-       ========================================================= */
 
     document.addEventListener(
       "click",
@@ -1885,12 +1310,9 @@
             ".dashboard-search-wrapper"
           );
 
-
         if (
           wrapper &&
-          !wrapper.contains(
-            event.target
-          )
+          !wrapper.contains(event.target)
         ) {
 
           searchResults.classList.remove(
@@ -1902,31 +1324,7 @@
       }
     );
 
-
-
-    /* =========================================================
-       REOPEN RESULTS
-       ========================================================= */
-
-    searchInput.addEventListener(
-      "focus",
-      function() {
-
-        if (
-          searchInput.value.trim()
-        ) {
-
-          searchBooks(
-            searchInput.value
-          );
-
-        }
-
-      }
-    );
-
   </script>
-
 
 </body>
 </html>
