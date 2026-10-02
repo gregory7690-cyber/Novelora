@@ -68,76 +68,40 @@
           <h2>Your Notifications</h2>
         </div>
 
-        <button class="section-link" type="button">
+        <button
+          class="section-link"
+          id="markAllReadBtn"
+          type="button"
+          style="display:none;">
           Mark all as read
         </button>
 
       </div>
 
 
-      <div class="notification-page-list">
-
-        <a href="alpha-hybrid.html" class="notification-page-item">
-
-          <div class="notification-page-icon">
-            📖
-          </div>
-
-          <div class="notification-page-content">
-
-            <h3>New chapter available</h3>
-
-            <p>
-              The Alpha's Forbidden Hybrid has a new chapter waiting for you.
-            </p>
-
-            <small>Just now</small>
-
-          </div>
-
-        </a>
+      <div
+        class="notification-page-list"
+        id="notificationList">
+      </div>
 
 
-        <a href="coins.html" class="notification-page-item">
+      <div
+        id="emptyNotifications"
+        style="
+          text-align:center;
+          padding:50px 20px;
+          opacity:0.75;
+        ">
 
-          <div class="notification-page-icon">
-            🪙
-          </div>
+        <div style="font-size:45px; margin-bottom:15px;">
+          🔔
+        </div>
 
-          <div class="notification-page-content">
+        <h3>No notifications yet</h3>
 
-            <h3>Daily reward</h3>
-
-            <p>
-              You received 2 coins for checking in today.
-            </p>
-
-            <small>Today</small>
-
-          </div>
-
-        </a>
-
-
-        <a href="reader-dashboard.html" class="notification-page-item">
-
-          <div class="notification-page-icon">
-            ✨
-          </div>
-
-          <div class="notification-page-content">
-
-            <h3>Welcome to Novelora</h3>
-
-            <p>
-              Discover new stories and build your personal library.
-            </p>
-
-            <small>Today</small>
-
-          </div>
-
-        </a>
+        <p>
+          You're all caught up. New updates will appear here.
+        </p>
 
       </div>
 
@@ -179,6 +143,287 @@
     </a>
 
   </nav>
+
+
+  <script>
+
+    const notificationList =
+      document.getElementById("notificationList");
+
+    const emptyNotifications =
+      document.getElementById("emptyNotifications");
+
+    const markAllReadBtn =
+      document.getElementById("markAllReadBtn");
+
+
+    function getNotifications() {
+
+      try {
+
+        const saved =
+          JSON.parse(
+            localStorage.getItem("noveloraNotifications")
+          );
+
+        return Array.isArray(saved) ? saved : [];
+
+      } catch (error) {
+
+        return [];
+
+      }
+
+    }
+
+
+    function getNotificationIcon(type) {
+
+      const icons = {
+        "General": "✨",
+        "New Chapter": "📖",
+        "Reward": "🪙",
+        "Promotion": "🔥",
+        "System": "⚙️"
+      };
+
+      return icons[type] || "🔔";
+
+    }
+
+
+    function formatNotificationDate(dateValue) {
+
+      if (!dateValue) {
+        return "Recently";
+      }
+
+      const date = new Date(dateValue);
+
+      if (isNaN(date.getTime())) {
+        return "Recently";
+      }
+
+      const now = new Date();
+
+      const difference =
+        now.getTime() - date.getTime();
+
+      const minutes =
+        Math.floor(difference / 60000);
+
+      const hours =
+        Math.floor(difference / 3600000);
+
+      const days =
+        Math.floor(difference / 86400000);
+
+
+      if (minutes < 1) {
+        return "Just now";
+      }
+
+      if (minutes < 60) {
+        return minutes + " min ago";
+      }
+
+      if (hours < 24) {
+        return hours + (hours === 1 ? " hour ago" : " hours ago");
+      }
+
+      if (days < 7) {
+        return days + (days === 1 ? " day ago" : " days ago");
+      }
+
+      return date.toLocaleDateString();
+    }
+
+
+    function getNotificationLink(notification) {
+
+      if (notification.relatedBookId) {
+
+        return "book-details.html?id=" +
+          encodeURIComponent(notification.relatedBookId);
+
+      }
+
+      if (notification.bookId) {
+
+        return "book-details.html?id=" +
+          encodeURIComponent(notification.bookId);
+
+      }
+
+      if (
+        notification.relatedBook &&
+        typeof notification.relatedBook === "string"
+      ) {
+
+        return "book-details.html?id=" +
+          encodeURIComponent(notification.relatedBook);
+
+      }
+
+      return "#";
+
+    }
+
+
+    function renderNotifications() {
+
+      const notifications =
+        getNotifications();
+
+      notificationList.innerHTML = "";
+
+
+      if (!notifications.length) {
+
+        emptyNotifications.style.display = "block";
+        markAllReadBtn.style.display = "none";
+
+        return;
+
+      }
+
+
+      emptyNotifications.style.display = "none";
+      markAllReadBtn.style.display = "inline-flex";
+
+
+      notifications
+        .slice()
+        .sort(function(a, b) {
+
+          const dateA =
+            new Date(
+              a.createdAt ||
+              a.date ||
+              a.timestamp ||
+              0
+            ).getTime();
+
+          const dateB =
+            new Date(
+              b.createdAt ||
+              b.date ||
+              b.timestamp ||
+              0
+            ).getTime();
+
+          return dateB - dateA;
+
+        })
+        .forEach(function(notification) {
+
+          const item =
+            document.createElement("a");
+
+          item.className =
+            "notification-page-item";
+
+
+          const link =
+            getNotificationLink(notification);
+
+          item.href = link;
+
+
+          const icon =
+            getNotificationIcon(notification.type);
+
+
+          const title =
+            notification.title ||
+            "Novelora Update";
+
+
+          const message =
+            notification.message ||
+            "";
+
+
+          const date =
+            formatNotificationDate(
+              notification.createdAt ||
+              notification.date ||
+              notification.timestamp
+            );
+
+
+          item.innerHTML = `
+
+            <div class="notification-page-icon">
+              ${icon}
+            </div>
+
+            <div class="notification-page-content">
+
+              <h3>
+                ${escapeHTML(title)}
+              </h3>
+
+              <p>
+                ${escapeHTML(message)}
+              </p>
+
+              <small>
+                ${date}
+              </small>
+
+            </div>
+
+          `;
+
+
+          notificationList.appendChild(item);
+
+        });
+
+    }
+
+
+    function escapeHTML(value) {
+
+      const div =
+        document.createElement("div");
+
+      div.textContent =
+        value == null ? "" : String(value);
+
+      return div.innerHTML;
+
+    }
+
+
+    markAllReadBtn.addEventListener(
+      "click",
+      function() {
+
+        const notifications =
+          getNotifications();
+
+        notifications.forEach(function(notification) {
+
+          notification.read = true;
+
+        });
+
+        localStorage.setItem(
+          "noveloraNotifications",
+          JSON.stringify(notifications)
+        );
+
+        renderNotifications();
+
+      }
+    );
+
+
+    renderNotifications();
+
+  </script>
 
 </body>
 
