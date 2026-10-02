@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Search — Novelora</title>
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    .search-page {
+      min-height: 100vh;
+      padding: 28px 18px 100px;
+      background:
+        radial-gradient(circle at top right, rgba(255, 72, 145, 0.10), transparent 30%),
+        #080808;
+    }
+
+    .search-wrap {
+      width: min(1050px, 100%);
+      margin: 0 auto;
+    }
+
+    .search-top {
+      margin-bottom: 28px;
+    }
+
+    .search-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      color: #aaa;
+      text-decoration: none;
+      font-size: 14px;
+      margin-bottom: 18px;
+    }
+
+    .search-back:hover {
+      color: #ff4f9a;
+    }
+
+    .search-title {
+      color: #fff;
+      font-size: clamp(28px, 6vw, 42px);
+      margin: 0 0 8px;
+      font-weight: 800;
+    }
+
+    .search-subtitle {
+      color: #999;
+      margin: 0;
+      font-size: 14px;
+    }
+
+    .search-box {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+      background: #151515;
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      border-radius: 18px;
+      padding: 6px 8px 6px 18px;
+      box-shadow: 0 10px 35px rgba(0, 0, 0, 0.25);
+      margin-bottom: 18px;
+    }
+
+    .search-icon {
+      font-size: 20px;
+      opacity: .8;
+    }
+
+    #searchInput {
+      flex: 1;
+      min-width: 0;
+      border: 0;
+      outline: 0;
+      background: transparent;
+      color: #fff;
+      font-size: 16px;
+      padding: 14px 0;
+    }
+
+    #searchInput::placeholder {
+      color: #777;
+    }
+
+    .clear-search {
+      display: none;
+      border: 0;
+      background: #292929;
+      color: #bbb;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .clear-search:hover {
+      color: #fff;
+      background: #353535;
+    }
+
+    .search-filters {
+      display: flex;
+      gap: 9px;
+      overflow-x: auto;
+      padding-bottom: 5px;
+      scrollbar-width: none;
+    }
+
+    .search-filters::-webkit-scrollbar {
+      display: none;
+    }
+
+    .filter-btn {
+      flex: 0 0 auto;
+      border: 1px solid rgba(255, 255, 255, .08);
+      background: #141414;
+      color: #aaa;
+      border-radius: 999px;
+      padding: 9px 15px;
+      cursor: pointer;
+      font-size: 13px;
+      transition: .2s ease;
+    }
+
+    .filter-btn.active,
+    .filter-btn:hover {
+      background: rgba(255, 79, 154, .12);
+      border-color: rgba(255, 79, 154, .4);
+      color: #ff6ba9;
+    }
+
+    .results-heading {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin: 30px 0 15px;
+    }
+
+    .results-heading h2 {
+      color: #fff;
+      font-size: 19px;
+      margin: 0;
+    }
+
+    #resultCount {
+      color: #777;
+      font-size: 13px;
+    }
+
+    .search-results {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(155px, 1fr));
+      gap: 18px;
+    }
+
+    .book-result {
+      display: block;
+      color: inherit;
+      text-decoration: none;
+      background: #121212;
+      border: 1px solid rgba(255, 255, 255, .07);
+      border-radius: 17px;
+      overflow: hidden;
+      transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease;
+    }
+
+    .book-result:hover {
+      transform: translateY(-4px);
+      border-color: rgba(255, 79, 154, .35);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, .35);
+    }
+
+    .book-cover {
+      width: 100%;
+      aspect-ratio: 2 / 3;
+      background: linear-gradient(145deg, #242424, #111);
+      overflow: hidden;
+    }
+
+    .book-cover img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .cover-placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 18px;
+      color: #777;
+      font-size: 13px;
+    }
+
+    .book-info {
+      padding: 13px;
+    }
+
+    .book-info h3 {
+      color: #fff;
+      font-size: 15px;
+      line-height: 1.35;
+      margin: 0 0 6px;
+    }
+
+    .book-author {
+      color: #999;
+      font-size: 12px;
+      margin-bottom: 8px;
+    }
+
+    .book-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .book-tag {
+      background: rgba(255, 79, 154, .09);
+      color: #ff75ad;
+      border-radius: 999px;
+      padding: 4px 7px;
+      font-size: 10px;
+    }
+
+    .book-description {
+      color: #777;
+      font-size: 11px;
+      line-height: 1.45;
+      margin-top: 9px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .empty-state {
+      display: none;
+      text-align: center;
+      padding: 65px 20px;
+      background: #111;
+      border: 1px solid rgba(255,255,255,.06);
+      border-radius: 20px;
+    }
+
+    .empty-icon {
+      font-size: 42px;
+      margin-bottom: 12px;
+    }
+
+    .empty-state h3 {
+      color: #fff;
+      margin: 0 0 7px;
+    }
+
+    .empty-state p {
+      color: #777;
+      margin: 0;
+      font-size: 14px;
+    }
+
+    .popular-searches {
+      margin-top: 32px;
+    }
+
+    .popular-searches h3 {
+      color: #fff;
+      font-size: 16px;
+      margin: 0 0 13px;
+    }
+
+    .popular-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 9px;
+    }
+
+    .popular-btn {
+      border: 1px solid rgba(255,255,255,.08);
+      background: #141414;
+      color: #aaa;
+      border-radius: 999px;
+      padding: 9px 13px;
+      cursor: pointer;
+      font-size: 12px;
+    }
+
+    .popular-btn:hover {
+      color: #ff6ba9;
+      border-color: rgba(255,79,154,.35);
+    }
+
+    @media (max-width: 520px) {
+      .search-page {
+        padding: 20px 13px 90px;
+      }
+
+      .search-results {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+      }
+
+      .book-info {
+        padding: 10px;
+      }
+
+      .book-info h3 {
+        font-size: 13px;
+      }
+
+      .book-description {
+        display: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <main class="search-page">
+    <div class="search-wrap">
+
+      <section class="search-top">
+        <a href="reader-dashboard.html" class="search-back">← Back to Novelora</a>
+
+        <h1 class="search-title">Find your next story</h1>
+        <p class="search-subtitle">
+          Search by title, author, genre, or keywords.
+        </p>
+      </section>
+
+      <div class="search-box">
+        <span class="search-icon">🔎</span>
+
+        <input
+          id="searchInput"
+          type="search"
+          autocomplete="off"
+          placeholder="Search books, authors, genres..."
+          aria-label="Search Novelora"
+        >
+
+        <button
+          id="clearSearch"
+          class="clear-search"
+          type="button"
+          aria-label="Clear search"
+        >✕</button>
+      </div>
+
+      <div class="search-filters">
+        <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="romance">Romance</button>
+        <button class="filter-btn" data-filter="werewolf">Werewolf</button>
+        <button class="filter-btn" data-filter="billionaire">Billionaire</button>
+        <button class="filter-btn" data-filter="fantasy">Fantasy</button>
+        <button class="filter-btn" data-filter="mystery">Mystery</button>
+        <button class="filter-btn" data-filter="thriller">Thriller</button>
+        <button class="filter-btn" data-filter="drama">Drama</button>
+        <button class="filter-btn" data-filter="historical">Historical</button>
+      </div>
+
+      <section class="results-heading">
+        <h2 id="resultsTitle">All Stories</h2>
+        <span id="resultCount"></span>
+      </section>
+
+      <section id="searchResults" class="search-results"></section>
+
+      <section id="emptyState" class="empty-state">
+        <div class="empty-icon">📚</div>
+        <h3>No stories found</h3>
+        <p>Try another title, author, genre, or keyword.</p>
+      </section>
+
+      <section class="popular-searches">
+        <h3>Popular searches</h3>
+
+        <div class="popular-list">
+          <button class="popular-btn" data-search="alpha">Alpha</button>
+          <button class="popular-btn" data-search="romance">Romance</button>
+          <button class="popular-btn" data-search="billionaire">Billionaire</button>
+          <button class="popular-btn" data-search="fantasy">Fantasy</button>
+          <button class="popular-btn" data-search="mystery">Mystery</button>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <script>
+    /*
+      Novelora Search
+      ----------------
+      Searches:
+      - title
+      - author
+      - genre
+      - subgenre
+      - secondary genres
+      - tags
+      - keywords
+      - description
+      - tagline
+
+      It also reads noveloraAdminBooks when that data exists
+      on the same origin.
+
+      Backend connection will later replace the local data source.
+    */
+
+    const DEMO_BOOKS = [
+      {
+        id: "alpha-hybrid",
+        title: "The Alpha's Forbidden Hybrid",
+        author: "Moonlight Writer",
+        genre: "Romance",
+        subgenre: "Werewolf",
+        tags: ["Alpha", "Werewolf", "Forbidden Love"],
+        searchKeywords: ["alpha", "hybrid", "wolf", "mate"],
+        description: "A forbidden hybrid girl is pulled into the dangerous world of an Alpha king."
+      },
+      {
+        id: "billionaire-bride",
+        title: "The Billionaire's Secret Bride",
+        author: "Novelora Stories",
+        genre: "Billionaire",
+        subgenre: "Romance",
+        tags: ["Billionaire", "Marriage", "Romance"],
+        searchKeywords: ["rich", "bride", "CEO", "marriage"],
+        description: "A secret marriage forces two strangers into a relationship neither expected."
+      },
+      {
+        id: "crown-of-the-moon",
+        title: "Crown of the Moon",
+        author: "Moonlight Writer",
+        genre: "Fantasy",
+        subgenre: "Romance",
+        tags: ["Fantasy", "Queen", "Magic"],
+        searchKeywords: ["moon", "queen", "kingdom", "magic"],
+        description: "A mysterious young woman discovers that the crown she fears was always meant for her."
+      },
+      {
+        id: "girl-behind-the-mask",
+        title: "The Girl Behind the Mask",
+        author: "Novelora Stories",
+        genre: "Mystery",
+        subgenre: "Drama",
+        tags: ["Mystery", "Secrets", "Drama"],
+        searchKeywords: ["mask", "secret", "mystery", "identity"],
+        description: "Everyone knows her name, but nobody knows the truth hidden behind her mask."
+      }
+    ];
+
+    const searchInput = document.getElementById("searchInput");
+    const clearSearch = document.getElementById("clearSearch");
+    const results = document.getElementById("searchResults");
+    const emptyState = document.getElementById("emptyState");
+    const resultCount = document.getElementById("resultCount");
+    const resultsTitle = document.getElementById("resultsTitle");
+
+    let activeFilter = "all";
+    let allBooks = [];
+
+    function normalize(value) {
+      return String(value || "")
+        .toLowerCase()
+        .trim();
+    }
+
+    function getArray(value) {
+      if (Array.isArray(value)) return value;
+
+      if (typeof value === "string") {
+        return value
+          .split(",")
+          .map(item => item.trim())
+          .filter(Boolean);
+      }
+
+      return [];
+    }
+
+    function getBookSearchText(book) {
+      const values = [
+        book.title,
+        book.author,
+        book.penName,
+        book.genre,
+        book.subgenre,
+        book.secondaryGenres,
+        book.tags,
+        book.searchKeywords,
+        book.description,
+        book.tagline,
+        book.promotionalBlurb
+      ];
+
+      return values
+        .flatMap(value => getArray(value).length ? getArray(value) : [value])
+        .join(" ")
+        .toLowerCase();
+    }
+
+    function loadBooks() {
+      const stored = localStorage.getItem("noveloraAdminBooks");
+
+      let adminBooks = [];
+
+      try {
+        adminBooks = stored ? JSON.parse(stored) : [];
+      } catch (error) {
+        adminBooks = [];
+      }
+
+      if (!Array.isArray(adminBooks)) {
+        adminBooks = [];
+      }
+
+      /*
+        Keep demo books available while the real backend isn't connected.
+        If an admin book has the same ID as a demo book, the admin version wins.
+      */
+
+      const combined = [...DEMO_BOOKS];
+
+      adminBooks.forEach(book => {
+        if (!book || !book.id) return;
+
+        const existingIndex = combined.findIndex(
+          item => String(item.id) === String(book.id)
+        );
+
+        if (existingIndex >= 0) {
+          combined[existingIndex] = {
+            ...combined[existingIndex],
+            ...book
+          };
+        } else {
+          combined.push(book);
+        }
+      });
+
+      /*
+        Remove duplicates by ID.
+      */
+
+      const unique = [];
+      const seen = new Set();
+
+      combined.forEach(book => {
+        const id = String(book.id);
+
+        if (seen.has(id)) return;
+
+        seen.add(id);
+        unique.push(book);
+      });
+
+      allBooks = unique;
+    }
+
+    function getCover(book) {
+      return (
+        book.coverImage ||
+        book.cover ||
+        book.coverUrl ||
+        book.image ||
+        ""
+      );
+    }
+
+    function formatBookDescription(book) {
+      return (
+        book.description ||
+        book.tagline ||
+        book.promotionalBlurb ||
+        "Discover this story on Novelora."
+      );
+    }
+
+    function matchesFilter(book) {
+      if (activeFilter === "all") return true;
+
+      const text = getBookSearchText(book);
+
+      return text.includes(activeFilter);
+    }
+
+    function matchesSearch(book, query) {
+      if (!query) return true;
+
+      const terms = normalize(query)
+        .split(/\s+/)
+        .filter(Boolean);
+
+      const searchable = getBookSearchText(book);
+
+      return terms.every(term => searchable.includes(term));
+    }
+
+    function renderResults() {
+      const query = searchInput.value;
+
+      const filtered = allBooks.filter(book => {
+        return matchesFilter(book) && matchesSearch(book, query);
+      });
+
+      results.innerHTML = "";
+
+      resultCount.textContent =
+        filtered.length === 1
+          ? "1 story"
+          : `${filtered.length} stories`;
+
+      if (query) {
+        resultsTitle.textContent = `Results for "${query}"`;
+      } else if (activeFilter !== "all") {
+        resultsTitle.textContent =
+          activeFilter.charAt(0).toUpperCase() +
+          activeFilter.slice(1) +
+          " Stories";
+      } else {
+        resultsTitle.textContent = "All Stories";
+      }
+
+      if (!filtered.length) {
+        emptyState.style.display = "block";
+        return;
+      }
+
+      emptyState.style.display = "none";
+
+      filtered.forEach(book => {
+        const card = document.createElement("a");
+
+        card.className = "book-result";
+        card.href =
+          "book-details.html?id=" +
+          encodeURIComponent(book.id);
+
+        const cover = getCover(book);
+
+        const coverHTML = cover
+          ? `<img src="${escapeHTML(cover)}" alt="${escapeHTML(book.title || "Book cover")}" loading="lazy">`
+          : `<div class="cover-placeholder">📖<br>No cover yet</div>`;
+
+        const genre = book.genre || "Story";
+        const author = book.author || book.penName || "Novelora Author";
+
+        card.innerHTML = `
+          <div class="book-cover">
+            ${coverHTML}
+          </div>
+
+          <div class="book-info">
+            <h3>${escapeHTML(book.title || "Untitled Story")}</h3>
+
+            <div class="book-author">
+              by ${escapeHTML(author)}
+            </div>
+
+            <div class="book-meta">
+              <span class="book-tag">
+                ${escapeHTML(genre)}
+              </span>
+
+              ${
+                book.subgenre
+                  ? `<span class="book-tag">${escapeHTML(book.subgenre)}</span>`
+                  : ""
+              }
+            </div>
+
+            <div class="book-description">
+              ${escapeHTML(formatBookDescription(book))}
+            </div>
+          </div>
+        `;
+
+        results.appendChild(card);
+      });
+    }
+
+    function escapeHTML(value) {
+      return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    searchInput.addEventListener("input", () => {
+      clearSearch.style.display =
+        searchInput.value ? "block" : "none";
+
+      renderResults();
+    });
+
+    clearSearch.addEventListener("click", () => {
+      searchInput.value = "";
+      clearSearch.style.display = "none";
+      searchInput.focus();
+      renderResults();
+    });
+
+    document.querySelectorAll(".filter-btn").forEach(button => {
+      button.addEventListener("click", () => {
+        document
+          .querySelectorAll(".filter-btn")
+          .forEach(btn => btn.classList.remove("active"));
+
+        button.classList.add("active");
+
+        activeFilter = normalize(button.dataset.filter);
+
+        renderResults();
+      });
+    });
+
+    document.querySelectorAll(".popular-btn").forEach(button => {
+      button.addEventListener("click", () => {
+        searchInput.value = button.dataset.search;
+        clearSearch.style.display = "block";
+
+        activeFilter = "all";
+
+        document
+          .querySelectorAll(".filter-btn")
+          .forEach(btn => btn.classList.remove("active"));
+
+        document
+          .querySelector('[data-filter="all"]')
+          .classList.add("active");
+
+        renderResults();
+
+        searchInput.focus();
+      });
+    });
+
+    /*
+      Initial load.
+    */
+
+    loadBooks();
+    renderResults();
+  </script>
+
+</body>
+</html>
