@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Followed Authors • Novelora</title>
+
+<link rel="stylesheet" href="style.css">
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+
+<style>
+    body {
+        margin: 0;
+        background: #080808;
+        color: #fff;
+        font-family: Arial, sans-serif;
+    }
+
+    .followed-page {
+        max-width: 1050px;
+        margin: 0 auto;
+        padding: 25px 20px 60px;
+    }
+
+    .followed-top {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 35px;
+    }
+
+    .back-btn {
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        border: 1px solid rgba(255,105,180,.35);
+        background: #111;
+        color: #fff;
+        font-size: 20px;
+        cursor: pointer;
+    }
+
+    .back-btn:hover {
+        border-color: #ff69b4;
+        color: #ff69b4;
+    }
+
+    .logo {
+        font-size: 25px;
+        font-weight: 800;
+        color: #ff69b4;
+    }
+
+    .hero {
+        margin-bottom: 28px;
+    }
+
+    .hero h1 {
+        margin: 0 0 8px;
+        font-size: 32px;
+    }
+
+    .hero p {
+        margin: 0;
+        color: #aaa;
+        line-height: 1.6;
+    }
+
+    .authors-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 18px;
+    }
+
+    .author-card {
+        background: linear-gradient(145deg, #151515, #0c0c0c);
+        border: 1px solid rgba(255,105,180,.15);
+        border-radius: 20px;
+        padding: 22px;
+        transition: .2s ease;
+    }
+
+    .author-card:hover {
+        transform: translateY(-3px);
+        border-color: rgba(255,105,180,.5);
+        box-shadow: 0 12px 35px rgba(255,105,180,.08);
+    }
+
+    .author-avatar {
+        width: 68px;
+        height: 68px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 15px;
+        background: linear-gradient(135deg, #ff69b4, #9b3d75);
+        color: #fff;
+        font-size: 25px;
+        font-weight: 800;
+        overflow: hidden;
+    }
+
+    .author-avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .author-name {
+        margin: 0 0 6px;
+        font-size: 19px;
+    }
+
+    .author-bio {
+        color: #999;
+        font-size: 14px;
+        line-height: 1.5;
+        min-height: 42px;
+        margin-bottom: 18px;
+    }
+
+    .unfollow-btn {
+        width: 100%;
+        border: 1px solid rgba(255,105,180,.4);
+        background: rgba(255,105,180,.08);
+        color: #ff8ac5;
+        border-radius: 12px;
+        padding: 11px;
+        font-weight: 700;
+        cursor: pointer;
+    }
+
+    .unfollow-btn:hover {
+        background: #ff69b4;
+        color: #fff;
+    }
+
+    .empty-state,
+    .loading-state,
+    .error-state {
+        text-align: center;
+        padding: 70px 20px;
+        border: 1px solid rgba(255,255,255,.08);
+        border-radius: 20px;
+        background: #101010;
+    }
+
+    .empty-icon {
+        font-size: 50px;
+        margin-bottom: 15px;
+    }
+
+    .empty-state h2,
+    .loading-state h2,
+    .error-state h2 {
+        margin-bottom: 8px;
+    }
+
+    .empty-state p,
+    .loading-state p,
+    .error-state p {
+        color: #999;
+        line-height: 1.6;
+    }
+
+    .explore-btn {
+        display: inline-block;
+        margin-top: 15px;
+        padding: 12px 20px;
+        border-radius: 12px;
+        background: #ff69b4;
+        color: #fff;
+        text-decoration: none;
+        font-weight: 700;
+    }
+
+    @media (max-width: 800px) {
+        .authors-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @media (max-width: 550px) {
+        .followed-page {
+            padding: 20px 15px 50px;
+        }
+
+        .hero h1 {
+            font-size: 27px;
+        }
+
+        .authors-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+</head>
+
+<body>
+
+<div class="followed-page">
+
+    <div class="followed-top">
+        <button class="back-btn" onclick="window.location.href='profile.html'">←</button>
+        <div class="logo">Novelora</div>
+    </div>
+
+    <div class="hero">
+        <h1>Followed Authors 💗</h1>
+        <p>Authors you're following and want to keep up with.</p>
+    </div>
+
+    <div id="content">
+        <div class="loading-state">
+            <h2>Loading authors...</h2>
+            <p>Please wait a moment.</p>
+        </div>
+    </div>
+
+</div>
+
+<script>
+let currentUser = null;
+
+async function checkAuth() {
+    const { data, error } = await supabaseClient.auth.getSession();
+
+    if (error || !data.session) {
+        window.location.href = "login.html";
+        return false;
+    }
+
+    currentUser = data.session.user;
+    return true;
+}
+
+async function loadFollowedAuthors() {
+    const content = document.getElementById("content");
+
+    try {
+        const { data: follows, error: followError } = await supabaseClient
+            .from("author_follows")
+            .select("id, author_id, created_at")
+            .eq("user_id", currentUser.id)
+            .order("created_at", { ascending: false });
+
+        if (followError) {
+            throw followError;
+        }
+
+        if (!follows || follows.length === 0) {
+            content.innerHTML = `
+                <div class="empty-state">
+                    <div class="empty-icon">💗</div>
+                    <h2>No followed authors yet</h2>
+                    <p>When you follow an author, they'll appear here.</p>
+                    <a href="reader-dashboard.html" class="explore-btn">
+                        Explore Books
+                    </a>
+                </div>
+            `;
+            return;
+        }
+
+        const authorIds = follows.map(item => item.author_id);
+
+        const { data: authors, error: authorError } = await supabaseClient
+            .from("authors")
+            .select("id, pen_name, bio, avatar_url, status")
+            .in("id", authorIds);
+
+        if (authorError) {
+            throw authorError;
+        }
+
+        const authorMap = {};
+        (authors || []).forEach(author => {
+            authorMap[author.id] = author;
+        });
+
+        const cards = follows
+            .map(follow => {
+                const author = authorMap[follow.author_id];
+
+                if (!author) return "";
+
+                const name = author.pen_name || "Novelora Author";
+                const initial = name.charAt(0).toUpperCase();
+
+                const avatar = author.avatar_url
+                    ? `<img src="${escapeHtml(author.avatar_url)}" alt="${escapeHtml(name)}">`
+                    : initial;
+
+                return `
+                    <div class="author-card" id="author-${follow.author_id}">
+                        <div class="author-avatar">
+                            ${avatar}
+                        </div>
+
+                        <h3 class="author-name">
+                            ${escapeHtml(name)}
+                        </h3>
+
+                        <p class="author-bio">
+                            ${escapeHtml(author.bio || "This author hasn't added a bio yet.")}
+                        </p>
+
+                        <button
+                            class="unfollow-btn"
+                            onclick="unfollowAuthor('${follow.author_id}')">
+                            ✓ Following
+                        </button>
+                    </div>
+                `;
+            })
+            .filter(Boolean)
+            .join("");
+
+        if (!cards) {
+            content.innerHTML = `
+                <div class="empty-state">
+                    <div class="empty-icon">💗</div>
+                    <h2>No followed authors found</h2>
+                    <p>Your followed-author list is currently empty.</p>
+                </div>
+            `;
+            return;
+        }
+
+        content.innerHTML = `<div class="authors-grid">${cards}</div>`;
+
+    } catch (error) {
+        console.error("Followed authors error:", error);
+
+        content.innerHTML = `
+            <div class="error-state">
+                <div class="empty-icon">😕</div>
+                <h2>Couldn't load followed authors</h2>
+                <p>Please try again.</p>
+                <button class="explore-btn" onclick="loadFollowedAuthors()">
+                    Try Again
+                </button>
+            </div>
+        `;
+    }
+}
+
+async function unfollowAuthor(authorId) {
+
+    const { error } = await supabaseClient
+        .from("author_follows")
+        .delete()
+        .eq("user_id", currentUser.id)
+        .eq("author_id", authorId);
+
+    if (error) {
+        alert("Couldn't unfollow this author. Please try again.");
+        console.error(error);
+        return;
+    }
+
+    const card = document.getElementById("author-" + authorId);
+
+    if (card) {
+        card.remove();
+    }
+
+    const remaining = document.querySelectorAll(".author-card");
+
+    if (remaining.length === 0) {
+        document.getElementById("content").innerHTML = `
+            <div class="empty-state">
+                <div class="empty-icon">💗</div>
+                <h2>No followed authors yet</h2>
+                <p>When you follow an author, they'll appear here.</p>
+                <a href="reader-dashboard.html" class="explore-btn">
+                    Explore Books
+                </a>
+            </div>
+        `;
+    }
+}
+
+function escapeHtml(value) {
+    return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+async function init() {
+    const authenticated = await checkAuth();
+
+    if (!authenticated) return;
+
+    await loadFollowedAuthors();
+}
+
+init();
+</script>
+
+</body>
+</html>
