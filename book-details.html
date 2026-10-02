@@ -1,1516 +1,1821 @@
-<!DOCTYPE html>
-<html lang="en">
+/*
+  NOVELORA BOOK DETAILS COMMUNITY + ACTIVITY
+  -------------------------------------------
+  Adds:
+  - Real local view tracking
+  - View formatting (K / M)
+  - Library count
+  - Book-specific comments
+  - Replies
+  - Likes
+  - Reports
+  - Delete own comments/replies
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  Uses existing Novelora keys:
+  - noveloraLibrary
+  - noveloraCommunityComments
+  - reader profile keys
+*/
 
-  <title>Book Details — Novelora</title>
+(function () {
+  "use strict";
 
-  <link rel="stylesheet" href="style.css">
+  const BOOK_ID =
+    new URLSearchParams(window.location.search).get("id");
 
-  <style>
-    .book-details-page {
-      min-height: 100vh;
+  if (!BOOK_ID) return;
+
+  const VIEW_KEY = "noveloraBookViews";
+  const VIEW_VISIT_KEY = "noveloraBookViewVisits";
+  const COMMENTS_KEY = "noveloraCommunityComments";
+  const LIBRARY_KEY = "noveloraLibrary";
+
+  function readJSON(key, fallback) {
+    try {
+      const value = JSON.parse(localStorage.getItem(key));
+      return value ?? fallback;
+    } catch {
+      return fallback;
     }
-
-    .book-details-container {
-      width: min(1100px, 92%);
-      margin: 0 auto;
-      padding: 40px 0 100px;
-    }
-
-    .book-back {
-      display: inline-block;
-      margin-bottom: 28px;
-      text-decoration: none;
-      font-weight: 700;
-    }
-
-    .book-hero {
-      display: grid;
-      grid-template-columns: 280px 1fr;
-      gap: 40px;
-      padding: 32px;
-      border-radius: 26px;
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-    }
-
-    .book-cover-large {
-      width: 100%;
-      aspect-ratio: 2 / 3;
-      border-radius: 20px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 25px;
-      box-sizing: border-box;
-
-      background:
-        linear-gradient(
-          145deg,
-          #ffffff,
-          #f8d8ea 45%,
-          #bd4e8d
-        );
-
-      color: #241522;
-      font-size: 22px;
-      font-weight: 900;
-      line-height: 1.25;
-
-      box-shadow:
-        0 20px 50px rgba(255, 105, 180, 0.20);
-    }
-
-    .book-label {
-      font-size: 11px;
-      letter-spacing: 2px;
-      font-weight: 800;
-      opacity: 0.65;
-      margin-bottom: 10px;
-    }
-
-    .book-title {
-      font-size: clamp(32px, 5vw, 54px);
-      line-height: 1.05;
-      margin: 0 0 12px;
-    }
-
-    .book-author {
-      opacity: 0.75;
-      margin-bottom: 20px;
-    }
-
-    .book-meta {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 9px;
-      margin-bottom: 24px;
-    }
-
-    .book-meta span {
-      padding: 8px 13px;
-      border-radius: 999px;
-      background: rgba(255, 105, 180, 0.10);
-      border: 1px solid rgba(255, 105, 180, 0.18);
-      font-size: 13px;
-      font-weight: 700;
-    }
-
-    .book-description {
-      line-height: 1.8;
-      opacity: 0.82;
-      margin-bottom: 25px;
-    }
-
-    /* PROMOTION */
-
-    .reader-promotion {
-      display: none;
-      margin: 0 0 25px;
-      padding: 18px 20px;
-      border-radius: 18px;
-
-      background:
-        linear-gradient(
-          135deg,
-          rgba(255, 105, 180, 0.16),
-          rgba(255, 211, 107, 0.08)
-        );
-
-      border: 1px solid rgba(255, 105, 180, 0.28);
-      box-shadow: 0 12px 35px rgba(255, 105, 180, 0.08);
-    }
-
-    .promotion-top {
-      display: flex;
-      align-items: center;
-      gap: 9px;
-      margin-bottom: 7px;
-      font-size: 13px;
-      font-weight: 900;
-      color: #ff8bc5;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-
-    .promotion-title {
-      font-size: 18px;
-      font-weight: 900;
-      margin-bottom: 6px;
-    }
-
-    .promotion-description {
-      font-size: 13px;
-      line-height: 1.6;
-      opacity: 0.75;
-      margin-bottom: 9px;
-    }
-
-    .promotion-price {
-      display: flex;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 9px;
-      font-size: 14px;
-      font-weight: 800;
-    }
-
-    .promotion-old-price {
-      text-decoration: line-through;
-      opacity: 0.5;
-    }
-
-    .promotion-new-price {
-      color: #ffd36b;
-      font-size: 18px;
-    }
-
-    .promotion-end {
-      margin-top: 8px;
-      font-size: 12px;
-      opacity: 0.65;
-    }
-
-    .book-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-    }
-
-    .book-action {
-      border: none;
-      cursor: pointer;
-      text-decoration: none;
-      padding: 14px 22px;
-      border-radius: 14px;
-      font-weight: 800;
-      font-size: 14px;
-    }
-
-    .primary-action {
-      background: linear-gradient(135deg, #ff69b4, #d94d93);
-      color: white;
-    }
-
-    .secondary-action {
-      background: rgba(255, 255, 255, 0.06);
-      color: inherit;
-      border: 1px solid rgba(255, 255, 255, 0.10);
-    }
-
-    .chapters-section {
-      margin-top: 55px;
-    }
-
-    .section-small {
-      font-size: 11px;
-      letter-spacing: 2px;
-      font-weight: 800;
-      opacity: 0.6;
-      margin-bottom: 7px;
-    }
-
-    .chapters-section h2 {
-      margin: 0 0 22px;
-      font-size: 30px;
-    }
-
-    .chapter-list {
-      display: grid;
-      gap: 10px;
-    }
-
-    .chapter-item {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 15px;
-      padding: 17px 20px;
-      border-radius: 15px;
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(255, 255, 255, 0.07);
-      text-decoration: none;
-      color: inherit;
-      transition: 0.2s ease;
-    }
-
-    .chapter-item:hover {
-      transform: translateY(-2px);
-      border-color: rgba(255, 105, 180, 0.3);
-      background: rgba(255, 105, 180, 0.06);
-    }
-
-    .chapter-left {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-    }
-
-    .chapter-number {
-      width: 42px;
-      height: 42px;
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: rgba(255, 105, 180, 0.12);
-      font-weight: 900;
-      flex-shrink: 0;
-    }
-
-    .chapter-title {
-      font-weight: 800;
-    }
-
-    .chapter-subtitle {
-      font-size: 12px;
-      opacity: 0.6;
-      margin-top: 4px;
-    }
-
-    .chapter-price {
-      font-size: 13px;
-      font-weight: 800;
-      white-space: nowrap;
-    }
-
-    .chapter-price-promo {
-      display: flex;
-      align-items: center;
-      gap: 7px;
-    }
-
-    .chapter-old-price {
-      text-decoration: line-through;
-      opacity: 0.45;
-      font-size: 12px;
-    }
-
-    .chapter-new-price {
-      color: #ffd36b;
-      font-size: 14px;
-      font-weight: 900;
-    }
-
-    .free {
-      color: #ff8bc5;
-    }
-
-    .paid {
-      color: #ffd36b;
-    }
-
-    .empty-chapters {
-      padding: 35px;
-      text-align: center;
-      border-radius: 18px;
-      background: rgba(255, 255, 255, 0.04);
-      opacity: 0.75;
-    }
-
-    @media (max-width: 750px) {
-      .book-details-container {
-        width: 94%;
-        padding-top: 25px;
-      }
-
-      .book-hero {
-        grid-template-columns: 1fr;
-        padding: 22px;
-      }
-
-      .book-cover-large {
-        width: min(220px, 75%);
-        margin: 0 auto;
-      }
-
-      .book-title {
-        font-size: 36px;
-      }
-
-      .book-actions {
-        flex-direction: column;
-      }
-
-      .book-action {
-        width: 100%;
-        text-align: center;
-        box-sizing: border-box;
-      }
-
-      .chapter-item {
-        padding: 14px;
-      }
-    }
-  </style>
-</head>
-
-
-<body class="reader-page book-details-page">
-
-
-<header class="reader-navbar">
-
-  <a href="reader-dashboard.html" class="reader-logo">
-    NOVEL<span>ORA</span>
-  </a>
-
-  <nav class="reader-nav">
-
-    <a href="library.html">📚 Library</a>
-    <a href="coins.html">🪙 Coins</a>
-    <a href="trending.html">🔥 Trending</a>
-    <a href="free-books.html">🆓 Free Books</a>
-
-  </nav>
-
-  <div class="reader-profile">
-
-    <a href="notifications.html" class="notification-btn">
-      🔔
-    </a>
-
-    <a href="profile.html" class="profile-btn">
-      👤
-    </a>
-
-  </div>
-
-</header>
-
-
-
-<main class="book-details-container">
-
-  <a href="reader-dashboard.html" class="book-back">
-    ← Back to Dashboard
-  </a>
-
-
-  <section class="book-hero">
-
-    <div
-      id="bookCover"
-      class="book-cover-large"
-    >
-      BOOK
-    </div>
-
-
-    <div>
-
-      <div
-        id="bookLabel"
-        class="book-label"
-      >
-        NOVELORA STORY
-      </div>
-
-
-      <h1
-        id="bookTitle"
-        class="book-title"
-      >
-        Loading book...
-      </h1>
-
-
-      <p
-        id="bookAuthor"
-        class="book-author"
-      >
-      </p>
-
-
-      <div
-        id="bookMeta"
-        class="book-meta"
-      >
-      </div>
-
-
-      <p
-        id="bookDescription"
-        class="book-description"
-      >
-      </p>
-
-
-      <!-- ACTIVE PROMOTION -->
-
-      <div
-        id="readerPromotion"
-        class="reader-promotion"
-      >
-
-        <div class="promotion-top">
-          🔥 Limited-Time Offer
-        </div>
-
-        <div
-          id="promotionTitle"
-          class="promotion-title"
-        >
-        </div>
-
-        <div
-          id="promotionDescription"
-          class="promotion-description"
-        >
-        </div>
-
-        <div
-          id="promotionPrice"
-          class="promotion-price"
-        >
-        </div>
-
-        <div
-          id="promotionEnd"
-          class="promotion-end"
-        >
-        </div>
-
-      </div>
-
-
-      <div class="book-actions">
-
-        <a
-          id="startReading"
-          href="#"
-          class="book-action primary-action"
-        >
-          📖 Start Reading
-        </a>
-
-
-        <button
-          type="button"
-          class="book-action secondary-action"
-          onclick="addCurrentBookToLibrary()"
-        >
-          ＋ Add to Library
-        </button>
-
-      </div>
-
-    </div>
-
-  </section>
-
-
-
-  <section class="chapters-section">
-
-    <div class="section-small">
-      THE STORY
-    </div>
-
-    <h2>
-      Chapters
-    </h2>
-
-
-    <div
-      id="chapterList"
-      class="chapter-list"
-    >
-    </div>
-
-  </section>
-
-</main>
-
-
-
-<nav class="mobile-reader-nav">
-
-  <a href="reader-dashboard.html">
-    🏠
-    <span>Home</span>
-  </a>
-
-  <a href="library.html">
-    📚
-    <span>Library</span>
-  </a>
-
-  <a href="trending.html">
-    🔥
-    <span>Trending</span>
-  </a>
-
-  <a href="free-books.html">
-    🆓
-    <span>Free</span>
-  </a>
-
-  <a href="profile.html">
-    👤
-    <span>Profile</span>
-  </a>
-
-</nav>
-
-
-
-<script>
+  }
+
+  function saveJSON(key, value) {
+    localStorage.setItem(key, JSON.stringify(value));
+  }
+
+  function escapeHTML(value) {
+    return String(value ?? "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  }
 
   /*
-   * GET BOOK ID FROM URL
+   * -----------------------------------------
+   * READER IDENTITY
+   * -----------------------------------------
    */
 
-  const params =
-    new URLSearchParams(window.location.search);
+  function getReaderProfile() {
+    const possibleKeys = [
+      "noveloraReaderProfile",
+      "readerProfile",
+      "noveloraProfile"
+    ];
 
-  const bookId =
-    params.get("id");
+    for (const key of possibleKeys) {
+      const profile = readJSON(key, null);
 
+      if (profile && typeof profile === "object") {
+        return profile;
+      }
+    }
 
-  /*
-   * ADMIN BOOKS
-   */
+    return null;
+  }
 
-  const adminBooks =
-    JSON.parse(
-      localStorage.getItem("noveloraAdminBooks")
-    ) || [];
+  function getReaderId() {
+    const profile = getReaderProfile();
 
-
-  /*
-   * FIND THE SELECTED BOOK
-   */
-
-  let book =
-    adminBooks.find(function(item) {
-
+    if (profile) {
       return String(
-        item.id ||
-        item.bookId ||
-        item.bookID
-      ) === String(bookId);
-
-    });
-
-
-  /*
-   * DEMO BOOKS
-   */
-
-  const demoBooks = {
-
-    "alpha-hybrid": {
-      id: "alpha-hybrid",
-      title: "The Alpha's Forbidden Hybrid",
-      author: "Moonlight Writer",
-      genre: "Romance",
-      secondGenre: "Werewolf",
-      rating: "16+",
-      status: "Ongoing",
-      description:
-        "She was never supposed to exist. Born from a forbidden bloodline, she has spent her entire life hiding the secret that could destroy the supernatural world.",
-      cover: ""
-    },
-
-    "billionaire-bride": {
-      id: "billionaire-bride",
-      title: "The Billionaire's Secret Bride",
-      author: "Novelora Writer",
-      genre: "Billionaire",
-      secondGenre: "Romance",
-      rating: "16+",
-      status: "Ongoing",
-      description:
-        "A secret marriage, a powerful billionaire and a love neither of them expected.",
-      cover: ""
-    },
-
-    "crown-of-the-moon": {
-      id: "crown-of-the-moon",
-      title: "Crown of the Moon",
-      author: "Moonlight Writer",
-      genre: "Fantasy",
-      secondGenre: "Romance",
-      rating: "13+",
-      status: "Ongoing",
-      description:
-        "A kingdom ruled by destiny, where a forgotten princess discovers that her bloodline may determine the fate of an entire realm.",
-      cover: ""
-    },
-
-    "girl-behind-the-mask": {
-      id: "girl-behind-the-mask",
-      title: "The Girl Behind the Mask",
-      author: "Novelora Writer",
-      genre: "Mystery",
-      secondGenre: "Drama",
-      rating: "16+",
-      status: "Ongoing",
-      description:
-        "Everyone has something to hide. But when one girl removes her mask, the truth could change everything.",
-      cover: ""
+        profile.id ||
+        profile.userId ||
+        profile.readerId ||
+        profile.email ||
+        ""
+      );
     }
 
-  };
+    let anonymousId =
+      localStorage.getItem("noveloraAnonymousReaderId");
 
+    if (!anonymousId) {
+      anonymousId =
+        "reader_" +
+        Date.now() +
+        "_" +
+        Math.random()
+          .toString(36)
+          .slice(2);
 
-  if (!book) {
+      localStorage.setItem(
+        "noveloraAnonymousReaderId",
+        anonymousId
+      );
+    }
 
-    book =
-      demoBooks[bookId];
-
+    return anonymousId;
   }
 
+  function getReaderName() {
+    const profile = getReaderProfile();
 
-  /*
-   * BOOK NOT FOUND
-   */
+    if (profile) {
+      return (
+        profile.username ||
+        profile.displayName ||
+        profile.name ||
+        profile.fullName ||
+        "Reader"
+      );
+    }
 
-  if (!book) {
-
-    document.getElementById(
-      "bookTitle"
-    ).textContent = "Book Not Found";
-
-
-    document.getElementById(
-      "bookDescription"
-    ).textContent =
-      "Sorry, this story could not be found.";
-
-
-    document.getElementById(
-      "chapterList"
-    ).innerHTML =
-      '<div class="empty-chapters">Book not found.</div>';
-
+    return "Reader";
   }
 
+  /*
+   * -----------------------------------------
+   * NUMBER FORMAT
+   * -----------------------------------------
+   */
 
-  else {
+  function formatCount(number) {
+    number = Number(number) || 0;
 
-    /*
-     * NORMALIZE BOOK INFORMATION
-     */
-
-    const title =
-      book.title ||
-      book.bookTitle ||
-      "Untitled Book";
-
-
-    const author =
-      book.author ||
-      book.authorName ||
-      book.penName ||
-      "Unknown Author";
-
-
-    const genre =
-      book.genre ||
-      "Romance";
-
-
-    const secondGenre =
-      book.subgenre ||
-      book.secondaryGenre ||
-      book.secondGenre ||
-      "";
-
-
-    const rating =
-      book.ageRating ||
-      book.rating ||
-      "All Ages";
-
-
-    const status =
-      book.status ||
-      book.storyStatus ||
-      "Ongoing";
-
-
-    const description =
-      book.description ||
-      book.synopsis ||
-      "No description available.";
-
-
-    const currentBookId =
-      book.id ||
-      book.bookId ||
-      book.bookID ||
-      bookId;
-
-
-    /*
-     * PAGE TITLE
-     */
-
-    document.title =
-      title + " — Novelora";
-
-
-    /*
-     * BOOK INFORMATION
-     */
-
-    document.getElementById(
-      "bookTitle"
-    ).textContent =
-      title;
-
-
-    document.getElementById(
-      "bookAuthor"
-    ).innerHTML =
-      "By <strong>" +
-      author +
-      "</strong>";
-
-
-    document.getElementById(
-      "bookDescription"
-    ).textContent =
-      description;
-
-
-    /*
-     * COVER
-     */
-
-    const cover =
-      book.coverImage ||
-      book.cover ||
-      "";
-
-
-    if (cover) {
-
-      document.getElementById(
-        "bookCover"
-      ).style.backgroundImage =
-        "url('" + cover + "')";
-
-      document.getElementById(
-        "bookCover"
-      ).style.backgroundSize =
-        "cover";
-
-      document.getElementById(
-        "bookCover"
-      ).style.backgroundPosition =
-        "center";
-
-      document.getElementById(
-        "bookCover"
-      ).textContent = "";
-
+    if (number < 1000) {
+      return number.toLocaleString();
     }
 
-    else {
+    if (number < 1000000) {
+      const value = number / 1000;
 
-      document.getElementById(
-        "bookCover"
-      ).textContent =
-        title.toUpperCase();
+      if (Number.isInteger(value)) {
+        return value + "K";
+      }
 
+      return value
+        .toFixed(2)
+        .replace(/\.?0+$/, "") + "K";
     }
 
+    const value = number / 1000000;
 
-    /*
-     * META
-     */
-
-    let metaHTML =
-      "<span>❤️ " +
-      genre +
-      "</span>";
-
-
-    if (secondGenre) {
-
-      metaHTML +=
-        "<span>✨ " +
-        secondGenre +
-        "</span>";
-
+    if (Number.isInteger(value)) {
+      return value + "M";
     }
 
+    return value
+      .toFixed(2)
+      .replace(/\.?0+$/, "") + "M";
+  }
 
-    metaHTML +=
-      "<span>🔞 " +
-      rating +
-      "</span>" +
-      "<span>📖 " +
-      status +
-      "</span>";
+  /*
+   * -----------------------------------------
+   * REAL VIEW TRACKING
+   * -----------------------------------------
+   *
+   * One view per reader/browser per book
+   * per calendar day.
+   *
+   * This prevents refreshing the page 50 times
+   * from creating 50 views.
+   */
 
+  function recordBookView() {
+    const views = readJSON(VIEW_KEY, {});
+    const visits = readJSON(VIEW_VISIT_KEY, {});
 
-    document.getElementById(
-      "bookMeta"
-    ).innerHTML =
-      metaHTML;
+    const readerId = getReaderId();
 
+    const today =
+      new Date().toISOString().slice(0, 10);
 
-    /*
-     * FIND ACTIVE PROMOTION
-     */
+    const visitId =
+      String(BOOK_ID) +
+      "::" +
+      String(readerId) +
+      "::" +
+      today;
 
-    const promotions =
-      JSON.parse(
-        localStorage.getItem(
-          "noveloraPromotions"
-        )
-      ) || [];
+    if (!visits[visitId]) {
+      visits[visitId] = true;
 
+      const current =
+        Number(views[BOOK_ID]) || 0;
 
-    const now =
-      new Date();
+      views[BOOK_ID] =
+        current + 1;
 
+      saveJSON(VIEW_KEY, views);
+      saveJSON(VIEW_VISIT_KEY, visits);
+    }
+  }
 
-    const activePromotion =
-      promotions.find(function(promotion) {
+  function getBookViews() {
+    const views =
+      readJSON(VIEW_KEY, {});
 
-        const promotionBookId =
-          promotion.bookId ||
-          promotion.bookID ||
-          promotion.book;
+    return Number(
+      views[BOOK_ID]
+    ) || 0;
+  }
 
+  /*
+   * -----------------------------------------
+   * LIBRARY COUNT
+   * -----------------------------------------
+   */
 
-        if (
-          String(promotionBookId) !==
-          String(currentBookId)
-        ) {
+  function getLibraryCount() {
+    const library =
+      readJSON(LIBRARY_KEY, []);
 
-          return false;
+    if (!Array.isArray(library)) {
+      return 0;
+    }
 
-        }
+    const matches =
+      library.filter(function (item) {
+        const id =
+          item.id ||
+          item.bookId ||
+          item.bookID;
 
-
-        /*
-         * Promotion dates
-         */
-
-        const start =
-          promotion.startDate
-            ? new Date(
-                promotion.startDate +
-                "T00:00:00"
-              )
-            : null;
-
-
-        const end =
-          promotion.endDate
-            ? new Date(
-                promotion.endDate +
-                "T23:59:59"
-              )
-            : null;
-
-
-        if (
-          start &&
-          now < start
-        ) {
-
-          return false;
-
-        }
-
-
-        if (
-          end &&
-          now > end
-        ) {
-
-          return false;
-
-        }
-
-
-        /*
-         * If admin marked it
-         * as ended, don't show it.
-         */
-
-        if (
-          String(
-            promotion.status ||
-            ""
-          ).toLowerCase() ===
-          "ended"
-        ) {
-
-          return false;
-
-        }
-
-
-        /*
-         * Only chapter discounts
-         * affect chapter prices.
-         */
-
-        return String(
-          promotion.type ||
-          ""
-        ).toLowerCase()
-        .includes("discount");
-
+        return String(id) === String(BOOK_ID);
       });
 
+    return matches.length;
+  }
 
-    /*
-     * PROMOTION PRICE
-     */
+  /*
+   * -----------------------------------------
+   * COMMENTS
+   * -----------------------------------------
+   */
 
-    let promotionPrice = null;
+  function getComments() {
+    const comments =
+      readJSON(COMMENTS_KEY, []);
 
+    return Array.isArray(comments)
+      ? comments
+      : [];
+  }
 
-    if (activePromotion) {
+  function saveComments(comments) {
+    saveJSON(
+      COMMENTS_KEY,
+      comments
+    );
+  }
 
-      const discount =
-        Number(
-          activePromotion.discountCoins
+  function getBookComments() {
+    return getComments()
+      .filter(function (comment) {
+
+        const commentBookId =
+          comment.bookId ||
+          comment.bookID ||
+          comment.book;
+
+        return (
+          String(commentBookId) ===
+          String(BOOK_ID)
         );
+      })
+      .filter(function (comment) {
+        return (
+          String(comment.status || "visible")
+            .toLowerCase() !== "deleted"
+        );
+      })
+      .filter(function (comment) {
+        return (
+          String(comment.status || "visible")
+            .toLowerCase() !== "hidden"
+        );
+      })
+      .sort(function (a, b) {
+        return (
+          new Date(
+            b.createdAt || 0
+          ) -
+          new Date(
+            a.createdAt || 0
+          )
+        );
+      });
+  }
 
+  /*
+   * -----------------------------------------
+   * INTERFACE
+   * -----------------------------------------
+   */
 
-      if (
-        Number.isFinite(discount) &&
-        discount >= 0
-      ) {
+  function createInterface() {
 
-        promotionPrice =
-          discount;
+    const chaptersSection =
+      document.querySelector(
+        ".chapters-section"
+      );
 
-      }
-
+    if (!chaptersSection) {
+      return;
     }
 
-
     /*
-     * DISPLAY ACTIVE PROMOTION
+     * ACTIVITY STYLES
      */
 
-    if (
-      activePromotion &&
-      promotionPrice !== null
+    const style =
+      document.createElement("style");
+
+    style.textContent = `
+      .novelora-activity {
+        margin-top: 24px;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+      }
+
+      .novelora-stat {
+        padding: 16px;
+        border-radius: 18px;
+        background: rgba(255,255,255,0.045);
+        border: 1px solid rgba(255,255,255,0.08);
+        text-align: center;
+      }
+
+      .novelora-stat-icon {
+        font-size: 20px;
+        margin-bottom: 5px;
+      }
+
+      .novelora-stat-number {
+        font-size: 20px;
+        font-weight: 900;
+      }
+
+      .novelora-stat-label {
+        margin-top: 4px;
+        font-size: 11px;
+        opacity: .58;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      .novelora-community {
+        margin-top: 55px;
+        padding-bottom: 40px;
+      }
+
+      .novelora-community-heading {
+        margin-bottom: 22px;
+      }
+
+      .novelora-community-heading h2 {
+        margin: 0;
+        font-size: 30px;
+      }
+
+      .novelora-community-heading p {
+        margin: 7px 0 0;
+        opacity: .65;
+      }
+
+      .novelora-comment-box {
+        padding: 20px;
+        border-radius: 20px;
+        background: rgba(255,255,255,.04);
+        border: 1px solid rgba(255,255,255,.08);
+        margin-bottom: 25px;
+      }
+
+      .novelora-comment-box textarea {
+        width: 100%;
+        min-height: 100px;
+        resize: vertical;
+        box-sizing: border-box;
+        padding: 15px;
+        border-radius: 14px;
+        border: 1px solid rgba(255,255,255,.1);
+        background: rgba(0,0,0,.18);
+        color: inherit;
+        outline: none;
+        font: inherit;
+      }
+
+      .novelora-comment-box textarea:focus {
+        border-color: rgba(255,105,180,.55);
+      }
+
+      .novelora-comment-bottom {
+        margin-top: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+      }
+
+      .novelora-character-count {
+        font-size: 12px;
+        opacity: .5;
+      }
+
+      .novelora-post-comment {
+        border: 0;
+        cursor: pointer;
+        padding: 12px 18px;
+        border-radius: 12px;
+        color: white;
+        font-weight: 800;
+        background: linear-gradient(
+          135deg,
+          #ff69b4,
+          #d94d93
+        );
+      }
+
+      .novelora-comments-list {
+        display: grid;
+        gap: 15px;
+      }
+
+      .novelora-comment {
+        padding: 18px;
+        border-radius: 18px;
+        background: rgba(255,255,255,.035);
+        border: 1px solid rgba(255,255,255,.07);
+      }
+
+      .novelora-comment-top {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .novelora-avatar {
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(
+          135deg,
+          #ff69b4,
+          #9f3f73
+        );
+        font-weight: 900;
+        color: white;
+        flex-shrink: 0;
+      }
+
+      .novelora-comment-name {
+        font-weight: 800;
+      }
+
+      .novelora-comment-date {
+        font-size: 11px;
+        opacity: .48;
+        margin-top: 2px;
+      }
+
+      .novelora-comment-text {
+        margin: 14px 0;
+        line-height: 1.65;
+        white-space: pre-wrap;
+        word-break: break-word;
+      }
+
+      .novelora-comment-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .novelora-comment-action {
+        border: 0;
+        cursor: pointer;
+        padding: 7px 10px;
+        border-radius: 10px;
+        background: rgba(255,255,255,.055);
+        color: inherit;
+        font-size: 12px;
+      }
+
+      .novelora-comment-action:hover {
+        background: rgba(255,105,180,.12);
+      }
+
+      .novelora-replies {
+        margin-top: 15px;
+        margin-left: 38px;
+        display: grid;
+        gap: 10px;
+      }
+
+      .novelora-reply {
+        padding: 13px;
+        border-radius: 14px;
+        background: rgba(255,255,255,.025);
+        border-left: 2px solid rgba(255,105,180,.3);
+      }
+
+      .novelora-reply-box {
+        margin-top: 12px;
+        display: none;
+      }
+
+      .novelora-reply-box textarea {
+        width: 100%;
+        min-height: 75px;
+        box-sizing: border-box;
+        padding: 12px;
+        border-radius: 12px;
+        border: 1px solid rgba(255,255,255,.1);
+        background: rgba(0,0,0,.18);
+        color: inherit;
+        resize: vertical;
+        font: inherit;
+      }
+
+      .novelora-reply-submit {
+        margin-top: 8px;
+        border: 0;
+        cursor: pointer;
+        padding: 9px 14px;
+        border-radius: 10px;
+        color: white;
+        font-weight: 800;
+        background: #d94d93;
+      }
+
+      .novelora-empty-community {
+        padding: 35px 20px;
+        text-align: center;
+        border-radius: 18px;
+        background: rgba(255,255,255,.035);
+        border: 1px solid rgba(255,255,255,.06);
+        opacity: .7;
+      }
+
+      @media (max-width: 650px) {
+        .novelora-activity {
+          grid-template-columns: 1fr;
+        }
+
+        .novelora-comment-bottom {
+          align-items: stretch;
+          flex-direction: column;
+        }
+
+        .novelora-post-comment {
+          width: 100%;
+        }
+
+        .novelora-replies {
+          margin-left: 15px;
+        }
+      }
+    `;
+
+    document.head.appendChild(style);
+
+    /*
+     * ACTIVITY BAR
+     */
+
+    const activity =
+      document.createElement("div");
+
+    activity.className =
+      "novelora-activity";
+
+    activity.innerHTML = `
+      <div class="novelora-stat">
+        <div class="novelora-stat-icon">👁</div>
+        <div
+          class="novelora-stat-number"
+          id="noveloraViewCount"
+        >0</div>
+        <div class="novelora-stat-label">
+          Views
+        </div>
+      </div>
+
+      <div class="novelora-stat">
+        <div class="novelora-stat-icon">📚</div>
+        <div
+          class="novelora-stat-number"
+          id="noveloraLibraryCount"
+        >0</div>
+        <div class="novelora-stat-label">
+          In Library
+        </div>
+      </div>
+
+      <div class="novelora-stat">
+        <div class="novelora-stat-icon">💬</div>
+        <div
+          class="novelora-stat-number"
+          id="noveloraCommentCount"
+        >0</div>
+        <div class="novelora-stat-label">
+          Comments
+        </div>
+      </div>
+    `;
+
+    /*
+     * Put activity immediately
+     * below the book hero.
+     */
+
+    const hero =
+      document.querySelector(
+        ".book-hero"
+      );
+
+    if (hero) {
+      hero.after(activity);
+    }
+
+    /*
+     * COMMUNITY SECTION
+     */
+
+    const community =
+      document.createElement("section");
+
+    community.className =
+      "novelora-community";
+
+    community.innerHTML = `
+      <div class="novelora-community-heading">
+        <div class="section-small">
+          COMMUNITY
+        </div>
+
+        <h2>
+          Talk about this story 💬
+        </h2>
+
+        <p>
+          Share your thoughts, react to other readers,
+          and discuss the story.
+        </p>
+      </div>
+
+      <div class="novelora-comment-box">
+
+        <textarea
+          id="noveloraCommentInput"
+          maxlength="1000"
+          placeholder="What do you think about this story?"
+        ></textarea>
+
+        <div class="novelora-comment-bottom">
+
+          <span
+            class="novelora-character-count"
+            id="noveloraCharacterCount"
+          >
+            0 / 1000
+          </span>
+
+          <button
+            type="button"
+            class="novelora-post-comment"
+            id="noveloraPostComment"
+          >
+            💬 Post Comment
+          </button>
+
+        </div>
+
+      </div>
+
+      <div
+        id="noveloraCommentsList"
+        class="novelora-comments-list"
+      ></div>
+    `;
+
+    chaptersSection.after(
+      community
+    );
+
+    /*
+     * INITIAL VIEW
+     */
+
+    recordBookView();
+
+    /*
+     * UPDATE COUNTERS
+     */
+
+    function updateCounters() {
+
+      const comments =
+        getBookComments();
+
+      document.getElementById(
+        "noveloraViewCount"
+      ).textContent =
+        formatCount(
+          getBookViews()
+        );
+
+      document.getElementById(
+        "noveloraLibraryCount"
+      ).textContent =
+        formatCount(
+          getLibraryCount()
+        );
+
+      document.getElementById(
+        "noveloraCommentCount"
+      ).textContent =
+        formatCount(
+          comments.length
+        );
+    }
+
+    /*
+     * -----------------------------------------
+     * RENDER COMMENTS
+     * -----------------------------------------
+     */
+
+    function renderComments() {
+
+      const container =
+        document.getElementById(
+          "noveloraCommentsList"
+        );
+
+      const comments =
+        getBookComments();
+
+      updateCounters();
+
+      if (!comments.length) {
+
+        container.innerHTML = `
+          <div class="novelora-empty-community">
+            💬 No comments yet.<br><br>
+            Be the first reader to start the conversation.
+          </div>
+        `;
+
+        return;
+      }
+
+      container.innerHTML =
+        comments
+          .map(renderComment)
+          .join("");
+
+      attachCommentEvents();
+    }
+
+    function renderComment(comment) {
+
+      const likes =
+        Array.isArray(
+          comment.likedBy
+        )
+          ? comment.likedBy
+          : [];
+
+      const liked =
+        likes.includes(
+          getReaderId()
+        );
+
+      const replies =
+        Array.isArray(
+          comment.replies
+        )
+          ? comment.replies
+          : [];
+
+      const visibleReplies =
+        replies.filter(function (reply) {
+          return (
+            String(
+              reply.status ||
+              "visible"
+            ).toLowerCase() !==
+            "hidden"
+          );
+        });
+
+      const own =
+        String(
+          comment.readerId || ""
+        ) ===
+        String(
+          getReaderId()
+        );
+
+      const date =
+        comment.createdAt
+          ? new Date(
+              comment.createdAt
+            ).toLocaleString()
+          : "";
+
+      const firstLetter =
+        String(
+          comment.username ||
+          "R"
+        )
+          .charAt(0)
+          .toUpperCase();
+
+      return `
+        <article
+          class="novelora-comment"
+          data-comment-id="${escapeHTML(comment.id)}"
+        >
+
+          <div class="novelora-comment-top">
+
+            <div class="novelora-avatar">
+              ${escapeHTML(firstLetter)}
+            </div>
+
+            <div>
+              <div class="novelora-comment-name">
+                ${escapeHTML(
+                  comment.username ||
+                  "Reader"
+                )}
+              </div>
+
+              <div class="novelora-comment-date">
+                ${escapeHTML(date)}
+              </div>
+            </div>
+
+          </div>
+
+          <div class="novelora-comment-text">
+            ${escapeHTML(
+              comment.text
+            )}
+          </div>
+
+          <div class="novelora-comment-actions">
+
+            <button
+              class="novelora-comment-action"
+              data-action="like"
+              data-id="${escapeHTML(comment.id)}"
+            >
+              ${liked ? "❤️" : "♡"}
+              ${formatCount(
+                likes.length
+              )}
+            </button>
+
+            <button
+              class="novelora-comment-action"
+              data-action="reply"
+              data-id="${escapeHTML(comment.id)}"
+            >
+              ↩️ Reply
+            </button>
+
+            <button
+              class="novelora-comment-action"
+              data-action="report"
+              data-id="${escapeHTML(comment.id)}"
+            >
+              🚩 Report
+            </button>
+
+            ${
+              own
+                ? `
+                  <button
+                    class="novelora-comment-action"
+                    data-action="delete"
+                    data-id="${escapeHTML(comment.id)}"
+                  >
+                    🗑 Delete
+                  </button>
+                `
+                : ""
+            }
+
+          </div>
+
+          <div
+            class="novelora-reply-box"
+            id="replyBox-${escapeHTML(comment.id)}"
+          >
+            <textarea
+              maxlength="1000"
+              placeholder="Write a reply..."
+            ></textarea>
+
+            <button
+              class="novelora-reply-submit"
+              data-action="post-reply"
+              data-id="${escapeHTML(comment.id)}"
+            >
+              Reply
+            </button>
+          </div>
+
+          ${
+            visibleReplies.length
+              ? `
+                <div class="novelora-replies">
+                  ${visibleReplies
+                    .map(function (reply) {
+                      return renderReply(
+                        reply,
+                        comment.id
+                      );
+                    })
+                    .join("")}
+                </div>
+              `
+              : ""
+          }
+
+        </article>
+      `;
+    }
+
+    function renderReply(
+      reply,
+      commentId
     ) {
 
-      const promotionBox =
-        document.getElementById(
-          "readerPromotion"
+      const likes =
+        Array.isArray(
+          reply.likedBy
+        )
+          ? reply.likedBy
+          : [];
+
+      const liked =
+        likes.includes(
+          getReaderId()
         );
 
+      const own =
+        String(
+          reply.readerId || ""
+        ) ===
+        String(
+          getReaderId()
+        );
 
-      const promotionTitle =
-        activePromotion.title ||
-        "Special Chapter Offer";
+      const date =
+        reply.createdAt
+          ? new Date(
+              reply.createdAt
+            ).toLocaleString()
+          : "";
 
+      return `
+        <div
+          class="novelora-reply"
+          data-reply-id="${escapeHTML(reply.id)}"
+        >
 
-      const promotionDescription =
-        activePromotion.description ||
-        "Enjoy this limited-time chapter discount.";
+          <div class="novelora-comment-top">
 
+            <div class="novelora-avatar">
+              ${escapeHTML(
+                String(
+                  reply.username ||
+                  "R"
+                )
+                  .charAt(0)
+                  .toUpperCase()
+              )}
+            </div>
 
-      document.getElementById(
-        "promotionTitle"
-      ).textContent =
-        promotionTitle;
+            <div>
+              <div class="novelora-comment-name">
+                ${escapeHTML(
+                  reply.username ||
+                  "Reader"
+                )}
+              </div>
 
+              <div class="novelora-comment-date">
+                ${escapeHTML(date)}
+              </div>
+            </div>
 
-      document.getElementById(
-        "promotionDescription"
-      ).textContent =
-        promotionDescription;
+          </div>
 
+          <div class="novelora-comment-text">
+            ${escapeHTML(
+              reply.text
+            )}
+          </div>
 
-      document.getElementById(
-        "promotionPrice"
-      ).innerHTML =
+          <div class="novelora-comment-actions">
 
-        '<span class="promotion-old-price">' +
-          'Regular chapter price applies' +
-        '</span>' +
+            <button
+              class="novelora-comment-action"
+              data-action="like-reply"
+              data-comment-id="${escapeHTML(commentId)}"
+              data-reply-id="${escapeHTML(reply.id)}"
+            >
+              ${liked ? "❤️" : "♡"}
+              ${formatCount(
+                likes.length
+              )}
+            </button>
 
-        '<span class="promotion-new-price">' +
-          '🪙 ' +
-          promotionPrice +
-          ' coins/chapter' +
-        '</span>';
-
-
-      if (activePromotion.endDate) {
-
-        const endDate =
-          new Date(
-            activePromotion.endDate +
-            "T23:59:59"
-          );
-
-
-        document.getElementById(
-          "promotionEnd"
-        ).textContent =
-          "⏳ Offer ends " +
-          endDate.toLocaleDateString(
-            undefined,
-            {
-              year: "numeric",
-              month: "long",
-              day: "numeric"
+            ${
+              own
+                ? `
+                  <button
+                    class="novelora-comment-action"
+                    data-action="delete-reply"
+                    data-comment-id="${escapeHTML(commentId)}"
+                    data-reply-id="${escapeHTML(reply.id)}"
+                  >
+                    🗑 Delete
+                  </button>
+                `
+                : ""
             }
-          );
 
-      }
+          </div>
 
-
-      promotionBox.style.display =
-        "block";
-
+        </div>
+      `;
     }
 
-
     /*
-     * FIND ADMIN CHAPTERS
+     * -----------------------------------------
+     * COMMENT EVENTS
+     * -----------------------------------------
      */
 
-    const adminChapters =
-      JSON.parse(
-        localStorage.getItem(
-          "noveloraAdminChapters"
+    function attachCommentEvents() {
+
+      document
+        .querySelectorAll(
+          "[data-action='like']"
         )
-      ) || [];
+        .forEach(function (button) {
 
+          button.addEventListener(
+            "click",
+            function () {
 
-    const chapters =
-      adminChapters
+              toggleCommentLike(
+                button.dataset.id
+              );
 
-        .filter(function(chapter) {
-
-          const chapterBookId =
-            chapter.bookId ||
-            chapter.bookID ||
-            chapter.book;
-
-
-          return String(
-            chapterBookId
-          ) === String(
-            currentBookId
-          );
-
-        })
-
-        .sort(function(a, b) {
-
-          return Number(
-            a.chapterNumber ||
-            a.number ||
-            0
-          ) -
-
-          Number(
-            b.chapterNumber ||
-            b.number ||
-            0
+            }
           );
 
         });
 
+      document
+        .querySelectorAll(
+          "[data-action='reply']"
+        )
+        .forEach(function (button) {
+
+          button.addEventListener(
+            "click",
+            function () {
+
+              const box =
+                document.getElementById(
+                  "replyBox-" +
+                  button.dataset.id
+                );
+
+              if (!box) return;
+
+              box.style.display =
+                box.style.display === "block"
+                  ? "none"
+                  : "block";
+
+            }
+          );
+
+        });
+
+      document
+        .querySelectorAll(
+          "[data-action='report']"
+        )
+        .forEach(function (button) {
+
+          button.addEventListener(
+            "click",
+            function () {
+
+              reportComment(
+                button.dataset.id
+              );
+
+            }
+          );
+
+        });
+
+      document
+        .querySelectorAll(
+          "[data-action='delete']"
+        )
+        .forEach(function (button) {
+
+          button.addEventListener(
+            "click",
+            function () {
+
+              deleteComment(
+                button.dataset.id
+              );
+
+            }
+          );
+
+        });
+
+      document
+        .querySelectorAll(
+          "[data-action='post-reply']"
+        )
+        .forEach(function (button) {
+
+          button.addEventListener(
+            "click",
+            function () {
+
+              const box =
+                document.getElementById(
+                  "replyBox-" +
+                  button.dataset.id
+                );
+
+              const textarea =
+                box
+                  ? box.querySelector(
+                      "textarea"
+                    )
+                  : null;
+
+              if (!textarea) return;
+
+              postReply(
+                button.dataset.id,
+                textarea.value
+              );
+
+            }
+          );
+
+        });
+
+      document
+        .querySelectorAll(
+          "[data-action='like-reply']"
+        )
+        .forEach(function (button) {
+
+          button.addEventListener(
+            "click",
+            function () {
+
+              toggleReplyLike(
+                button.dataset.commentId,
+                button.dataset.replyId
+              );
+
+            }
+          );
+
+        });
+
+      document
+        .querySelectorAll(
+          "[data-action='delete-reply']"
+        )
+        .forEach(function (button) {
+
+          button.addEventListener(
+            "click",
+            function () {
+
+              deleteReply(
+                button.dataset.commentId,
+                button.dataset.replyId
+              );
+
+            }
+          );
+
+        });
+    }
 
     /*
-     * CHAPTER LIST
+     * -----------------------------------------
+     * POST COMMENT
+     * -----------------------------------------
      */
 
-    const chapterList =
+    const input =
       document.getElementById(
-        "chapterList"
+        "noveloraCommentInput"
       );
 
+    const characterCount =
+      document.getElementById(
+        "noveloraCharacterCount"
+      );
 
-    chapterList.innerHTML = "";
+    input.addEventListener(
+      "input",
+      function () {
 
+        characterCount.textContent =
+          input.value.length +
+          " / 1000";
 
-    let publishedChapterCount = 0;
+      }
+    );
 
+    document
+      .getElementById(
+        "noveloraPostComment"
+      )
+      .addEventListener(
+        "click",
+        function () {
 
-    if (chapters.length > 0) {
+          const text =
+            input.value.trim();
 
+          if (!text) {
+            alert(
+              "Please write a comment first."
+            );
+            return;
+          }
 
-      chapters.forEach(function(chapter) {
+          const comments =
+            getComments();
 
+          comments.push({
 
-        const number =
-          chapter.chapterNumber ||
-          chapter.number ||
-          1;
+            id:
+              "comment_" +
+              Date.now() +
+              "_" +
+              Math.random()
+                .toString(36)
+                .slice(2),
 
+            parentId: null,
 
-        const chapterTitle =
-          chapter.title ||
-          chapter.chapterTitle ||
-          "Chapter " + number;
+            readerId:
+              getReaderId(),
 
+            username:
+              getReaderName(),
 
-        const access =
-          String(
-            chapter.access ||
-            chapter.accessType ||
-            "Paid"
-          ).toLowerCase();
+            text:
+              text,
 
+            bookId:
+              BOOK_ID,
 
-        const isFree =
-          access === "free";
+            bookTitle:
+              document.getElementById(
+                "bookTitle"
+              )?.textContent ||
+              "",
 
+            likes:
+              0,
 
-        const normalPrice =
-          Number(
-            chapter.price ||
-            chapter.coinPrice ||
-            5
+            likedBy:
+              [],
+
+            replies:
+              [],
+
+            reports:
+              [],
+
+            reportCount:
+              0,
+
+            status:
+              "visible",
+
+            createdAt:
+              new Date().toISOString(),
+
+            updatedAt:
+              new Date().toISOString()
+
+          });
+
+          saveComments(
+            comments
           );
 
+          input.value = "";
+          characterCount.textContent =
+            "0 / 1000";
 
-        const statusText =
-          String(
-            chapter.status ||
-            "Published"
-          ).toLowerCase();
-
-
-        const isPublished =
-          statusText === "published";
-
-
-        /*
-         * Do not show unpublished
-         * chapters to readers.
-         */
-
-        if (!isPublished) {
-
-          return;
+          renderComments();
 
         }
+      );
 
+    /*
+     * -----------------------------------------
+     * LIKE COMMENT
+     * -----------------------------------------
+     */
 
-        publishedChapterCount++;
+    function toggleCommentLike(
+      commentId
+    ) {
 
+      const comments =
+        getComments();
 
-        /*
-         * Apply active promotion
-         */
+      const comment =
+        comments.find(function (item) {
+          return String(item.id) ===
+            String(commentId);
+        });
 
-        let readerPrice =
-          normalPrice;
+      if (!comment) return;
 
+      if (!Array.isArray(comment.likedBy)) {
+        comment.likedBy = [];
+      }
 
-        let isDiscounted =
-          false;
+      const readerId =
+        getReaderId();
 
-
-        if (
-          !isFree &&
-          promotionPrice !== null &&
-          promotionPrice < normalPrice
-        ) {
-
-          readerPrice =
-            promotionPrice;
-
-          isDiscounted =
-            true;
-
-        }
-
-
-        let priceHTML;
-
-
-        if (isFree) {
-
-          priceHTML =
-            '<span class="chapter-price free">FREE</span>';
-
-        }
-
-        else if (isDiscounted) {
-
-          priceHTML =
-
-            '<span class="chapter-price paid chapter-price-promo">' +
-
-              '<span class="chapter-old-price">' +
-                '🪙 ' +
-                normalPrice +
-              '</span>' +
-
-              '<span class="chapter-new-price">' +
-                '🔥 🪙 ' +
-                readerPrice +
-              '</span>' +
-
-            '</span>';
-
-        }
-
-        else {
-
-          priceHTML =
-            '<span class="chapter-price paid">🪙 ' +
-              normalPrice +
-            '</span>';
-
-        }
-
-
-        const subtitle =
-          isFree
-            ? "Free to read"
-
-            : isDiscounted
-              ? "🔥 Limited offer • " +
-                readerPrice +
-                " coins"
-
-              : "Locked • " +
-                normalPrice +
-                " coins";
-
-
-        const item =
-          document.createElement("a");
-
-
-        item.className =
-          "chapter-item";
-
-
-        item.href =
-          "chapter.html?book=" +
-
-          encodeURIComponent(
-            currentBookId
-          ) +
-
-          "&chapter=" +
-
-          encodeURIComponent(
-            number
-          );
-
-
-        item.innerHTML =
-
-          '<div class="chapter-left">' +
-
-            '<div class="chapter-number">' +
-              number +
-            '</div>' +
-
-            '<div>' +
-
-              '<div class="chapter-title">' +
-                chapterTitle +
-              '</div>' +
-
-              '<div class="chapter-subtitle">' +
-                subtitle +
-              '</div>' +
-
-            '</div>' +
-
-          '</div>' +
-
-          priceHTML;
-
-
-        chapterList.appendChild(
-          item
+      const index =
+        comment.likedBy.indexOf(
+          readerId
         );
 
-      });
+      if (index >= 0) {
 
+        comment.likedBy.splice(
+          index,
+          1
+        );
+
+      } else {
+
+        comment.likedBy.push(
+          readerId
+        );
+
+      }
+
+      comment.likes =
+        comment.likedBy.length;
+
+      comment.updatedAt =
+        new Date().toISOString();
+
+      saveComments(
+        comments
+      );
+
+      renderComments();
     }
-
 
     /*
-     * NO PUBLISHED CHAPTERS
+     * -----------------------------------------
+     * LIKE REPLY
+     * -----------------------------------------
      */
 
-    if (publishedChapterCount === 0) {
+    function toggleReplyLike(
+      commentId,
+      replyId
+    ) {
 
-      chapterList.innerHTML =
+      const comments =
+        getComments();
 
-        '<div class="empty-chapters">' +
+      const comment =
+        comments.find(function (item) {
+          return String(item.id) ===
+            String(commentId);
+        });
 
-          '📖 No published chapters yet.<br><br>' +
+      if (!comment) return;
 
-          'Publish chapters from the Novelora Admin panel and they will appear here.' +
+      if (!Array.isArray(comment.replies)) {
+        comment.replies = [];
+      }
 
-        '</div>';
+      const reply =
+        comment.replies.find(
+          function (item) {
+            return String(item.id) ===
+              String(replyId);
+          }
+        );
 
+      if (!reply) return;
+
+      if (!Array.isArray(reply.likedBy)) {
+        reply.likedBy = [];
+      }
+
+      const readerId =
+        getReaderId();
+
+      const index =
+        reply.likedBy.indexOf(
+          readerId
+        );
+
+      if (index >= 0) {
+
+        reply.likedBy.splice(
+          index,
+          1
+        );
+
+      } else {
+
+        reply.likedBy.push(
+          readerId
+        );
+
+      }
+
+      reply.likes =
+        reply.likedBy.length;
+
+      saveComments(
+        comments
+      );
+
+      renderComments();
     }
 
-
     /*
-     * START READING
+     * -----------------------------------------
+     * REPLY
+     * -----------------------------------------
      */
 
-    const firstPublished =
-      chapters.find(function(chapter) {
+    function postReply(
+      commentId,
+      text
+    ) {
 
-        return String(
-          chapter.status ||
-          "Published"
-        ).toLowerCase() ===
-        "published";
+      text =
+        String(text || "")
+          .trim();
+
+      if (!text) {
+        alert(
+          "Please write a reply first."
+        );
+        return;
+      }
+
+      const comments =
+        getComments();
+
+      const comment =
+        comments.find(function (item) {
+          return String(item.id) ===
+            String(commentId);
+        });
+
+      if (!comment) return;
+
+      if (!Array.isArray(comment.replies)) {
+        comment.replies = [];
+      }
+
+      comment.replies.push({
+
+        id:
+          "reply_" +
+          Date.now() +
+          "_" +
+          Math.random()
+            .toString(36)
+            .slice(2),
+
+        parentId:
+          commentId,
+
+        readerId:
+          getReaderId(),
+
+        username:
+          getReaderName(),
+
+        text:
+          text,
+
+        likes:
+          0,
+
+        likedBy:
+          [],
+
+        createdAt:
+          new Date().toISOString(),
+
+        status:
+          "visible"
 
       });
 
+      comment.updatedAt =
+        new Date().toISOString();
 
-    if (firstPublished) {
+      saveComments(
+        comments
+      );
 
-      const firstNumber =
-        firstPublished.chapterNumber ||
-        firstPublished.number ||
-        1;
-
-
-      document.getElementById(
-        "startReading"
-      ).href =
-
-        "chapter.html?book=" +
-
-        encodeURIComponent(
-          currentBookId
-        ) +
-
-        "&chapter=" +
-
-        firstNumber;
-
+      renderComments();
     }
 
-    else {
+    /*
+     * -----------------------------------------
+     * DELETE COMMENT
+     * -----------------------------------------
+     */
 
-      document.getElementById(
-        "startReading"
-      ).style.display =
-        "none";
+    function deleteComment(
+      commentId
+    ) {
 
-    }
-
-  }
-
-
-
-  /*
-   * ADD CURRENT BOOK TO LIBRARY
-   */
-
-  function addCurrentBookToLibrary() {
-
-    if (!book) {
-
-      return;
-
-    }
-
-
-    const bookID =
-      book.id ||
-      book.bookId ||
-      book.bookID ||
-      bookId;
-
-
-    let library =
-      JSON.parse(
-        localStorage.getItem(
-          "noveloraLibrary"
+      if (
+        !confirm(
+          "Delete this comment?"
         )
-      ) || [];
+      ) {
+        return;
+      }
 
+      const comments =
+        getComments();
 
-    const exists =
-      library.some(function(item) {
-
-        return String(
-          item.id
-        ) === String(
-          bookID
+      const index =
+        comments.findIndex(
+          function (item) {
+            return String(item.id) ===
+              String(commentId);
+          }
         );
+
+      if (index === -1) return;
+
+      const comment =
+        comments[index];
+
+      if (
+        String(
+          comment.readerId || ""
+        ) !==
+        String(
+          getReaderId()
+        )
+      ) {
+        alert(
+          "You can only delete your own comment."
+        );
+        return;
+      }
+
+      /*
+       * Keep the record available for
+       * Admin moderation/history but
+       * hide it from readers.
+       */
+
+      comment.status =
+        "deleted";
+
+      comment.updatedAt =
+        new Date().toISOString();
+
+      saveComments(
+        comments
+      );
+
+      renderComments();
+    }
+
+    /*
+     * -----------------------------------------
+     * DELETE REPLY
+     * -----------------------------------------
+     */
+
+    function deleteReply(
+      commentId,
+      replyId
+    ) {
+
+      if (
+        !confirm(
+          "Delete this reply?"
+        )
+      ) {
+        return;
+      }
+
+      const comments =
+        getComments();
+
+      const comment =
+        comments.find(function (item) {
+          return String(item.id) ===
+            String(commentId);
+        });
+
+      if (!comment) return;
+
+      const reply =
+        (comment.replies || [])
+          .find(function (item) {
+            return String(item.id) ===
+              String(replyId);
+          });
+
+      if (!reply) return;
+
+      if (
+        String(
+          reply.readerId || ""
+        ) !==
+        String(
+          getReaderId()
+        )
+      ) {
+        alert(
+          "You can only delete your own reply."
+        );
+        return;
+      }
+
+      reply.status =
+        "deleted";
+
+      saveComments(
+        comments
+      );
+
+      renderComments();
+    }
+
+    /*
+     * -----------------------------------------
+     * REPORT
+     * -----------------------------------------
+     */
+
+    function reportComment(
+      commentId
+    ) {
+
+      const comments =
+        getComments();
+
+      const comment =
+        comments.find(function (item) {
+          return String(item.id) ===
+            String(commentId);
+        });
+
+      if (!comment) return;
+
+      if (!Array.isArray(comment.reports)) {
+        comment.reports = [];
+      }
+
+      const readerId =
+        getReaderId();
+
+      const alreadyReported =
+        comment.reports.some(
+          function (report) {
+            return String(
+              report.readerId
+            ) ===
+            String(
+              readerId
+            );
+          }
+        );
+
+      if (alreadyReported) {
+        alert(
+          "You have already reported this comment."
+        );
+        return;
+      }
+
+      comment.reports.push({
+
+        readerId:
+          readerId,
+
+        username:
+          getReaderName(),
+
+        reason:
+          "Reader report",
+
+        createdAt:
+          new Date().toISOString()
 
       });
 
+      comment.reportCount =
+        comment.reports.length;
 
-    if (exists) {
+      saveComments(
+        comments
+      );
 
       alert(
-        "This book is already in your library."
+        "Thanks. This comment has been reported."
+      );
+    }
+
+    /*
+     * INITIAL RENDER
+     */
+
+    renderComments();
+
+    /*
+     * If the existing Add to Library
+     * function is used, refresh the
+     * displayed count afterwards.
+     */
+
+    const libraryButton =
+      document.querySelector(
+        '[onclick="addCurrentBookToLibrary()"]'
       );
 
-      return;
+    if (libraryButton) {
+
+      libraryButton.addEventListener(
+        "click",
+        function () {
+
+          setTimeout(
+            updateCounters,
+            100
+          );
+
+        }
+      );
 
     }
 
+  }
 
-    library.push({
+  /*
+   * Wait until the existing
+   * Book Details page has loaded.
+   */
 
-      id: bookID,
+  if (
+    document.readyState ===
+    "loading"
+  ) {
 
-      title:
-        book.title ||
-        book.bookTitle ||
-        "Untitled Book",
-
-      author:
-        book.author ||
-        book.authorName ||
-        book.penName ||
-        "Unknown Author",
-
-      genre:
-        book.genre ||
-        "Romance",
-
-      cover:
-        book.coverImage ||
-        book.cover ||
-        ""
-
-    });
-
-
-    localStorage.setItem(
-      "noveloraLibrary",
-      JSON.stringify(library)
+    document.addEventListener(
+      "DOMContentLoaded",
+      createInterface
     );
 
+  } else {
 
-    alert(
-      (book.title ||
-      book.bookTitle ||
-      "This book") +
-
-      " has been added to your library!"
-    );
+    createInterface();
 
   }
 
-</script>
-
-
-</body>
-</html>
+})();
