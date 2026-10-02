@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Language — Novelora</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #fff7fb;
+    color: #222;
+}
+
+header {
+    background: #fff;
+    border-bottom: 1px solid #f0d9e5;
+    padding: 15px 5%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.logo {
+    color: #e83e8c;
+    font-size: 25px;
+    font-weight: bold;
+}
+
+.back {
+    text-decoration: none;
+    color: #e83e8c;
+    font-weight: bold;
+}
+
+.container {
+    max-width: 700px;
+    margin: 30px auto;
+    padding: 0 20px 50px;
+}
+
+.page-header {
+    margin-bottom: 22px;
+}
+
+.page-header h1 {
+    font-size: 28px;
+    margin-bottom: 7px;
+}
+
+.page-header p {
+    color: #777;
+    line-height: 1.5;
+}
+
+.card {
+    background: white;
+    border: 1px solid #f0d9e5;
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.language-option {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    padding: 20px;
+    border-bottom: 1px solid #eee;
+    cursor: pointer;
+    transition: .2s;
+}
+
+.language-option:last-child {
+    border-bottom: none;
+}
+
+.language-option:hover {
+    background: #fff8fc;
+}
+
+.language-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.language-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: #fff0f7;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 21px;
+}
+
+.language-name {
+    font-weight: bold;
+}
+
+.language-native {
+    color: #888;
+    font-size: 12px;
+    margin-top: 4px;
+}
+
+.radio {
+    width: 22px;
+    height: 22px;
+    border: 2px solid #ddd;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.language-option.selected .radio {
+    border-color: #e83e8c;
+}
+
+.language-option.selected .radio::after {
+    content: "";
+    width: 10px;
+    height: 10px;
+    background: #e83e8c;
+    border-radius: 50%;
+}
+
+.save-btn {
+    width: 100%;
+    margin-top: 20px;
+    padding: 14px;
+    border: none;
+    border-radius: 12px;
+    background: #e83e8c;
+    color: white;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.save-btn:disabled {
+    opacity: .6;
+    cursor: not-allowed;
+}
+
+.status {
+    text-align: center;
+    margin-top: 12px;
+    min-height: 20px;
+    color: #e83e8c;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.loading {
+    position: fixed;
+    inset: 0;
+    background: #fff7fb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    color: #e83e8c;
+    font-weight: bold;
+}
+
+.loading.hidden {
+    display: none;
+}
+
+@media (max-width: 600px) {
+    .container {
+        margin-top: 22px;
+    }
+
+    .page-header h1 {
+        font-size: 24px;
+    }
+
+    .language-option {
+        padding: 17px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="loading" id="loading">
+    Loading language settings...
+</div>
+
+<header>
+    <div class="logo">Novelora</div>
+    <a href="profile.html" class="back">← Profile</a>
+</header>
+
+<div class="container">
+
+    <div class="page-header">
+        <h1>🌍 Language</h1>
+        <p>
+            Choose the language you want to use throughout Novelora.
+        </p>
+    </div>
+
+    <div class="card">
+
+        <div
+            class="language-option"
+            data-language="English"
+            onclick="selectLanguage('English')"
+        >
+            <div class="language-left">
+                <div class="language-icon">🇬🇧</div>
+
+                <div>
+                    <div class="language-name">English</div>
+                    <div class="language-native">English</div>
+                </div>
+            </div>
+
+            <div class="radio"></div>
+        </div>
+
+        <div
+            class="language-option"
+            data-language="French"
+            onclick="selectLanguage('French')"
+        >
+            <div class="language-left">
+                <div class="language-icon">🇫🇷</div>
+
+                <div>
+                    <div class="language-name">French</div>
+                    <div class="language-native">Français</div>
+                </div>
+            </div>
+
+            <div class="radio"></div>
+        </div>
+
+        <div
+            class="language-option"
+            data-language="Spanish"
+            onclick="selectLanguage('Spanish')"
+        >
+            <div class="language-left">
+                <div class="language-icon">🇪🇸</div>
+
+                <div>
+                    <div class="language-name">Spanish</div>
+                    <div class="language-native">Español</div>
+                </div>
+            </div>
+
+            <div class="radio"></div>
+        </div>
+
+        <div
+            class="language-option"
+            data-language="Portuguese"
+            onclick="selectLanguage('Portuguese')"
+        >
+            <div class="language-left">
+                <div class="language-icon">🇵🇹</div>
+
+                <div>
+                    <div class="language-name">Portuguese</div>
+                    <div class="language-native">Português</div>
+                </div>
+            </div>
+
+            <div class="radio"></div>
+        </div>
+
+    </div>
+
+    <button
+        class="save-btn"
+        id="saveButton"
+        onclick="saveLanguage()"
+    >
+        Save Language
+    </button>
+
+    <div class="status" id="status"></div>
+
+</div>
+
+<script>
+
+let currentUser = null;
+let selectedLanguage = "English";
+
+
+/* =========================
+   LOAD ACCOUNT
+========================= */
+
+async function loadLanguageSettings() {
+
+    try {
+
+        const {
+            data: {
+                session
+            },
+            error
+        } = await supabaseClient.auth.getSession();
+
+        if (error || !session) {
+            window.location.href = "login.html";
+            return;
+        }
+
+        currentUser = session.user;
+
+        selectedLanguage =
+            currentUser.user_metadata?.language ||
+            "English";
+
+        renderSelectedLanguage();
+
+        document
+            .getElementById("loading")
+            .classList.add("hidden");
+
+    } catch (error) {
+
+        console.error(error);
+
+        window.location.href = "login.html";
+    }
+}
+
+
+/* =========================
+   SELECT LANGUAGE
+========================= */
+
+function selectLanguage(language) {
+
+    selectedLanguage = language;
+
+    renderSelectedLanguage();
+}
+
+
+function renderSelectedLanguage() {
+
+    document
+        .querySelectorAll(".language-option")
+        .forEach(option => {
+
+            option.classList.toggle(
+                "selected",
+                option.dataset.language === selectedLanguage
+            );
+        });
+}
+
+
+/* =========================
+   SAVE
+========================= */
+
+async function saveLanguage() {
+
+    const button =
+        document.getElementById("saveButton");
+
+    const status =
+        document.getElementById("status");
+
+    button.disabled = true;
+    button.textContent = "Saving...";
+    status.textContent = "";
+
+    try {
+
+        /*
+         * Save the language to the authenticated
+         * Supabase account.
+         */
+
+        const {
+            data,
+            error
+        } = await supabaseClient.auth.updateUser({
+
+            data: {
+                language: selectedLanguage
+            }
+
+        });
+
+        if (error) {
+            throw error;
+        }
+
+        /*
+         * Keep the current user object updated
+         * immediately.
+         */
+
+        currentUser = data.user;
+
+        status.textContent =
+            "Language saved successfully ✓";
+
+        /*
+         * Give the user a moment to see the
+         * confirmation before returning.
+         */
+
+        setTimeout(() => {
+
+            window.location.href =
+                "profile.html";
+
+        }, 700);
+
+    } catch (error) {
+
+        console.error(error);
+
+        status.textContent =
+            error.message ||
+            "Unable to save your language.";
+
+    } finally {
+
+        button.disabled = false;
+        button.textContent = "Save Language";
+    }
+}
+
+
+/* =========================
+   START
+========================= */
+
+loadLanguageSettings();
+
+</script>
+
+</body>
+</html>
