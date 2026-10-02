@@ -1056,30 +1056,27 @@
   }
 
 
-  /*
-   * ==========================================
-   * BOOK NOT FOUND
-   * ==========================================
-   */
-
-  if (!book) {
-
-    document.getElementById(
-      "bookTitle"
-    ).textContent =
-      "Book Not Found";
-
-    document.getElementById(
-      "bookDescription"
-    ).textContent =
-      "Sorry, this story could not be found.";
-
-    document.getElementById(
-      "chapterList"
-    ).innerHTML =
-      '<div class="empty-chapters">Book not found.</div>';
-
-  }
+Dashboard
+   ↓
+book-details.html?id=SUPABASE-UUID
+   ↓
+Supabase:
+.from("books")
+.select("*")
+.eq("id", bookId)
+.single()
+   ↓
+BOOK FOUND ✅
+   ↓
+cover_url
+promotional_blurb
+description
+genre
+author
+   ↓
+Then separately:
+chapters
+.where(book_id = bookId)
 
 
   else {
