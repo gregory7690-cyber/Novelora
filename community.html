@@ -1,0 +1,2282 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Community — Novelora</title>
+
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    /* =========================
+       COMMUNITY PAGE
+    ========================= */
+
+    .community-page {
+      max-width: 950px;
+      margin: 0 auto;
+    }
+
+    .community-intro {
+      background: linear-gradient(135deg, #fff1f7, #ffffff);
+      border-radius: 22px;
+      padding: 40px;
+      margin-bottom: 30px;
+    }
+
+    .community-intro h1 {
+      margin: 8px 0 12px;
+      font-size: 34px;
+    }
+
+    .community-intro p:not(.section-label) {
+      color: #777;
+      max-width: 620px;
+    }
+
+    .community-create {
+      background: #ffffff;
+      border: 1px solid #eeeeee;
+      border-radius: 18px;
+      padding: 24px;
+      margin-bottom: 35px;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.03);
+    }
+
+    .community-create h2 {
+      margin: 0 0 18px;
+      font-size: 20px;
+    }
+
+    .community-input,
+    .community-select {
+      width: 100%;
+      border: 1px solid #dddddd;
+      border-radius: 12px;
+      padding: 13px 15px;
+      font: inherit;
+      outline: none;
+      background: #ffffff;
+      color: #171717;
+      margin-bottom: 12px;
+    }
+
+    .community-input:focus,
+    .community-select:focus {
+      border-color: #e91e63;
+      box-shadow: 0 0 0 3px rgba(233, 30, 99, 0.08);
+    }
+
+    textarea.community-input {
+      min-height: 110px;
+      resize: vertical;
+    }
+
+    .community-create-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    .community-character-count {
+      color: #999;
+      font-size: 12px;
+    }
+
+    .community-post-button {
+      border: none;
+      background: #e91e63;
+      color: white;
+      padding: 12px 22px;
+      border-radius: 10px;
+      font-weight: 700;
+    }
+
+    .community-post-button:hover {
+      background: #d81b60;
+    }
+
+    .community-heading {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .community-heading h2 {
+      margin: 4px 0 0;
+      font-size: 25px;
+    }
+
+    .community-count {
+      color: #888;
+      font-size: 13px;
+    }
+
+    .community-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .community-comment {
+      background: #ffffff;
+      border: 1px solid #eeeeee;
+      border-radius: 16px;
+      padding: 20px;
+    }
+
+    .community-comment.reply {
+      margin-top: 12px;
+      margin-left: 45px;
+      background: #fafafa;
+      border-left: 3px solid #ffd2e3;
+    }
+
+    .community-comment-top {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .community-avatar {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: #fff1f7;
+      color: #d81b60;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+
+    .community-user-area {
+      min-width: 0;
+      flex: 1;
+    }
+
+    .community-user-line {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .community-user-line strong {
+      font-size: 14px;
+    }
+
+    .community-time {
+      color: #999;
+      font-size: 11px;
+    }
+
+    .community-book-tag {
+      display: inline-block;
+      margin-top: 4px;
+      color: #d81b60;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .community-comment-text {
+      margin: 14px 0 14px 54px;
+      color: #444;
+      font-size: 14px;
+      line-height: 1.65;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+
+    .community-actions {
+      margin-left: 54px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .community-action {
+      border: none;
+      background: transparent;
+      color: #777;
+      padding: 6px 9px;
+      border-radius: 8px;
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    .community-action:hover {
+      background: #fff1f7;
+      color: #d81b60;
+    }
+
+    .community-action.liked {
+      color: #e91e63;
+      background: #fff1f7;
+    }
+
+    .community-replies {
+      margin-left: 0;
+      margin-top: 10px;
+    }
+
+    .reply-box {
+      display: none;
+      margin: 12px 0 0 54px;
+    }
+
+    .reply-box.active {
+      display: block;
+    }
+
+    .reply-box textarea {
+      width: 100%;
+      min-height: 80px;
+      resize: vertical;
+      border: 1px solid #dddddd;
+      border-radius: 10px;
+      padding: 11px;
+      font: inherit;
+      outline: none;
+    }
+
+    .reply-box textarea:focus {
+      border-color: #e91e63;
+    }
+
+    .reply-buttons {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .reply-cancel,
+    .reply-submit {
+      border: none;
+      border-radius: 8px;
+      padding: 8px 13px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .reply-cancel {
+      background: #f4f4f4;
+      color: #666;
+    }
+
+    .reply-submit {
+      background: #e91e63;
+      color: white;
+    }
+
+    .community-empty {
+      text-align: center;
+      padding: 60px 20px;
+      border: 1px dashed #dddddd;
+      border-radius: 18px;
+      background: #fdfdfd;
+    }
+
+    .community-empty-icon {
+      font-size: 45px;
+      margin-bottom: 12px;
+    }
+
+    .community-empty h3 {
+      margin: 0 0 7px;
+      font-size: 19px;
+    }
+
+    .community-empty p {
+      color: #888;
+      font-size: 14px;
+      margin: 0;
+    }
+
+    .community-message {
+      display: none;
+      margin-top: 12px;
+      padding: 11px 14px;
+      border-radius: 9px;
+      background: #fff1f7;
+      color: #d81b60;
+      font-size: 13px;
+    }
+
+    .community-back {
+      display: inline-block;
+      margin-top: 25px;
+      color: #e91e63;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    @media (max-width: 600px) {
+
+      .community-intro {
+        padding: 28px 22px;
+      }
+
+      .community-intro h1 {
+        font-size: 27px;
+      }
+
+      .community-create {
+        padding: 18px;
+      }
+
+      .community-comment {
+        padding: 16px;
+      }
+
+      .community-comment.reply {
+        margin-left: 20px;
+      }
+
+      .community-comment-text,
+      .community-actions,
+      .reply-box {
+        margin-left: 0;
+      }
+
+      .community-heading {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+  </style>
+
+</head>
+
+<body class="reader-page">
+
+  <!-- NAVBAR -->
+
+  <header class="reader-navbar">
+
+    <a href="reader-dashboard.html" class="reader-logo">
+      NOVEL<span>ORA</span>
+    </a>
+
+    <nav class="reader-nav">
+
+      <a href="library.html">
+        📚 Library
+      </a>
+
+      <a href="coins.html">
+        🪙 Coins
+      </a>
+
+      <a href="trending.html">
+        🔥 Trending
+      </a>
+
+      <a href="free-books.html">
+        🆓 Free Books
+      </a>
+
+    </nav>
+
+    <div class="reader-profile">
+
+      <a href="notifications.html" class="notification-btn">
+        🔔
+      </a>
+
+      <a href="profile.html" class="profile-btn">
+        👤
+      </a>
+
+    </div>
+
+  </header>
+
+
+  <!-- CONTENT -->
+
+  <main class="reader-content">
+
+    <div class="community-page">
+
+      <!-- INTRO -->
+
+      <section class="community-intro">
+
+        <p class="section-label">
+          NOVELORA COMMUNITY
+        </p>
+
+        <h1>
+          Talk about the stories you love 💬
+        </h1>
+
+        <p>
+          Share your thoughts, react to comments, and talk with other readers about your favorite stories.
+        </p>
+
+      </section>
+
+
+      <!-- CREATE COMMENT -->
+
+      <section class="community-create">
+
+        <h2>
+          Start a conversation
+        </h2>
+
+        <select
+          id="bookSelect"
+          class="community-select">
+
+          <option value="">
+            General Novelora discussion
+          </option>
+
+        </select>
+
+        <textarea
+          id="commentInput"
+          class="community-input"
+          maxlength="1000"
+          placeholder="What are you thinking?">
+        </textarea>
+
+        <div class="community-create-bottom">
+
+          <span
+            id="characterCount"
+            class="community-character-count">
+            0 / 1000
+          </span>
+
+          <button
+            id="postCommentBtn"
+            class="community-post-button"
+            type="button">
+            Post Comment
+          </button>
+
+        </div>
+
+        <div
+          id="communityMessage"
+          class="community-message">
+        </div>
+
+      </section>
+
+
+      <!-- COMMENTS -->
+
+      <section class="dashboard-section">
+
+        <div class="community-heading">
+
+          <div>
+
+            <p class="section-label">
+              DISCUSSIONS
+            </p>
+
+            <h2>
+              Reader Comments
+            </h2>
+
+          </div>
+
+          <span
+            id="commentCount"
+            class="community-count">
+            0 comments
+          </span>
+
+        </div>
+
+
+        <div
+          id="communityList"
+          class="community-list">
+        </div>
+
+
+        <div
+          id="communityEmpty"
+          class="community-empty">
+
+          <div class="community-empty-icon">
+            💬
+          </div>
+
+          <h3>
+            No comments yet
+          </h3>
+
+          <p>
+            Be the first reader to start a conversation.
+          </p>
+
+        </div>
+
+      </section>
+
+
+      <a
+        href="reader-dashboard.html"
+        class="community-back">
+        ← Back to Dashboard
+      </a>
+
+    </div>
+
+  </main>
+
+
+  <!-- MOBILE NAV -->
+
+  <nav class="mobile-reader-nav">
+
+    <a href="reader-dashboard.html">
+      🏠
+      <span>Home</span>
+    </a>
+
+    <a href="library.html">
+      📚
+      <span>Library</span>
+    </a>
+
+    <a href="trending.html">
+      🔥
+      <span>Trending</span>
+    </a>
+
+    <a href="free-books.html">
+      🆓
+      <span>Free</span>
+    </a>
+
+    <a href="profile.html">
+      👤
+      <span>Profile</span>
+    </a>
+
+  </nav>
+
+
+  <script>
+
+    /* =========================
+       STORAGE
+    ========================= */
+
+    const COMMENTS_KEY =
+      "noveloraCommunityComments";
+
+    const BOOKS_KEY =
+      "noveloraAdminBooks";
+
+    const PROFILE_KEYS = [
+      "noveloraReaderProfile",
+      "readerProfile",
+      "noveloraProfile"
+    ];
+
+
+    /* =========================
+       ELEMENTS
+    ========================= */
+
+    const bookSelect =
+      document.getElementById("bookSelect");
+
+    const commentInput =
+      document.getElementById("commentInput");
+
+    const postCommentBtn =
+      document.getElementById("postCommentBtn");
+
+    const communityList =
+      document.getElementById("communityList");
+
+    const communityEmpty =
+      document.getElementById("communityEmpty");
+
+    const commentCount =
+      document.getElementById("commentCount");
+
+    const characterCount =
+      document.getElementById("characterCount");
+
+    const communityMessage =
+      document.getElementById("communityMessage");
+
+
+    /* =========================
+       HELPERS
+    ========================= */
+
+    function getComments() {
+
+      try {
+
+        const saved =
+          JSON.parse(
+            localStorage.getItem(COMMENTS_KEY)
+          );
+
+        return Array.isArray(saved)
+          ? saved
+          : [];
+
+      } catch (error) {
+
+        return [];
+
+      }
+
+    }
+
+
+    function saveComments(comments) {
+
+      localStorage.setItem(
+        COMMENTS_KEY,
+        JSON.stringify(comments)
+      );
+
+    }
+
+
+    function getBooks() {
+
+      try {
+
+        const saved =
+          JSON.parse(
+            localStorage.getItem(BOOKS_KEY)
+          );
+
+        return Array.isArray(saved)
+          ? saved
+          : [];
+
+      } catch (error) {
+
+        return [];
+
+      }
+
+    }
+
+
+    function getReaderProfile() {
+
+      for (const key of PROFILE_KEYS) {
+
+        try {
+
+          const saved =
+            JSON.parse(
+              localStorage.getItem(key)
+            );
+
+          if (saved && typeof saved === "object") {
+
+            return saved;
+
+          }
+
+        } catch (error) {}
+
+      }
+
+      return null;
+
+    }
+
+
+    function getReaderName() {
+
+      const profile =
+        getReaderProfile();
+
+      if (!profile) {
+
+        return "Reader";
+
+      }
+
+      return (
+        profile.username ||
+        profile.displayName ||
+        profile.name ||
+        profile.fullName ||
+        "Reader"
+      );
+
+    }
+
+
+    function getReaderId() {
+
+      const profile =
+        getReaderProfile();
+
+      if (!profile) {
+
+        return "local-reader";
+
+      }
+
+      return String(
+        profile.id ||
+        profile.userId ||
+        profile.readerId ||
+        profile.email ||
+        "local-reader"
+      );
+
+    }
+
+
+    function getInitials(name) {
+
+      const words =
+        String(name)
+          .trim()
+          .split(/\s+/)
+          .filter(Boolean);
+
+      if (!words.length) {
+
+        return "R";
+
+      }
+
+      if (words.length === 1) {
+
+        return words[0]
+          .substring(0, 2)
+          .toUpperCase();
+
+      }
+
+      return (
+        words[0][0] +
+        words[1][0]
+      ).toUpperCase();
+
+    }
+
+
+    function escapeHTML(value) {
+
+      const div =
+        document.createElement("div");
+
+      div.textContent =
+        value == null
+          ? ""
+          : String(value);
+
+      return div.innerHTML;
+
+    }
+
+
+    function formatTime(dateValue) {
+
+      if (!dateValue) {
+
+        return "Recently";
+
+      }
+
+      const date =
+        new Date(dateValue);
+
+      if (isNaN(date.getTime())) {
+
+        return "Recently";
+
+      }
+
+      const now =
+        new Date();
+
+      const difference =
+        now.getTime() -
+        date.getTime();
+
+      const minutes =
+        Math.floor(
+          difference / 60000
+        );
+
+      const hours =
+        Math.floor(
+          difference / 3600000
+        );
+
+      const days =
+        Math.floor(
+          difference / 86400000
+        );
+
+
+      if (minutes < 1) {
+
+        return "Just now";
+
+      }
+
+      if (minutes < 60) {
+
+        return minutes +
+          (minutes === 1
+            ? " min ago"
+            : " mins ago");
+
+      }
+
+      if (hours < 24) {
+
+        return hours +
+          (hours === 1
+            ? " hour ago"
+            : " hours ago");
+
+      }
+
+      if (days < 7) {
+
+        return days +
+          (days === 1
+            ? " day ago"
+            : " days ago");
+
+      }
+
+      return date.toLocaleDateString();
+
+    }
+
+
+    function showMessage(message) {
+
+      communityMessage.textContent =
+        message;
+
+      communityMessage.style.display =
+        "block";
+
+      setTimeout(function() {
+
+        communityMessage.style.display =
+          "none";
+
+      }, 3500);
+
+    }
+
+
+    /* =========================
+       BOOK SELECT
+    ========================= */
+
+    function loadBooks() {
+
+      const books =
+        getBooks();
+
+      books.forEach(function(book) {
+
+        const option =
+          document.createElement("option");
+
+        option.value =
+          book.id ||
+          book.bookId ||
+          "";
+
+        option.textContent =
+          book.title ||
+          book.name ||
+          "Untitled Book";
+
+        if (option.value) {
+
+          bookSelect.appendChild(option);
+
+        }
+
+      });
+
+    }
+
+
+    /* =========================
+       COMMENT COUNT
+    ========================= */
+
+    function updateCount(comments) {
+
+      const total =
+        comments.length;
+
+      commentCount.textContent =
+        total +
+        (total === 1
+          ? " comment"
+          : " comments");
+
+    }
+
+
+    /* =========================
+       LIKE
+    ========================= */
+
+    function toggleLike(commentId) {
+
+      const comments =
+        getComments();
+
+      const readerId =
+        getReaderId();
+
+      const comment =
+        comments.find(function(item) {
+
+          return String(item.id) ===
+            String(commentId);
+
+        });
+
+
+      if (!comment) {
+
+        return;
+
+      }
+
+
+      if (!Array.isArray(comment.likedBy)) {
+
+        comment.likedBy = [];
+
+      }
+
+
+      const existingIndex =
+        comment.likedBy.indexOf(
+          readerId
+        );
+
+
+      if (existingIndex >= 0) {
+
+        comment.likedBy.splice(
+          existingIndex,
+          1
+        );
+
+      } else {
+
+        comment.likedBy.push(
+          readerId
+        );
+
+      }
+
+
+      comment.likes =
+        comment.likedBy.length;
+
+
+      saveComments(comments);
+
+      renderComments();
+
+    }
+
+
+    /* =========================
+       REPLY
+    ========================= */
+
+    function addReply(parentId, text) {
+
+      const cleanText =
+        text.trim();
+
+      if (!cleanText) {
+
+        return;
+
+      }
+
+
+      const comments =
+        getComments();
+
+      const parent =
+        comments.find(function(comment) {
+
+          return String(comment.id) ===
+            String(parentId);
+
+        });
+
+
+      if (!parent) {
+
+        return;
+
+      }
+
+
+      if (!Array.isArray(parent.replies)) {
+
+        parent.replies = [];
+
+      }
+
+
+      const now =
+        new Date().toISOString();
+
+      const reply = {
+
+        id:
+          "reply_" +
+          Date.now() +
+          "_" +
+          Math.random()
+            .toString(36)
+            .substring(2, 8),
+
+        parentId:
+          parentId,
+
+        readerId:
+          getReaderId(),
+
+        username:
+          getReaderName(),
+
+        text:
+          cleanText,
+
+        likes:
+          0,
+
+        likedBy:
+          [],
+
+        createdAt:
+          now,
+
+        status:
+          "visible"
+
+      };
+
+
+      parent.replies.push(
+        reply
+      );
+
+
+      saveComments(comments);
+
+      renderComments();
+
+    }
+
+
+    /* =========================
+       DELETE
+    ========================= */
+
+    function deleteComment(commentId) {
+
+      const comments =
+        getComments();
+
+      const readerId =
+        getReaderId();
+
+
+      const comment =
+        comments.find(function(item) {
+
+          return String(item.id) ===
+            String(commentId);
+
+        });
+
+
+      if (!comment) {
+
+        return;
+
+      }
+
+
+      if (
+        String(comment.readerId) !==
+        String(readerId)
+      ) {
+
+        showMessage(
+          "You can only delete your own comments."
+        );
+
+        return;
+
+      }
+
+
+      if (
+        !confirm(
+          "Delete this comment?"
+        )
+      ) {
+
+        return;
+
+      }
+
+
+      const filtered =
+        comments.filter(function(item) {
+
+          return String(item.id) !==
+            String(commentId);
+
+        });
+
+
+      saveComments(filtered);
+
+      renderComments();
+
+    }
+
+
+    /* =========================
+       DELETE REPLY
+    ========================= */
+
+    function deleteReply(
+      parentId,
+      replyId
+    ) {
+
+      const comments =
+        getComments();
+
+      const readerId =
+        getReaderId();
+
+      const parent =
+        comments.find(function(item) {
+
+          return String(item.id) ===
+            String(parentId);
+
+        });
+
+
+      if (!parent ||
+          !Array.isArray(parent.replies)) {
+
+        return;
+
+      }
+
+
+      const reply =
+        parent.replies.find(function(item) {
+
+          return String(item.id) ===
+            String(replyId);
+
+        });
+
+
+      if (!reply) {
+
+        return;
+
+      }
+
+
+      if (
+        String(reply.readerId) !==
+        String(readerId)
+      ) {
+
+        showMessage(
+          "You can only delete your own replies."
+        );
+
+        return;
+
+      }
+
+
+      if (
+        !confirm(
+          "Delete this reply?"
+        )
+      ) {
+
+        return;
+
+      }
+
+
+      parent.replies =
+        parent.replies.filter(
+          function(item) {
+
+            return String(item.id) !==
+              String(replyId);
+
+          }
+        );
+
+
+      saveComments(comments);
+
+      renderComments();
+
+    }
+
+
+    /* =========================
+       REPORT
+    ========================= */
+
+    function reportComment(commentId) {
+
+      const comments =
+        getComments();
+
+      const comment =
+        comments.find(function(item) {
+
+          return String(item.id) ===
+            String(commentId);
+
+        });
+
+
+      if (!comment) {
+
+        return;
+
+      }
+
+
+      if (
+        !Array.isArray(comment.reports)
+      ) {
+
+        comment.reports = [];
+
+      }
+
+
+      const readerId =
+        getReaderId();
+
+
+      const alreadyReported =
+        comment.reports.some(
+          function(report) {
+
+            return String(
+              report.readerId
+            ) === String(readerId);
+
+          }
+        );
+
+
+      if (alreadyReported) {
+
+        showMessage(
+          "You already reported this comment."
+        );
+
+        return;
+
+      }
+
+
+      const reason =
+        prompt(
+          "Why are you reporting this comment?"
+        );
+
+
+      if (!reason ||
+          !reason.trim()) {
+
+        return;
+
+      }
+
+
+      comment.reports.push({
+
+        readerId:
+          readerId,
+
+        reason:
+          reason.trim(),
+
+        createdAt:
+          new Date().toISOString(),
+
+        status:
+          "pending"
+
+      });
+
+
+      comment.reportCount =
+        comment.reports.length;
+
+
+      saveComments(comments);
+
+      showMessage(
+        "Comment reported for review."
+      );
+
+      renderComments();
+
+    }
+
+
+    /* =========================
+       RENDER REPLIES
+    ========================= */
+
+    function renderReplies(
+      parent
+    ) {
+
+      if (
+        !Array.isArray(parent.replies) ||
+        parent.replies.length === 0
+      ) {
+
+        return "";
+
+      }
+
+
+      return parent.replies
+        .map(function(reply) {
+
+          const liked =
+            Array.isArray(
+              reply.likedBy
+            ) &&
+            reply.likedBy.includes(
+              getReaderId()
+            );
+
+
+          return `
+
+            <div
+              class="community-comment reply">
+
+              <div class="community-comment-top">
+
+                <div class="community-avatar">
+                  ${escapeHTML(
+                    getInitials(
+                      reply.username ||
+                      "Reader"
+                    )
+                  )}
+                </div>
+
+                <div class="community-user-area">
+
+                  <div class="community-user-line">
+
+                    <strong>
+                      ${escapeHTML(
+                        reply.username ||
+                        "Reader"
+                      )}
+                    </strong>
+
+                    <span class="community-time">
+                      ${formatTime(
+                        reply.createdAt
+                      )}
+                    </span>
+
+                  </div>
+
+                </div>
+
+              </div>
+
+
+              <div class="community-comment-text">
+
+                ${escapeHTML(
+                  reply.text
+                )}
+
+              </div>
+
+
+              <div class="community-actions">
+
+                <button
+                  class="community-action ${liked ? "liked" : ""}"
+                  type="button"
+                  data-reply-like="${escapeHTML(
+                    reply.id
+                  )}"
+                  data-parent-id="${escapeHTML(
+                    parent.id
+                  )}">
+
+                  ❤️ ${Array.isArray(
+                    reply.likedBy
+                  )
+                    ? reply.likedBy.length
+                    : 0}
+
+                </button>
+
+
+                ${
+                  String(
+                    reply.readerId
+                  ) === String(
+                    getReaderId()
+                  )
+                    ? `
+                      <button
+                        class="community-action"
+                        type="button"
+                        data-delete-reply="${escapeHTML(
+                          reply.id
+                        )}"
+                        data-parent-id="${escapeHTML(
+                          parent.id
+                        )}">
+                        Delete
+                      </button>
+                    `
+                    : ""
+                }
+
+              </div>
+
+            </div>
+
+          `;
+
+        })
+        .join("");
+
+    }
+
+
+    /* =========================
+       RENDER COMMENTS
+    ========================= */
+
+    function renderComments() {
+
+      const comments =
+        getComments()
+          .filter(function(comment) {
+
+            return (
+              !comment.status ||
+              comment.status === "visible"
+            );
+
+          })
+          .sort(function(a, b) {
+
+            return new Date(
+              b.createdAt || 0
+            ) - new Date(
+              a.createdAt || 0
+            );
+
+          });
+
+
+      communityList.innerHTML =
+        "";
+
+
+      updateCount(
+        comments
+      );
+
+
+      if (!comments.length) {
+
+        communityEmpty.style.display =
+          "block";
+
+        return;
+
+      }
+
+
+      communityEmpty.style.display =
+        "none";
+
+
+      comments.forEach(function(comment) {
+
+        const liked =
+          Array.isArray(
+            comment.likedBy
+          ) &&
+          comment.likedBy.includes(
+            getReaderId()
+          );
+
+
+        const bookLabel =
+          comment.bookTitle ||
+          comment.bookName ||
+          "";
+
+
+        const wrapper =
+          document.createElement(
+            "div"
+          );
+
+
+        wrapper.innerHTML = `
+
+          <article
+            class="community-comment">
+
+            <div class="community-comment-top">
+
+              <div class="community-avatar">
+
+                ${escapeHTML(
+                  getInitials(
+                    comment.username ||
+                    "Reader"
+                  )
+                )}
+
+              </div>
+
+
+              <div class="community-user-area">
+
+                <div class="community-user-line">
+
+                  <strong>
+                    ${escapeHTML(
+                      comment.username ||
+                      "Reader"
+                    )}
+                  </strong>
+
+                  <span class="community-time">
+                    ${formatTime(
+                      comment.createdAt
+                    )}
+                  </span>
+
+                </div>
+
+
+                ${
+                  bookLabel
+                    ? `
+                      <span class="community-book-tag">
+                        📖 ${escapeHTML(
+                          bookLabel
+                        )}
+                      </span>
+                    `
+                    : ""
+                }
+
+              </div>
+
+            </div>
+
+
+            <div class="community-comment-text">
+
+              ${escapeHTML(
+                comment.text ||
+                comment.content ||
+                ""
+              )}
+
+            </div>
+
+
+            <div class="community-actions">
+
+              <button
+                class="community-action ${liked ? "liked" : ""}"
+                type="button"
+                data-like="${escapeHTML(
+                  comment.id
+                )}">
+
+                ❤️ ${
+                  Array.isArray(
+                    comment.likedBy
+                  )
+                    ? comment.likedBy.length
+                    : Number(
+                        comment.likes
+                      ) || 0
+                }
+
+              </button>
+
+
+              <button
+                class="community-action"
+                type="button"
+                data-reply="${escapeHTML(
+                  comment.id
+                )}">
+
+                ↩️ Reply
+
+              </button>
+
+
+              <button
+                class="community-action"
+                type="button"
+                data-report="${escapeHTML(
+                  comment.id
+                )}">
+
+                🚩 Report
+
+              </button>
+
+
+              ${
+                String(
+                  comment.readerId
+                ) === String(
+                  getReaderId()
+                )
+                  ? `
+                    <button
+                      class="community-action"
+                      type="button"
+                      data-delete="${escapeHTML(
+                        comment.id
+                      )}">
+
+                      Delete
+
+                    </button>
+                  `
+                  : ""
+              }
+
+            </div>
+
+
+            <div
+              class="reply-box"
+              id="reply-box-${escapeHTML(
+                comment.id
+              )}">
+
+              <textarea
+                maxlength="1000"
+                placeholder="Write a reply..."></textarea>
+
+              <div class="reply-buttons">
+
+                <button
+                  class="reply-cancel"
+                  type="button"
+                  data-cancel-reply="${escapeHTML(
+                    comment.id
+                  )}">
+
+                  Cancel
+
+                </button>
+
+                <button
+                  class="reply-submit"
+                  type="button"
+                  data-submit-reply="${escapeHTML(
+                    comment.id
+                  )}">
+
+                  Reply
+
+                </button>
+
+              </div>
+
+            </div>
+
+
+            <div class="community-replies">
+
+              ${renderReplies(
+                comment
+              )}
+
+            </div>
+
+          </article>
+
+        `;
+
+
+        communityList.appendChild(
+          wrapper.firstElementChild
+        );
+
+      });
+
+
+      attachCommentActions();
+
+    }
+
+
+    /* =========================
+       ACTION EVENTS
+    ========================= */
+
+    function attachCommentActions() {
+
+      document
+        .querySelectorAll(
+          "[data-like]"
+        )
+        .forEach(function(button) {
+
+          button.addEventListener(
+            "click",
+            function() {
+
+              toggleLike(
+                button.dataset.like
+              );
+
+            }
+          );
+
+        });
+
+
+      document
+        .querySelectorAll(
+          "[data-reply]"
+        )
+        .forEach(function(button) {
+
+          button.addEventListener(
+            "click",
+            function() {
+
+              const box =
+                document.getElementById(
+                  "reply-box-" +
+                  button.dataset.reply
+                );
+
+
+              if (box) {
+
+                box.classList.toggle(
+                  "active"
+                );
+
+                if (
+                  box.classList.contains(
+                    "active"
+                  )
+                ) {
+
+                  const textarea =
+                    box.querySelector(
+                      "textarea"
+                    );
+
+                  textarea.focus();
+
+                }
+
+              }
+
+            }
+          );
+
+        });
+
+
+      document
+        .querySelectorAll(
+          "[data-cancel-reply]"
+        )
+        .forEach(function(button) {
+
+          button.addEventListener(
+            "click",
+            function() {
+
+              const box =
+                document.getElementById(
+                  "reply-box-" +
+                  button.dataset.cancelReply
+                );
+
+
+              if (box) {
+
+                box.classList.remove(
+                  "active"
+                );
+
+                box.querySelector(
+                  "textarea"
+                ).value = "";
+
+              }
+
+            }
+          );
+
+        });
+
+
+      document
+        .querySelectorAll(
+          "[data-submit-reply]"
+        )
+        .forEach(function(button) {
+
+          button.addEventListener(
+            "click",
+            function() {
+
+              const box =
+                document.getElementById(
+                  "reply-box-" +
+                  button.dataset.submitReply
+                );
+
+
+              if (!box) {
+
+                return;
+
+              }
+
+
+              const textarea =
+                box.querySelector(
+                  "textarea"
+                );
+
+
+              addReply(
+                button.dataset.submitReply,
+                textarea.value
+              );
+
+            }
+          );
+
+        });
+
+
+      document
+        .querySelectorAll(
+          "[data-report]"
+        )
+        .forEach(function(button) {
+
+          button.addEventListener(
+            "click",
+            function() {
+
+              reportComment(
+                button.dataset.report
+              );
+
+            }
+          );
+
+        });
+
+
+      document
+        .querySelectorAll(
+          "[data-delete]"
+        )
+        .forEach(function(button) {
+
+          button.addEventListener(
+            "click",
+            function() {
+
+              deleteComment(
+                button.dataset.delete
+              );
+
+            }
+          );
+
+        });
+
+
+      document
+        .querySelectorAll(
+          "[data-reply-like]"
+        )
+        .forEach(function(button) {
+
+          button.addEventListener(
+            "click",
+            function() {
+
+              toggleReplyLike(
+                button.dataset.parentId,
+                button.dataset.replyLike
+              );
+
+            }
+          );
+
+        });
+
+
+      document
+        .querySelectorAll(
+          "[data-delete-reply]"
+        )
+        .forEach(function(button) {
+
+          button.addEventListener(
+            "click",
+            function() {
+
+              deleteReply(
+                button.dataset.parentId,
+                button.dataset.deleteReply
+              );
+
+            }
+          );
+
+        });
+
+    }
+
+
+    /* =========================
+       REPLY LIKE
+    ========================= */
+
+    function toggleReplyLike(
+      parentId,
+      replyId
+    ) {
+
+      const comments =
+        getComments();
+
+      const parent =
+        comments.find(function(comment) {
+
+          return String(comment.id) ===
+            String(parentId);
+
+        });
+
+
+      if (
+        !parent ||
+        !Array.isArray(parent.replies)
+      ) {
+
+        return;
+
+      }
+
+
+      const reply =
+        parent.replies.find(function(item) {
+
+          return String(item.id) ===
+            String(replyId);
+
+        });
+
+
+      if (!reply) {
+
+        return;
+
+      }
+
+
+      if (!Array.isArray(reply.likedBy)) {
+
+        reply.likedBy = [];
+
+      }
+
+
+      const readerId =
+        getReaderId();
+
+      const index =
+        reply.likedBy.indexOf(
+          readerId
+        );
+
+
+      if (index >= 0) {
+
+        reply.likedBy.splice(
+          index,
+          1
+        );
+
+      } else {
+
+        reply.likedBy.push(
+          readerId
+        );
+
+      }
+
+
+      reply.likes =
+        reply.likedBy.length;
+
+
+      saveComments(comments);
+
+      renderComments();
+
+    }
+
+
+    /* =========================
+       POST COMMENT
+    ========================= */
+
+    postCommentBtn.addEventListener(
+      "click",
+      function() {
+
+        const text =
+          commentInput.value.trim();
+
+
+        if (!text) {
+
+          showMessage(
+            "Please write a comment first."
+          );
+
+          return;
+
+        }
+
+
+        const selectedBookId =
+          bookSelect.value;
+
+
+        let bookTitle = "";
+
+
+        if (selectedBookId) {
+
+          const books =
+            getBooks();
+
+          const book =
+            books.find(function(item) {
+
+              return String(
+                item.id ||
+                item.bookId
+              ) === String(
+                selectedBookId
+              );
+
+            });
+
+
+          if (book) {
+
+            bookTitle =
+              book.title ||
+              book.name ||
+              "";
+
+          }
+
+        }
+
+
+        const now =
+          new Date().toISOString();
+
+
+        const comment = {
+
+          id:
+            "comment_" +
+            Date.now() +
+            "_" +
+            Math.random()
+              .toString(36)
+              .substring(2, 8),
+
+          parentId:
+            null,
+
+          readerId:
+            getReaderId(),
+
+          username:
+            getReaderName(),
+
+          text:
+            text,
+
+          bookId:
+            selectedBookId || null,
+
+          bookTitle:
+            bookTitle || null,
+
+          likes:
+            0,
+
+          likedBy:
+            [],
+
+          replies:
+            [],
+
+          reports:
+            [],
+
+          reportCount:
+            0,
+
+          status:
+            "visible",
+
+          createdAt:
+            now,
+
+          updatedAt:
+            now
+
+        };
+
+
+        const comments =
+          getComments();
+
+
+        comments.push(
+          comment
+        );
+
+
+        saveComments(
+          comments
+        );
+
+
+        commentInput.value =
+          "";
+
+        characterCount.textContent =
+          "0 / 1000";
+
+
+        renderComments();
+
+      }
+    );
+
+
+    /* =========================
+       CHARACTER COUNT
+    ========================= */
+
+    commentInput.addEventListener(
+      "input",
+      function() {
+
+        characterCount.textContent =
+          commentInput.value.length +
+          " / 1000";
+
+      }
+    );
+
+
+    /* =========================
+       START
+    ========================= */
+
+    loadBooks();
+
+    renderComments();
+
+  </script>
+
+</body>
+
+</html>
