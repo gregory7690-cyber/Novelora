@@ -1,0 +1,603 @@
+<!DOCTYPE html><html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Purchase History — Novelora</title><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="supabase-config.js"></script><style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #080508;
+    color: #fff;
+}
+
+.purchase-page {
+    min-height: 100vh;
+    padding: 24px 18px 60px;
+}
+
+.purchase-container {
+    width: min(900px, 100%);
+    margin: auto;
+}
+
+.topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 28px;
+}
+
+.back-btn {
+    border: 1px solid rgba(255,105,180,.3);
+    background: #120b11;
+    color: #fff;
+    padding: 10px 16px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.logo {
+    color: #ff69b4;
+    font-size: 22px;
+    font-weight: 800;
+}
+
+.page-header {
+    margin-bottom: 25px;
+}
+
+.page-header h1 {
+    margin: 0 0 8px;
+    font-size: clamp(28px, 6vw, 40px);
+}
+
+.page-header p {
+    margin: 0;
+    color: #aaa;
+    line-height: 1.6;
+}
+
+.summary-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 13px;
+    margin-bottom: 28px;
+}
+
+.summary-card {
+    background: #100a0f;
+    border: 1px solid rgba(255,255,255,.08);
+    border-radius: 17px;
+    padding: 18px;
+}
+
+.summary-icon {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.summary-card strong {
+    display: block;
+    font-size: 21px;
+    margin-bottom: 5px;
+}
+
+.summary-card span {
+    color: #999;
+    font-size: 12px;
+}
+
+.history-title {
+    font-size: 20px;
+    margin: 0 0 14px;
+}
+
+.purchase-list {
+    display: grid;
+    gap: 12px;
+}
+
+.purchase-card {
+    background: #100a0f;
+    border: 1px solid rgba(255,255,255,.08);
+    border-radius: 18px;
+    padding: 18px;
+}
+
+.purchase-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 15px;
+}
+
+.purchase-coins {
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.purchase-date {
+    color: #888;
+    font-size: 12px;
+    margin-top: 6px;
+}
+
+.status {
+    padding: 6px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: capitalize;
+    white-space: nowrap;
+}
+
+.status.completed {
+    background: rgba(60,220,140,.12);
+    color: #62e09a;
+}
+
+.status.pending {
+    background: rgba(255,190,70,.12);
+    color: #ffc65c;
+}
+
+.status.failed,
+.status.refunded {
+    background: rgba(255,80,100,.12);
+    color: #ff7a8a;
+}
+
+.status.unknown {
+    background: rgba(255,255,255,.08);
+    color: #aaa;
+}
+
+.purchase-details {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-top: 17px;
+    padding-top: 15px;
+    border-top: 1px solid rgba(255,255,255,.06);
+}
+
+.detail span {
+    display: block;
+    color: #777;
+    font-size: 11px;
+    margin-bottom: 5px;
+}
+
+.detail strong {
+    font-size: 13px;
+    word-break: break-word;
+}
+
+.reference {
+    color: #aaa;
+    font-family: monospace;
+}
+
+.loading {
+    text-align: center;
+    color: #999;
+    padding: 40px 15px;
+}
+
+.empty-state {
+    text-align: center;
+    background: #100a0f;
+    border: 1px solid rgba(255,255,255,.08);
+    border-radius: 20px;
+    padding: 45px 20px;
+}
+
+.empty-icon {
+    font-size: 45px;
+    margin-bottom: 12px;
+}
+
+.empty-state h3 {
+    margin: 0 0 8px;
+}
+
+.empty-state p {
+    color: #999;
+    font-size: 14px;
+    line-height: 1.6;
+    margin: 0 auto 20px;
+    max-width: 450px;
+}
+
+.browse-btn {
+    display: inline-block;
+    text-decoration: none;
+    background: #ff69b4;
+    color: #160812;
+    padding: 11px 18px;
+    border-radius: 12px;
+    font-weight: 700;
+}
+
+.error-box {
+    display: none;
+    background: rgba(255,70,90,.08);
+    border: 1px solid rgba(255,70,90,.2);
+    color: #ff9ba6;
+    padding: 15px;
+    border-radius: 14px;
+    line-height: 1.5;
+    font-size: 13px;
+    margin-bottom: 18px;
+}
+
+@media (max-width: 700px) {
+    .summary-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .purchase-details {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 450px) {
+    .purchase-page {
+        padding: 18px 13px 45px;
+    }
+
+    .purchase-top {
+        align-items: flex-start;
+    }
+
+    .purchase-details {
+        grid-template-columns: 1fr;
+    }
+
+    .logo {
+        font-size: 19px;
+    }
+}
+</style></head><body><div class="purchase-page">
+<div class="purchase-container"><div class="topbar">
+
+    <button
+        class="back-btn"
+        onclick="window.location.href='profile.html'"
+    >
+        ← Back
+    </button>
+
+    <div class="logo">Novelora</div>
+
+</div>
+
+<div class="page-header">
+    <h1>Purchase History</h1>
+
+    <p>
+        View your Novelora coin purchases and payment history.
+    </p>
+</div>
+
+<div class="summary-grid">
+
+    <div class="summary-card">
+        <div class="summary-icon">🧾</div>
+        <strong id="totalPurchases">0</strong>
+        <span>Total Purchases</span>
+    </div>
+
+    <div class="summary-card">
+        <div class="summary-icon">🪙</div>
+        <strong id="totalCoins">0</strong>
+        <span>Coins Purchased</span>
+    </div>
+
+    <div class="summary-card">
+        <div class="summary-icon">💵</div>
+        <strong id="totalSpent">$0.00</strong>
+        <span>Total Spent</span>
+    </div>
+
+</div>
+
+<div
+    class="error-box"
+    id="errorBox"
+></div>
+
+<h2 class="history-title">
+    Your Purchases
+</h2>
+
+<div
+    class="purchase-list"
+    id="purchaseList"
+>
+    <div class="loading">
+        Loading your purchase history...
+    </div>
+</div>
+
+</div>
+</div><script>
+let currentUser = null;
+
+function escapeHtml(value) {
+    return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+function formatNumber(value) {
+    return Number(value || 0).toLocaleString();
+}
+
+function formatDate(value) {
+    if (!value) {
+        return "Date unavailable";
+    }
+
+    const date = new Date(value);
+
+    if (Number.isNaN(date.getTime())) {
+        return "Date unavailable";
+    }
+
+    return date.toLocaleString([], {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+        hour: "numeric",
+        minute: "2-digit"
+    });
+}
+
+function formatAmount(amount, currency) {
+    const number = Number(amount || 0);
+    const code = currency || "USD";
+
+    try {
+        return new Intl.NumberFormat(undefined, {
+            style: "currency",
+            currency: code
+        }).format(number);
+    } catch {
+        return `${code} ${number.toFixed(2)}`;
+    }
+}
+
+function normalizeStatus(status) {
+    const value = String(status || "unknown").toLowerCase();
+
+    if (
+        value === "completed" ||
+        value === "pending" ||
+        value === "failed" ||
+        value === "refunded"
+    ) {
+        return value;
+    }
+
+    return "unknown";
+}
+
+function showError(message) {
+    const box = document.getElementById("errorBox");
+
+    box.textContent = message;
+    box.style.display = "block";
+}
+
+function showEmpty() {
+    document.getElementById("purchaseList").innerHTML = `
+        <div class="empty-state">
+
+            <div class="empty-icon">🧾</div>
+
+            <h3>No purchases yet</h3>
+
+            <p>
+                Your completed and pending coin purchases will appear here
+                once you make a purchase.
+            </p>
+
+            <a
+                href="coins.html"
+                class="browse-btn"
+            >
+                🪙 Buy Coins
+            </a>
+
+        </div>
+    `;
+}
+
+function renderPurchases(purchases) {
+
+    const list = document.getElementById("purchaseList");
+
+    if (!purchases.length) {
+        showEmpty();
+        return;
+    }
+
+    let totalCoins = 0;
+    let totalSpent = 0;
+
+    purchases.forEach(purchase => {
+
+        const status = normalizeStatus(purchase.status);
+
+        /*
+         * Count completed purchases toward the user's actual
+         * purchased-coin and spending totals.
+         */
+        if (status === "completed") {
+            totalCoins += Number(purchase.coins || 0);
+            totalSpent += Number(purchase.amount || 0);
+        }
+    });
+
+    document.getElementById("totalPurchases").textContent =
+        formatNumber(purchases.length);
+
+    document.getElementById("totalCoins").textContent =
+        formatNumber(totalCoins);
+
+    /*
+     * The summary uses the currency of the purchases when possible.
+     * USD is the fallback because the database currently defaults to USD.
+     */
+    const currencies = purchases
+        .map(p => p.currency)
+        .filter(Boolean);
+
+    const summaryCurrency = currencies[0] || "USD";
+
+    document.getElementById("totalSpent").textContent =
+        formatAmount(totalSpent, summaryCurrency);
+
+    list.innerHTML = purchases.map(purchase => {
+
+        const status = normalizeStatus(purchase.status);
+
+        const coins = Number(purchase.coins || 0);
+
+        const amount = formatAmount(
+            purchase.amount,
+            purchase.currency || "USD"
+        );
+
+        const provider =
+            purchase.provider ||
+            "Payment Provider";
+
+        const reference =
+            purchase.provider_reference ||
+            purchase.id ||
+            "Not available";
+
+        return `
+            <div class="purchase-card">
+
+                <div class="purchase-top">
+
+                    <div>
+                        <div class="purchase-coins">
+                            🪙 ${formatNumber(coins)} Coins
+                        </div>
+
+                        <div class="purchase-date">
+                            ${escapeHtml(formatDate(purchase.created_at))}
+                        </div>
+                    </div>
+
+                    <div class="status ${status}">
+                        ${escapeHtml(status)}
+                    </div>
+
+                </div>
+
+                <div class="purchase-details">
+
+                    <div class="detail">
+                        <span>Amount</span>
+                        <strong>
+                            ${escapeHtml(amount)}
+                        </strong>
+                    </div>
+
+                    <div class="detail">
+                        <span>Payment Method</span>
+                        <strong>
+                            ${escapeHtml(provider)}
+                        </strong>
+                    </div>
+
+                    <div class="detail">
+                        <span>Reference</span>
+                        <strong class="reference">
+                            ${escapeHtml(reference)}
+                        </strong>
+                    </div>
+
+                </div>
+
+            </div>
+        `;
+    }).join("");
+}
+
+async function loadPurchaseHistory() {
+
+    try {
+
+        const {
+            data: sessionData,
+            error: sessionError
+        } = await supabaseClient.auth.getSession();
+
+        if (sessionError) {
+            throw sessionError;
+        }
+
+        const session = sessionData?.session;
+
+        if (!session?.user) {
+            window.location.href = "login.html";
+            return;
+        }
+
+        currentUser = session.user;
+
+        const {
+            data: purchases,
+            error
+        } = await supabaseClient
+            .from("purchases")
+            .select(`
+                id,
+                coins,
+                amount,
+                currency,
+                provider,
+                provider_reference,
+                status,
+                created_at
+            `)
+            .eq("user_id", currentUser.id)
+            .order("created_at", {
+                ascending: false
+            });
+
+        if (error) {
+            throw error;
+        }
+
+        renderPurchases(purchases || []);
+
+    } catch (error) {
+
+        console.error("Purchase history error:", error);
+
+        document.getElementById("purchaseList").innerHTML = "";
+
+        showError(
+            "We couldn't load your purchase history right now. Please try again."
+        );
+    }
+}
+
+loadPurchaseHistory();
+</script></body>
+</html>
