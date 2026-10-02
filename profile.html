@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Novelora - Profile</title>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+
 <style>
 * {
     box-sizing: border-box;
@@ -46,6 +49,24 @@ header {
     max-width: 900px;
     margin: 25px auto;
     padding: 0 20px 50px;
+}
+
+/* LOADING */
+
+.loading {
+    position: fixed;
+    inset: 0;
+    background: #fff7fb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    color: #e83e8c;
+    font-weight: bold;
+}
+
+.loading.hidden {
+    display: none;
 }
 
 /* NOTIFICATIONS */
@@ -95,6 +116,13 @@ header {
     opacity: .85;
 }
 
+.empty-notifications {
+    background: rgba(255,255,255,.12);
+    border-radius: 12px;
+    padding: 16px;
+    text-align: center;
+}
+
 .view-all {
     display: block;
     color: white;
@@ -126,11 +154,23 @@ header {
     margin: auto;
     font-size: 38px;
     font-weight: bold;
+    overflow: hidden;
+}
+
+.avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 .username {
     margin-top: 12px;
     font-size: 25px;
+}
+
+.display-name {
+    margin-top: 5px;
+    color: #555;
 }
 
 .email {
@@ -298,9 +338,85 @@ footer {
     padding: 25px;
 }
 
+/* EDIT MODAL */
+
+.modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.45);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    z-index: 100;
+}
+
+.modal.active {
+    display: flex;
+}
+
+.modal-card {
+    width: 100%;
+    max-width: 450px;
+    background: white;
+    border-radius: 20px;
+    padding: 25px;
+    box-shadow: 0 20px 50px rgba(0,0,0,.2);
+}
+
+.modal-card h2 {
+    margin-bottom: 20px;
+}
+
+.modal-card label {
+    display: block;
+    margin: 14px 0 6px;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.modal-card input {
+    width: 100%;
+    padding: 13px;
+    border: 1px solid #e5cbd8;
+    border-radius: 10px;
+    outline: none;
+    font-size: 14px;
+}
+
+.modal-card input:focus {
+    border-color: #e83e8c;
+}
+
+.modal-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.modal-buttons button {
+    flex: 1;
+    padding: 12px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.cancel-btn {
+    border: 1px solid #ddd;
+    background: white;
+}
+
+.save-btn {
+    border: none;
+    background: #e83e8c;
+    color: white;
+}
+
 /* MOBILE */
 
 @media (max-width: 650px) {
+
     .stats {
         grid-template-columns: 1fr 1fr;
     }
@@ -312,11 +428,19 @@ footer {
     .notification-heading h2 {
         font-size: 18px;
     }
+
+    .setting {
+        padding: 15px;
+    }
 }
 </style>
 </head>
 
 <body>
+
+<div class="loading" id="loading">
+    Loading your profile...
+</div>
 
 <header>
     <div class="logo">Novelora</div>
@@ -325,31 +449,24 @@ footer {
 
 <div class="container">
 
-    <!-- NOTIFICATIONS AT THE TOP -->
+    <!-- REAL NOTIFICATIONS -->
 
     <div class="notification-top">
 
         <div class="notification-heading">
             <h2>🔔 Notifications</h2>
-            <span class="unread">3 New</span>
+            <span class="unread" id="unreadCount">0 New</span>
         </div>
 
-        <div class="notification">
-            <strong>📖 New chapter available</strong>
-            <small>A new chapter has been added to a book you're following.</small>
+        <div id="notificationsList">
+            <div class="empty-notifications">
+                No new notifications.
+            </div>
         </div>
 
-        <div class="notification">
-            <strong>🎁 Reward received</strong>
-            <small>You received 2 coins from your daily check-in.</small>
-        </div>
-
-        <div class="notification">
-            <strong>✍️ Author update</strong>
-            <small>An author you follow has posted an update.</small>
-        </div>
-
-        <a href="#" class="view-all">View all notifications →</a>
+        <a href="notifications.html" class="view-all">
+            View all notifications →
+        </a>
 
     </div>
 
@@ -357,13 +474,21 @@ footer {
 
     <div class="profile-card">
 
-        <div class="avatar">N</div>
+        <div class="avatar" id="avatar">
+            N
+        </div>
 
-        <h1 class="username">Novelora Reader</h1>
+        <h1 class="username" id="username">
+            Reader
+        </h1>
 
-        <p class="email">reader@example.com</p>
+        <p class="display-name" id="displayName"></p>
 
-        <button class="edit-btn" onclick="editProfile()">
+        <p class="email" id="email">
+            Loading...
+        </p>
+
+        <button class="edit-btn" onclick="openEditProfile()">
             ✏️ Edit Profile
         </button>
 
@@ -376,22 +501,22 @@ footer {
     <div class="stats">
 
         <div class="stat">
-            <div class="stat-number">0</div>
+            <div class="stat-number" id="booksRead">0</div>
             <div class="stat-label">Books Read</div>
         </div>
 
         <div class="stat">
-            <div class="stat-number">0</div>
+            <div class="stat-number" id="chaptersRead">0</div>
             <div class="stat-label">Chapters Read</div>
         </div>
 
         <div class="stat">
-            <div class="stat-number">0</div>
+            <div class="stat-number" id="readingStreak">0</div>
             <div class="stat-label">Reading Streak</div>
         </div>
 
         <div class="stat">
-            <div class="stat-number">20</div>
+            <div class="stat-number" id="coins">0</div>
             <div class="stat-label">Coins</div>
         </div>
 
@@ -411,7 +536,7 @@ footer {
             </div>
         </a>
 
-        <a href="#" class="activity-item">
+        <a href="#" class="activity-item" onclick="openReadingHistory(event)">
             <div class="activity-icon">🕘</div>
             <div class="activity-text">
                 <strong>Reading History</strong>
@@ -419,7 +544,7 @@ footer {
             </div>
         </a>
 
-        <a href="#" class="activity-item">
+        <a href="#" class="activity-item" onclick="openFollowedAuthors(event)">
             <div class="activity-icon">❤️</div>
             <div class="activity-text">
                 <strong>Followed Authors</strong>
@@ -427,7 +552,7 @@ footer {
             </div>
         </a>
 
-        <a href="#" class="activity-item">
+        <a href="#" class="activity-item" onclick="openMyComments(event)">
             <div class="activity-icon">💬</div>
             <div class="activity-text">
                 <strong>My Reviews & Comments</strong>
@@ -443,7 +568,7 @@ footer {
 
     <div class="settings">
 
-        <div class="setting" onclick="settingMessage('Account Information')">
+        <div class="setting" onclick="openEditProfile()">
             <div class="setting-left">
                 <div class="setting-icon">👤</div>
                 <div class="setting-text">
@@ -454,7 +579,7 @@ footer {
             <div class="arrow">›</div>
         </div>
 
-        <div class="setting" onclick="settingMessage('Password')">
+        <div class="setting" onclick="changePassword()">
             <div class="setting-left">
                 <div class="setting-icon">🔐</div>
                 <div class="setting-text">
@@ -465,7 +590,7 @@ footer {
             <div class="arrow">›</div>
         </div>
 
-        <div class="setting" onclick="settingMessage('Notifications')">
+        <div class="setting" onclick="window.location.href='notifications.html'">
             <div class="setting-left">
                 <div class="setting-icon">🔔</div>
                 <div class="setting-text">
@@ -498,7 +623,7 @@ footer {
             <div class="arrow">›</div>
         </div>
 
-        <div class="setting" onclick="settingMessage('Purchase History')">
+        <div class="setting" onclick="viewPurchaseHistory()">
             <div class="setting-left">
                 <div class="setting-icon">💳</div>
                 <div class="setting-text">
@@ -509,7 +634,7 @@ footer {
             <div class="arrow">›</div>
         </div>
 
-        <div class="setting" onclick="settingMessage('Help')">
+        <div class="setting" onclick="settingMessage('Help & Support')">
             <div class="setting-left">
                 <div class="setting-icon">❓</div>
                 <div class="setting-text">
@@ -532,23 +657,781 @@ footer {
     © 2026 Novelora — Your next story awaits.
 </footer>
 
+
+<!-- EDIT PROFILE MODAL -->
+
+<div class="modal" id="editModal">
+
+    <div class="modal-card">
+
+        <h2>✏️ Edit Profile</h2>
+
+        <label for="editUsername">
+            Username
+        </label>
+
+        <input
+            type="text"
+            id="editUsername"
+            placeholder="Enter username"
+            maxlength="30"
+        >
+
+        <label for="editDisplayName">
+            Display Name
+        </label>
+
+        <input
+            type="text"
+            id="editDisplayName"
+            placeholder="Enter display name"
+            maxlength="50"
+        >
+
+        <div class="modal-buttons">
+
+            <button
+                class="cancel-btn"
+                type="button"
+                onclick="closeEditProfile()"
+            >
+                Cancel
+            </button>
+
+            <button
+                class="save-btn"
+                type="button"
+                id="saveProfileButton"
+                onclick="saveProfile()"
+            >
+                Save Changes
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
 <script>
 
-function editProfile() {
-    window.location.href = "edit-profile.html";
-}
+let currentUser = null;
+let currentProfile = null;
 
-function settingMessage(name) {
-    alert(name + " will be fully connected when Novelora accounts are connected to the backend.");
-}
 
-function logout() {
-    const confirmLogout = confirm("Are you sure you want to log out?");
+/* =========================
+   AUTHENTICATION
+========================= */
 
-    if (confirmLogout) {
+async function loadProfile() {
+
+    try {
+
+        const {
+            data: {
+                session
+            },
+            error: sessionError
+        } = await supabaseClient.auth.getSession();
+
+        if (sessionError || !session) {
+            window.location.href = "login.html";
+            return;
+        }
+
+        currentUser = session.user;
+
+        await loadUserProfile();
+        await loadNotifications();
+        await loadReadingStats();
+
+        document.getElementById("loading").classList.add("hidden");
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert("Unable to load your profile. Please try again.");
+
         window.location.href = "login.html";
     }
 }
+
+
+/* =========================
+   PROFILE
+========================= */
+
+async function loadUserProfile() {
+
+    const {
+        data,
+        error
+    } = await supabaseClient
+        .from("profiles")
+        .select("username, display_name, avatar_url, coins, role")
+        .eq("id", currentUser.id)
+        .single();
+
+    if (error) {
+
+        console.error("Profile error:", error);
+
+        currentProfile = {
+            username:
+                currentUser.user_metadata?.username ||
+                currentUser.email?.split("@")[0] ||
+                "Reader",
+
+            display_name:
+                currentUser.user_metadata?.username ||
+                "Reader",
+
+            coins: 0
+        };
+
+    } else {
+
+        currentProfile = data;
+    }
+
+    renderProfile();
+}
+
+
+function renderProfile() {
+
+    const username =
+        currentProfile?.username ||
+        currentUser.user_metadata?.username ||
+        currentUser.email?.split("@")[0] ||
+        "Reader";
+
+    const displayName =
+        currentProfile?.display_name ||
+        username;
+
+    document.getElementById("username").textContent =
+        "@" + username;
+
+    document.getElementById("displayName").textContent =
+        displayName;
+
+    document.getElementById("email").textContent =
+        currentUser.email || "";
+
+    document.getElementById("coins").textContent =
+        Number(currentProfile?.coins || 0).toLocaleString();
+
+    const avatar = document.getElementById("avatar");
+
+    if (currentProfile?.avatar_url) {
+
+        avatar.innerHTML =
+            `<img src="${escapeHtml(currentProfile.avatar_url)}" alt="Profile avatar">`;
+
+    } else {
+
+        avatar.textContent =
+            username.charAt(0).toUpperCase();
+    }
+}
+
+
+/* =========================
+   EDIT PROFILE
+========================= */
+
+function openEditProfile() {
+
+    document.getElementById("editUsername").value =
+        currentProfile?.username ||
+        currentUser.user_metadata?.username ||
+        "";
+
+    document.getElementById("editDisplayName").value =
+        currentProfile?.display_name ||
+        currentProfile?.username ||
+        "";
+
+    document.getElementById("editModal").classList.add("active");
+}
+
+
+function closeEditProfile() {
+
+    document.getElementById("editModal").classList.remove("active");
+}
+
+
+async function saveProfile() {
+
+    const username =
+        document.getElementById("editUsername")
+            .value
+            .trim();
+
+    const displayName =
+        document.getElementById("editDisplayName")
+            .value
+            .trim();
+
+    if (!username) {
+        alert("Please enter a username.");
+        return;
+    }
+
+    if (!/^[a-zA-Z0-9_]+$/.test(username)) {
+        alert("Username can only contain letters, numbers and underscores.");
+        return;
+    }
+
+    const button =
+        document.getElementById("saveProfileButton");
+
+    button.disabled = true;
+    button.textContent = "Saving...";
+
+    try {
+
+        /*
+         * Update the Supabase profile.
+         * This becomes the source of truth for the account.
+         */
+
+        const {
+            data,
+            error
+        } = await supabaseClient
+            .from("profiles")
+            .update({
+                username: username,
+                display_name: displayName || username,
+                updated_at: new Date().toISOString()
+            })
+            .eq("id", currentUser.id)
+            .select("username, display_name, avatar_url, coins, role")
+            .single();
+
+        if (error) {
+
+            if (
+                error.code === "23505" ||
+                error.message.toLowerCase().includes("duplicate")
+            ) {
+                throw new Error(
+                    "That username is already taken."
+                );
+            }
+
+            throw error;
+        }
+
+        currentProfile = data;
+
+        /*
+         * Also update auth metadata so pages that use
+         * user_metadata.username can immediately see the
+         * new username.
+         */
+
+        const {
+            error: metadataError
+        } = await supabaseClient.auth.updateUser({
+            data: {
+                username: username,
+                display_name: displayName || username
+            }
+        });
+
+        if (metadataError) {
+            console.warn(
+                "Metadata update warning:",
+                metadataError
+            );
+        }
+
+        renderProfile();
+
+        closeEditProfile();
+
+        alert("Profile updated successfully! 💕");
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert(
+            error.message ||
+            "Unable to update your profile."
+        );
+
+    } finally {
+
+        button.disabled = false;
+        button.textContent = "Save Changes";
+    }
+}
+
+
+/* =========================
+   NOTIFICATIONS
+========================= */
+
+async function loadNotifications() {
+
+    const list =
+        document.getElementById("notificationsList");
+
+    const {
+        data,
+        error
+    } = await supabaseClient
+        .from("notifications")
+        .select("id, title, message, type, is_read, created_at")
+        .eq("user_id", currentUser.id)
+        .order("created_at", {
+            ascending: false
+        })
+        .limit(3);
+
+    if (error) {
+
+        console.error(
+            "Notifications error:",
+            error
+        );
+
+        list.innerHTML = `
+            <div class="empty-notifications">
+                No new notifications.
+            </div>
+        `;
+
+        return;
+    }
+
+    const notifications = data || [];
+
+    const unread =
+        notifications.filter(
+            notification => !notification.is_read
+        ).length;
+
+    document.getElementById("unreadCount").textContent =
+        unread + " New";
+
+    if (!notifications.length) {
+
+        list.innerHTML = `
+            <div class="empty-notifications">
+                No new notifications.
+            </div>
+        `;
+
+        return;
+    }
+
+    list.innerHTML =
+        notifications
+            .map(notification => {
+
+                const icon =
+                    notification.type === "reward"
+                        ? "🎁"
+                        : notification.type === "promotion"
+                        ? "🔥"
+                        : notification.type === "new_chapter"
+                        ? "📖"
+                        : notification.type === "author"
+                        ? "✍️"
+                        : "🔔";
+
+                return `
+                    <div class="notification">
+
+                        <strong>
+                            ${icon}
+                            ${escapeHtml(notification.title || "Notification")}
+                        </strong>
+
+                        <small>
+                            ${escapeHtml(notification.message || "")}
+                        </small>
+
+                    </div>
+                `;
+
+            })
+            .join("");
+}
+
+
+/* =========================
+   READING STATS
+========================= */
+
+async function loadReadingStats() {
+
+    try {
+
+        /*
+         * Books read = unique books that have
+         * reading progress.
+         */
+
+        const {
+            data: progress
+        } = await supabaseClient
+            .from("reading_progress")
+            .select("book_id, chapter_id, last_read_at")
+            .eq("user_id", currentUser.id);
+
+        const progressRows = progress || [];
+
+        const uniqueBooks =
+            new Set(
+                progressRows.map(row => row.book_id)
+            );
+
+        document.getElementById("booksRead").textContent =
+            uniqueBooks.size;
+
+
+        /*
+         * Chapters read = number of chapters
+         * unlocked by this reader.
+         */
+
+        const {
+            count: unlockCount
+        } = await supabaseClient
+            .from("chapter_unlocks")
+            .select("id", {
+                count: "exact",
+                head: true
+            })
+            .eq("user_id", currentUser.id);
+
+        document.getElementById("chaptersRead").textContent =
+            unlockCount || 0;
+
+
+        /*
+         * Reading streak.
+         *
+         * Calculated from reading_progress dates.
+         */
+
+        const streak =
+            calculateReadingStreak(progressRows);
+
+        document.getElementById("readingStreak").textContent =
+            streak;
+
+    } catch (error) {
+
+        console.error(
+            "Reading stats error:",
+            error
+        );
+    }
+}
+
+
+/* =========================
+   READING STREAK
+========================= */
+
+function calculateReadingStreak(rows) {
+
+    if (!rows.length) {
+        return 0;
+    }
+
+    const dates = [
+        ...new Set(
+            rows
+                .map(row => row.last_read_at)
+                .filter(Boolean)
+                .map(date =>
+                    new Date(date)
+                        .toISOString()
+                        .slice(0, 10)
+                )
+        )
+    ].sort().reverse();
+
+    if (!dates.length) {
+        return 0;
+    }
+
+    const today =
+        new Date();
+
+    today.setHours(0, 0, 0, 0);
+
+    const todayString =
+        today.toISOString().slice(0, 10);
+
+    const yesterday =
+        new Date(today);
+
+    yesterday.setDate(
+        yesterday.getDate() - 1
+    );
+
+    const yesterdayString =
+        yesterday.toISOString().slice(0, 10);
+
+    if (
+        dates[0] !== todayString &&
+        dates[0] !== yesterdayString
+    ) {
+        return 0;
+    }
+
+    let streak = 0;
+
+    let currentDate =
+        new Date(
+            dates[0] + "T00:00:00"
+        );
+
+    for (const dateString of dates) {
+
+        const expected =
+            currentDate
+                .toISOString()
+                .slice(0, 10);
+
+        if (dateString !== expected) {
+            break;
+        }
+
+        streak++;
+
+        currentDate.setDate(
+            currentDate.getDate() - 1
+        );
+    }
+
+    return streak;
+}
+
+
+/* =========================
+   PASSWORD
+========================= */
+
+async function changePassword() {
+
+    const confirmed =
+        confirm(
+            "Send a password reset link to " +
+            currentUser.email +
+            "?"
+        );
+
+    if (!confirmed) {
+        return;
+    }
+
+    const {
+        error
+    } = await supabaseClient.auth.resetPasswordForEmail(
+        currentUser.email,
+        {
+            redirectTo:
+                window.location.origin +
+                window.location.pathname
+        }
+    );
+
+    if (error) {
+
+        console.error(error);
+
+        alert(
+            "Unable to send the password reset email."
+        );
+
+        return;
+    }
+
+    alert(
+        "Password reset instructions have been sent to your email. 📧"
+    );
+}
+
+
+/* =========================
+   PURCHASE HISTORY
+========================= */
+
+async function viewPurchaseHistory() {
+
+    const {
+        data,
+        error
+    } = await supabaseClient
+        .from("purchases")
+        .select(
+            "coins, amount, currency, provider, status, created_at"
+        )
+        .eq("user_id", currentUser.id)
+        .order("created_at", {
+            ascending: false
+        })
+        .limit(20);
+
+    if (error) {
+
+        console.error(error);
+
+        alert(
+            "Purchase history is currently unavailable."
+        );
+
+        return;
+    }
+
+    if (!data || !data.length) {
+
+        alert(
+            "You don't have any purchases yet."
+        );
+
+        return;
+    }
+
+    const summary =
+        data.map(item => {
+
+            const date =
+                new Date(item.created_at)
+                    .toLocaleDateString();
+
+            return (
+                date +
+                " — " +
+                item.coins +
+                " coins — " +
+                item.amount +
+                " " +
+                item.currency +
+                " — " +
+                item.status
+            );
+
+        }).join("\n");
+
+    alert(
+        "Purchase History\n\n" +
+        summary
+    );
+}
+
+
+/* =========================
+   OTHER ACTIVITY
+========================= */
+
+function openReadingHistory(event) {
+
+    event.preventDefault();
+
+    alert(
+        "Reading History will be connected to your reading activity."
+    );
+}
+
+
+function openFollowedAuthors(event) {
+
+    event.preventDefault();
+
+    alert(
+        "Followed Authors will be connected when author following is added."
+    );
+}
+
+
+function openMyComments(event) {
+
+    event.preventDefault();
+
+    alert(
+        "Your comments and replies will be connected to your Community activity."
+    );
+}
+
+
+function settingMessage(name) {
+
+    alert(
+        name +
+        " will be connected to your Novelora account settings."
+    );
+}
+
+
+/* =========================
+   LOGOUT
+========================= */
+
+async function logout() {
+
+    const confirmed =
+        confirm(
+            "Are you sure you want to log out?"
+        );
+
+    if (!confirmed) {
+        return;
+    }
+
+    const {
+        error
+    } = await supabaseClient.auth.signOut();
+
+    if (error) {
+
+        console.error(error);
+
+        alert(
+            "Unable to log out. Please try again."
+        );
+
+        return;
+    }
+
+    window.location.href =
+        "login.html";
+}
+
+
+/* =========================
+   SECURITY
+========================= */
+
+function escapeHtml(value) {
+
+    return String(value || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+
+/* =========================
+   START
+========================= */
+
+loadProfile();
 
 </script>
 
