@@ -914,7 +914,18 @@ function showChapterContent() {
       </div>
     `;
   } else {
-    chapterContent.innerHTML = content;
+    chapterContent.innerHTML = content
+  .replace(/\r\n/g, "\n")
+  .replace(/\r/g, "\n")
+  .split(/\n{2,}/)
+  .map(paragraph => {
+    const clean = paragraph.trim();
+
+    if (!clean) return "";
+
+    return `<p>${escapeHTML(clean).replace(/\n/g, "<br>")}</p>`;
+  })
+  .join("");
   }
 
   chapterContent.style.display = "block";
