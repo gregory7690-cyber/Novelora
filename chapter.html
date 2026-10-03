@@ -282,6 +282,11 @@
       text-align: right;
     }
 
+    .chapter-nav a.disabled {
+      opacity: 0.3;
+      pointer-events: none;
+    }
+
     .nav-label {
       display: block;
       font-size: 12px;
@@ -309,6 +314,15 @@
       text-align: center;
       padding: 60px 20px;
       opacity: 0.7;
+    }
+
+    .error-state {
+      text-align: center;
+      padding: 50px 20px;
+      border-radius: 18px;
+      background: rgba(255,70,70,0.08);
+      border: 1px solid rgba(255,70,70,0.18);
+      line-height: 1.7;
     }
 
     @media (max-width: 600px) {
@@ -347,6 +361,7 @@
 <main class="chapter-wrap">
 
   <div class="chapter-top">
+
     <a href="#" id="backToBook" class="back-btn">
       ← Back to Book
     </a>
@@ -354,6 +369,7 @@
     <a href="coins.html" class="coin-btn">
       🪙 <span id="topCoins">0</span> Coins
     </a>
+
   </div>
 
   <div id="loadingState" class="loading-state">
@@ -363,6 +379,7 @@
   <div id="chapterArea" style="display:none;">
 
     <header class="chapter-heading">
+
       <div id="bookTitle" class="chapter-book"></div>
 
       <h1 id="chapterTitle"></h1>
@@ -370,6 +387,7 @@
       <p id="chapterMeta"></p>
 
       <div id="chapterStatus" class="chapter-status"></div>
+
     </header>
 
     <section class="chapter-card">
@@ -384,7 +402,9 @@
           Unlock this chapter with coins to continue reading.
         </p>
 
-        <div id="promotionBadge" class="promo-badge" style="display:none;">
+        <div id="promotionBadge"
+             class="promo-badge"
+             style="display:none;">
           🔥 Limited-Time Offer
         </div>
 
@@ -392,11 +412,16 @@
           🪙 <span id="unlockPrice">5</span> Coins
         </div>
 
-        <div id="promotionExpiry" class="promo-expiry" style="display:none;"></div>
+        <div id="promotionExpiry"
+             class="promo-expiry"
+             style="display:none;">
+        </div>
 
         <br>
 
-        <button id="unlockButton" class="unlock-btn">
+        <button id="unlockButton"
+                class="unlock-btn"
+                type="button">
           🔓 Unlock Chapter
         </button>
 
@@ -404,17 +429,22 @@
           You have 0 coins
         </div>
 
-        <div id="unlockMessage" class="chapter-message"></div>
+        <div id="unlockMessage"
+             class="chapter-message">
+        </div>
 
       </div>
 
       <article id="chapterContent"
                class="chapter-content"
-               style="display:none;"></article>
+               style="display:none;">
+      </article>
 
     </section>
 
-    <div id="chapterNavigation" class="chapter-nav"></div>
+    <div id="chapterNavigation"
+         class="chapter-nav">
+    </div>
 
     <div class="chapter-footer">
       You're reading on Novelora · Your next story awaits.
@@ -424,1745 +454,987 @@
 
 </main>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+
 <script>
-(function () {
+"use strict";
 
-  "use strict";
+const params = new URLSearchParams(window.location.search);
 
-  /* =========================================================
-     URL
-  ========================================================= */
+let chapterId = params.get("id");
+const bookId = params.get("bookId");
 
-  const params = new URLSearchParams(window.location.search);
+let currentBook = null;
+let currentChapter = null;
+let currentUser = null;
+let chapters = [];
+let currentChapterIndex = -1;
+let currentCoinBalance = 0;
 
-  const bookId = params.get("book");
-  const chapterNumber = params.get("chapter");
+const loadingState = document.getElementById("loadingState");
+const chapterArea = document.getElementById("chapterArea");
+const bookTitleEl = document.getElementById("bookTitle");
+const chapterTitleEl = document.getElementById("chapterTitle");
+const chapterMetaEl = document.getElementById("chapterMeta");
+const chapterStatusEl = document.getElementById("chapterStatus");
+const chapterContent = document.getElementById("chapterContent");
+const lockScreen = document.getElementById("lockScreen");
+const unlockPriceEl = document.getElementById("unlockPrice");
+const unlockButton = document.getElementById("unlockButton");
+const coinBalanceEl = document.getElementById("coinBalance");
+const topCoins = document.getElementById("topCoins");
+const unlockMessage = document.getElementById("unlockMessage");
+const promotionBadge = document.getElementById("promotionBadge");
+const promotionExpiry = document.getElementById("promotionExpiry");
+const backToBook = document.getElementById("backToBook");
+const chapterNavigation = document.getElementById("chapterNavigation");
 
+function escapeHTML(value) {
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
 
-  /* =========================================================
-     DOM
-  ========================================================= */
+function formatDate(value) {
+  if (!value) return "";
 
-  const loadingState = document.getElementById("loadingState");
-  const chapterArea = document.getElementById("chapterArea");
+  const date = new Date(value);
 
-  const bookTitleEl = document.getElementById("bookTitle");
-  const chapterTitleEl = document.getElementById("chapterTitle");
-  const chapterMetaEl = document.getElementById("chapterMeta");
-  const chapterStatusEl = document.getElementById("chapterStatus");
+  if (Number.isNaN(date.getTime())) return "";
 
-  const lockScreen = document.getElementById("lockScreen");
-  const chapterContent = document.getElementById("chapterContent");
+  return date.toLocaleDateString(undefined, {
+    year: "numeric",
+    month: "short",
+    day: "numeric"
+  });
+}
 
-  const unlockPriceEl = document.getElementById("unlockPrice");
-  const unlockPriceBox = document.getElementById("unlockPriceBox");
-  const unlockButton = document.getElementById("unlockButton");
+function getChapterNumber(chapter) {
+  return Number(
+    chapter.chapter_number ??
+    chapter.chapterNumber ??
+    chapter.number ??
+    chapter.chapter ??
+    0
+  );
+}
 
-  const coinBalanceEl = document.getElementById("coinBalance");
-  const unlockMessage = document.getElementById("unlockMessage");
+function getChapterPrice(chapter) {
+  const possible = [
+    chapter.coin_price,
+    chapter.coinPrice,
+    chapter.price,
+    chapter.chapter_price,
+    chapter.chapterPrice,
+    chapter.coins
+  ];
 
-  const promotionBadge = document.getElementById("promotionBadge");
-  const promotionExpiry = document.getElementById("promotionExpiry");
+  for (const value of possible) {
+    const number = Number(value);
 
-  const topCoins = document.getElementById("topCoins");
-
-  const backToBook = document.getElementById("backToBook");
-  const chapterNavigation = document.getElementById("chapterNavigation");
-
-
-  /* =========================================================
-     STORAGE
-  ========================================================= */
-
-  function getJSON(key, fallback) {
-
-    try {
-
-      const value = localStorage.getItem(key);
-
-      if (!value) {
-        return fallback;
-      }
-
-      return JSON.parse(value);
-
-    } catch (error) {
-
-      console.error("Novelora storage error:", key, error);
-
-      return fallback;
+    if (Number.isFinite(number) && number >= 0) {
+      return number;
     }
   }
 
+  return Number(currentBook?.chapter_price) || 5;
+}
 
-  function saveJSON(key, value) {
-    localStorage.setItem(key, JSON.stringify(value));
+function isChapterFree(chapter) {
+  return (
+    chapter.is_free === true ||
+    chapter.isFree === true ||
+    chapter.free === true ||
+    getChapterPrice(chapter) === 0
+  );
+}
+
+function getChapterContent(chapter) {
+  return (
+    chapter.content ||
+    chapter.chapter_content ||
+    chapter.chapterContent ||
+    chapter.body ||
+    chapter.text ||
+    ""
+  );
+}
+
+function getChapterTitle(chapter) {
+  return (
+    chapter.title ||
+    "Chapter " + getChapterNumber(chapter)
+  );
+}
+
+async function loadCurrentUser() {
+  try {
+    const { data } = await supabaseClient.auth.getUser();
+    currentUser = data?.user || null;
+  } catch (error) {
+    console.warn("Auth check failed:", error);
+    currentUser = null;
+  }
+}
+
+async function loadCoinBalance() {
+  currentCoinBalance = 0;
+
+  if (!currentUser) {
+    updateCoinDisplay();
+    return;
   }
 
+  try {
+    const { data, error } = await supabaseClient
+      .from("profiles")
+      .select("*")
+      .eq("id", currentUser.id)
+      .maybeSingle();
 
-  /* =========================================================
-     ADMIN DATA
-  ========================================================= */
-
-  const adminBooks =
-    getJSON("noveloraAdminBooks", []);
-
-  const adminChapters =
-    getJSON("noveloraAdminChapters", []);
-
-  const promotions =
-    getJSON("noveloraPromotions", []);
-
-
-  /* =========================================================
-     FIND BOOK
-  ========================================================= */
-
-  function findBook() {
-
-    return adminBooks.find(function (book) {
-
-      const id =
-        book.id ||
-        book.bookId ||
-        book.bookID;
-
-      return String(id) === String(bookId);
-
-    });
-
-  }
-
-
-  /* =========================================================
-     FIND CHAPTER
-  ========================================================= */
-
-  function findChapter() {
-
-    return adminChapters.find(function (chapter) {
-
-      const chapterBook =
-        chapter.bookId ||
-        chapter.bookID ||
-        chapter.book;
-
-      const number =
-        chapter.chapterNumber ||
-        chapter.number ||
-        chapter.chapter;
-
-      return (
-        String(chapterBook) === String(bookId) &&
-        String(number) === String(chapterNumber)
-      );
-
-    });
-
-  }
-
-
-  /* =========================================================
-     ACTIVE PROMOTION
-  ========================================================= */
-
-  function getActivePromotion() {
-
-    if (!Array.isArray(promotions)) {
-      return null;
-    }
-
-    const now = new Date();
-
-    const matching = promotions.filter(function (promotion) {
-
-      if (!promotion) {
-        return false;
-      }
-
-      const promotionBook =
-        promotion.bookId ||
-        promotion.bookID ||
-        promotion.book;
-
-      if (
-        String(promotionBook) !== String(bookId)
-      ) {
-        return false;
-      }
-
-      const type =
-        String(promotion.type || "").toLowerCase();
-
-      if (!type.includes("discount")) {
-        return false;
-      }
-
-      const discountCoins =
-        Number(promotion.discountCoins);
-
-      if (
-        !Number.isFinite(discountCoins) ||
-        discountCoins < 0
-      ) {
-        return false;
-      }
-
-      const start =
-        promotion.startDate
-          ? new Date(promotion.startDate)
-          : null;
-
-      const end =
-        promotion.endDate
-          ? new Date(promotion.endDate)
-          : null;
-
-      if (
-        start &&
-        !isNaN(start.getTime()) &&
-        now < start
-      ) {
-        return false;
+    if (!error && data) {
+      if (data.coins !== undefined && data.coins !== null) {
+        currentCoinBalance = Number(data.coins) || 0;
+        updateCoinDisplay();
+        return;
       }
 
       if (
-        end &&
-        !isNaN(end.getTime()) &&
-        now > end
+        data.coin_balance !== undefined &&
+        data.coin_balance !== null
       ) {
-        return false;
+        currentCoinBalance = Number(data.coin_balance) || 0;
+        updateCoinDisplay();
+        return;
       }
-
-      return true;
-
-    });
-
-    if (!matching.length) {
-      return null;
     }
-
-    /*
-     * If multiple discounts exist, use the lowest valid
-     * promotional price.
-     */
-
-    matching.sort(function (a, b) {
-
-      return (
-        Number(a.discountCoins) -
-        Number(b.discountCoins)
-      );
-
-    });
-
-    return matching[0];
-
+  } catch (error) {
+    console.warn("Could not read profile coins:", error);
   }
 
+  updateCoinDisplay();
+}
 
-  /* =========================================================
-     GET NORMAL CHAPTER PRICE
-  ========================================================= */
+function updateCoinDisplay() {
+  topCoins.textContent = currentCoinBalance;
+  coinBalanceEl.textContent =
+    "You have " +
+    currentCoinBalance +
+    " coin" +
+    (currentCoinBalance === 1 ? "" : "s");
+}
 
-  function getNormalPrice(chapter) {
-
-    const possiblePrices = [
-
-      chapter.coinPrice,
-
-      chapter.price,
-
-      chapter.chapterPrice,
-
-      chapter.coins,
-
-      chapter.unlockPrice
-
-    ];
-
-    for (let i = 0; i < possiblePrices.length; i++) {
-
-      const value =
-        Number(possiblePrices[i]);
-
-      if (
-        Number.isFinite(value) &&
-        value >= 0
-      ) {
-
-        return value;
-      }
-
-    }
-
-    /*
-     * Novelora default chapter price.
-     */
-
-    return 5;
+async function loadBook() {
+  if (!bookId) {
+    showError("No book was selected.");
+    return false;
   }
 
+  const { data, error } = await supabaseClient
+    .from("books")
+    .select("*")
+    .eq("id", bookId)
+    .single();
 
-  /* =========================================================
-     GET EFFECTIVE PRICE
-  ========================================================= */
-
-  function getEffectivePrice(chapter) {
-
-    const normalPrice =
-      getNormalPrice(chapter);
-
-    const promotion =
-      getActivePromotion();
-
-    if (!promotion) {
-
-      return {
-        normalPrice: normalPrice,
-        effectivePrice: normalPrice,
-        promotion: null
-      };
-
-    }
-
-    const promotionalPrice =
-      Number(promotion.discountCoins);
-
-    /*
-     * Never allow a promotion to make the chapter
-     * more expensive than the normal price.
-     */
-
-    if (
-      !Number.isFinite(promotionalPrice) ||
-      promotionalPrice < 0 ||
-      promotionalPrice >= normalPrice
-    ) {
-
-      return {
-        normalPrice: normalPrice,
-        effectivePrice: normalPrice,
-        promotion: null
-      };
-
-    }
-
-    return {
-      normalPrice: normalPrice,
-      effectivePrice: promotionalPrice,
-      promotion: promotion
-    };
-
+  if (error || !data) {
+    console.error("Book loading error:", error);
+    showError("This book could not be found.");
+    return false;
   }
 
+  currentBook = data;
 
-  /* =========================================================
-     READER
-  ========================================================= */
+  bookTitleEl.textContent =
+    currentBook.title || "Novelora Story";
 
-  function getReader() {
+  document.title =
+    (currentBook.title || "Chapter") +
+    " | Novelora";
 
-    let reader =
-      getJSON("noveloraCurrentReader", null);
+  backToBook.href =
+    "book-details.html?id=" +
+    encodeURIComponent(bookId);
 
-    if (reader) {
-      return reader;
-    }
+  return true;
+}
 
-    reader =
-      getJSON("noveloraReader", null);
+async function loadChapterList() {
+  let result = await supabaseClient
+    .from("chapters")
+    .select("*")
+    .eq("book_id", bookId)
+    .eq("status", "published")
+    .order("chapter_number", { ascending: true });
 
-    if (reader) {
-      return reader;
-    }
-
-    const readers =
-      getJSON("noveloraReaders", []);
-
-    if (
-      Array.isArray(readers) &&
-      readers.length
-    ) {
-
-      return readers[0];
-
-    }
-
-    reader = {
-
-      id: "reader_demo",
-
-      username: "Reader",
-
-      email: "",
-
-      coins: 20,
-
-      createdAt:
-        new Date().toISOString()
-
-    };
-
-    saveJSON(
-      "noveloraCurrentReader",
-      reader
+  if (result.error) {
+    console.warn(
+      "Published chapter query failed, trying fallback:",
+      result.error
     );
 
-    return reader;
-
+    result = await supabaseClient
+      .from("chapters")
+      .select("*")
+      .eq("book_id", bookId)
+      .order("chapter_number", { ascending: true });
   }
 
-
-  /* =========================================================
-     COINS
-  ========================================================= */
-
-  function getCoins(reader) {
-
-    const possibleCoins = [
-
-      reader.coins,
-
-      reader.coinBalance,
-
-      reader.balance,
-
-      reader.coinsBalance
-
-    ];
-
-    for (
-      let i = 0;
-      i < possibleCoins.length;
-      i++
-    ) {
-
-      if (
-        possibleCoins[i] !== undefined &&
-        possibleCoins[i] !== null &&
-        !isNaN(Number(possibleCoins[i]))
-      ) {
-
-        return Number(possibleCoins[i]);
-
-      }
-
-    }
-
-    return 0;
-
+  if (result.error) {
+    console.error("Chapter list error:", result.error);
+    return false;
   }
 
-
-  function saveReaderCoins(reader, coins) {
-
-    coins =
-      Math.max(
-        0,
-        Number(coins) || 0
-      );
-
-    reader.coins = coins;
-    reader.coinBalance = coins;
-
-    saveJSON(
-      "noveloraCurrentReader",
-      reader
-    );
-
-
-    const readers =
-      getJSON("noveloraReaders", []);
-
-    if (
-      Array.isArray(readers) &&
-      readers.length
-    ) {
-
-      const readerId =
-        reader.id ||
-        reader.readerId ||
-        reader.userId;
-
-      const readerEmail =
-        reader.email || "";
-
-
-      const index =
-        readers.findIndex(function (item) {
-
-          const itemId =
-            item.id ||
-            item.readerId ||
-            item.userId;
-
-          return (
-
-            (
-              readerId &&
-              String(itemId) ===
-              String(readerId)
-            )
-
-            ||
-
-            (
-              readerEmail &&
-              item.email &&
-              String(item.email).toLowerCase() ===
-              String(readerEmail).toLowerCase()
-            )
-
-          );
-
-        });
-
-
-      if (index !== -1) {
-
-        readers[index].coins =
-          coins;
-
-        readers[index].coinBalance =
-          coins;
-
-        saveJSON(
-          "noveloraReaders",
-          readers
-        );
-
-      }
-
-    }
-
-
-    updateCoinDisplays(reader);
-
-  }
-
-
-  function updateCoinDisplays(reader) {
-
-    const coins =
-      getCoins(reader);
-
-    topCoins.textContent =
-      coins;
-
-    coinBalanceEl.textContent =
-      "You have " +
-      coins +
-      " coin" +
-      (coins === 1 ? "" : "s");
-
-  }
-
-
-  /* =========================================================
-     UNLOCK STORAGE
-  ========================================================= */
-
-  function getUnlocks() {
-
-    const unlocks =
-      getJSON(
-        "noveloraChapterUnlocks",
-        []
-      );
-
-    return Array.isArray(unlocks)
-      ? unlocks
-      : [];
-
-  }
-
-
-  function getReaderId(reader) {
-
+  chapters = (result.data || []).filter(chapter => {
     return (
-
-      reader.id ||
-
-      reader.readerId ||
-
-      reader.userId ||
-
-      reader.email ||
-
-      "reader_demo"
-
+      !chapter.status ||
+      String(chapter.status).toLowerCase() === "published"
     );
+  });
 
+  chapters.sort((a, b) => {
+    return getChapterNumber(a) - getChapterNumber(b);
+  });
+
+  return true;
+}
+
+function findCurrentChapter() {
+  return chapters.findIndex(chapter => {
+    return String(chapter.id) === String(chapterId);
+  });
+}
+
+function getActivePromotion() {
+  let promotions = [];
+
+  try {
+    promotions =
+      JSON.parse(
+        localStorage.getItem("noveloraPromotions")
+      ) || [];
+  } catch {
+    promotions = [];
   }
 
+  if (!Array.isArray(promotions)) return null;
 
-  function isChapterUnlocked(reader) {
+  const now = new Date();
 
-    const unlocks =
-      getUnlocks();
+  const valid = promotions.filter(promotion => {
+    const promotionBook =
+      promotion.bookId ||
+      promotion.bookID ||
+      promotion.book;
 
-    const readerId =
-      getReaderId(reader);
-
-
-    return unlocks.some(function (unlock) {
-
-      const unlockReader =
-        unlock.readerId ||
-        unlock.userId ||
-        unlock.readerEmail ||
-        unlock.reader;
-
-      const unlockBook =
-        unlock.bookId ||
-        unlock.bookID ||
-        unlock.book;
-
-      const unlockChapter =
-        unlock.chapterNumber ||
-        unlock.chapter ||
-        unlock.number;
-
-
-      return (
-
-        String(unlockReader) ===
-        String(readerId)
-
-        &&
-
-        String(unlockBook) ===
-        String(bookId)
-
-        &&
-
-        String(unlockChapter) ===
-        String(chapterNumber)
-
-      );
-
-    });
-
-  }
-
-
-  /* =========================================================
-     RECORD UNLOCK
-  ========================================================= */
-
-  function recordUnlock(
-    reader,
-    chapter,
-    price,
-    promotion
-  ) {
-
-    const unlocks =
-      getUnlocks();
-
-    const readerId =
-      getReaderId(reader);
-
-
-    const alreadyUnlocked =
-      unlocks.some(function (unlock) {
-
-        const unlockReader =
-          unlock.readerId ||
-          unlock.userId ||
-          unlock.readerEmail ||
-          unlock.reader;
-
-        const unlockBook =
-          unlock.bookId ||
-          unlock.bookID ||
-          unlock.book;
-
-        const unlockChapter =
-          unlock.chapterNumber ||
-          unlock.chapter ||
-          unlock.number;
-
-
-        return (
-
-          String(unlockReader) ===
-          String(readerId)
-
-          &&
-
-          String(unlockBook) ===
-          String(bookId)
-
-          &&
-
-          String(unlockChapter) ===
-          String(chapterNumber)
-
-        );
-
-      });
-
-
-    if (alreadyUnlocked) {
-      return;
+    if (String(promotionBook) !== String(bookId)) {
+      return false;
     }
 
-
-    const bookTitle =
-      currentBook
-        ? (
-            currentBook.title ||
-            currentBook.bookTitle ||
-            "Untitled Book"
-          )
-        : "Untitled Book";
-
-
-    const chapterTitle =
-      chapter.title ||
-      chapter.chapterTitle ||
-      ("Chapter " + chapterNumber);
-
-
-    unlocks.push({
-
-      id:
-        "unlock_" +
-        Date.now() +
-        "_" +
-        Math.random()
-          .toString(36)
-          .slice(2, 8),
-
-      readerId:
-        readerId,
-
-      readerEmail:
-        reader.email || "",
-
-      bookId:
-        bookId,
-
-      bookTitle:
-        bookTitle,
-
-      chapterNumber:
-        Number(chapterNumber),
-
-      chapterTitle:
-        chapterTitle,
-
-      coinsSpent:
-        price,
-
-      price:
-        price,
-
-      originalPrice:
-        promotion
-          ? getNormalPrice(chapter)
-          : price,
-
-      discountApplied:
-        !!promotion,
-
-      promotionId:
-        promotion
-          ? promotion.id || null
-          : null,
-
-      promotionTitle:
-        promotion
-          ? promotion.title || ""
-          : "",
-
-      unlockedAt:
-        new Date().toISOString()
-
-    });
-
-
-    saveJSON(
-      "noveloraChapterUnlocks",
-      unlocks
-    );
-
-  }
-
-
-  /* =========================================================
-     RECORD TRANSACTION
-  ========================================================= */
-
-  function recordTransaction(
-    reader,
-    chapter,
-    price,
-    promotion
-  ) {
-
-    const transactions =
-      getJSON(
-        "noveloraTransactions",
-        []
-      );
-
-
-    const readerId =
-      getReaderId(reader);
-
-
-    const bookTitle =
-      currentBook
-        ? (
-            currentBook.title ||
-            currentBook.bookTitle ||
-            "Untitled Book"
-          )
-        : "Untitled Book";
-
-
-    const chapterTitle =
-      chapter.title ||
-      chapter.chapterTitle ||
-      ("Chapter " + chapterNumber);
-
-
-    transactions.push({
-
-      id:
-        "tx_" +
-        Date.now() +
-        "_" +
-        Math.random()
-          .toString(36)
-          .slice(2, 8),
-
-      type:
-        "chapter_unlock",
-
-      status:
-        "completed",
-
-      readerId:
-        readerId,
-
-      readerEmail:
-        reader.email || "",
-
-      bookId:
-        bookId,
-
-      bookTitle:
-        bookTitle,
-
-      chapterNumber:
-        Number(chapterNumber),
-
-      chapterTitle:
-        chapterTitle,
-
-      coinsSpent:
-        price,
-
-      originalPrice:
-        promotion
-          ? getNormalPrice(chapter)
-          : price,
-
-      discountApplied:
-        !!promotion,
-
-      promotionId:
-        promotion
-          ? promotion.id || null
-          : null,
-
-      promotionTitle:
-        promotion
-          ? promotion.title || ""
-          : "",
-
-      /*
-       * Coin spending is not direct cash revenue.
-       */
-
-      amount:
-        0,
-
-      currency:
-        "USD",
-
-      date:
-        new Date().toISOString(),
-
-      createdAt:
-        new Date().toISOString()
-
-    });
-
-
-    saveJSON(
-      "noveloraTransactions",
-      transactions
-    );
-
-  }
-
-
-  /* =========================================================
-     ADMIN ACTIVITY
-  ========================================================= */
-
-  function recordActivity(
-    reader,
-    chapter,
-    price,
-    promotion
-  ) {
-
-    const activities =
-      getJSON(
-        "noveloraAdminActivities",
-        []
-      );
-
-
-    const bookTitle =
-      currentBook
-        ? (
-            currentBook.title ||
-            currentBook.bookTitle ||
-            "Untitled Book"
-          )
-        : "Untitled Book";
-
-
-    const chapterTitle =
-      chapter.title ||
-      chapter.chapterTitle ||
-      ("Chapter " + chapterNumber);
-
-
-    activities.push({
-
-      id:
-        "activity_" +
-        Date.now() +
-        "_" +
-        Math.random()
-          .toString(36)
-          .slice(2, 8),
-
-      type:
-        "chapter_unlock",
-
-      action:
-        "Reader unlocked a chapter",
-
-      readerId:
-        getReaderId(reader),
-
-      reader:
-        reader.username ||
-        reader.name ||
-        "Reader",
-
-      bookId:
-        bookId,
-
-      bookTitle:
-        bookTitle,
-
-      chapterNumber:
-        Number(chapterNumber),
-
-      chapterTitle:
-        chapterTitle,
-
-      coinsSpent:
-        price,
-
-      promotionId:
-        promotion
-          ? promotion.id || null
-          : null,
-
-      promotionTitle:
-        promotion
-          ? promotion.title || ""
-          : "",
-
-      createdAt:
-        new Date().toISOString(),
-
-      date:
-        new Date().toISOString()
-
-    });
-
-
-    saveJSON(
-      "noveloraAdminActivities",
-      activities
-    );
-
-  }
-
-
-  /* =========================================================
-     MESSAGE
-  ========================================================= */
-
-  function showMessage(
-    message,
-    type
-  ) {
-
-    unlockMessage.className =
-      "chapter-message " +
-      type;
-
-    unlockMessage.textContent =
-      message;
-
-  }
-
-
-  /* =========================================================
-     SHOW CONTENT
-  ========================================================= */
-
-  function showChapterContent() {
-
-    if (!currentChapter) {
-      return;
+    const type =
+      String(promotion.type || "").toLowerCase();
+
+    if (!type.includes("discount")) {
+      return false;
     }
 
+    const price = Number(promotion.discountCoins);
 
-    const content =
+    if (!Number.isFinite(price) || price < 0) {
+      return false;
+    }
 
-      currentChapter.content ||
+    const start = promotion.startDate
+      ? new Date(promotion.startDate)
+      : null;
 
-      currentChapter.chapterContent ||
+    const end = promotion.endDate
+      ? new Date(promotion.endDate)
+      : null;
 
-      currentChapter.text ||
+    if (
+      start &&
+      !Number.isNaN(start.getTime()) &&
+      now < start
+    ) {
+      return false;
+    }
 
-      currentChapter.body ||
+    if (
+      end &&
+      !Number.isNaN(end.getTime()) &&
+      now > end
+    ) {
+      return false;
+    }
 
-      "";
+    return true;
+  });
 
+  if (!valid.length) return null;
 
-    chapterContent.innerHTML =
-      content || "<p>This chapter has no content yet.</p>";
+  valid.sort((a, b) => {
+    return (
+      Number(a.discountCoins) -
+      Number(b.discountCoins)
+    );
+  });
 
+  return valid[0];
+}
 
-    chapterContent.style.display =
-      "block";
+function getEffectivePrice(chapter) {
+  const normalPrice = getChapterPrice(chapter);
+  const promotion = getActivePromotion();
 
-    lockScreen.style.display =
-      "none";
-
+  if (!promotion) {
+    return {
+      normalPrice,
+      effectivePrice: normalPrice,
+      promotion: null
+    };
   }
 
+  const promotionalPrice =
+    Number(promotion.discountCoins);
 
-  /* =========================================================
-     SHOW LOCK SCREEN
-  ========================================================= */
-
-  function showLockScreen(
-    chapter,
-    reader
+  if (
+    !Number.isFinite(promotionalPrice) ||
+    promotionalPrice < 0 ||
+    promotionalPrice >= normalPrice
   ) {
+    return {
+      normalPrice,
+      effectivePrice: normalPrice,
+      promotion: null
+    };
+  }
 
-    const pricing =
-      getEffectivePrice(chapter);
+  return {
+    normalPrice,
+    effectivePrice: promotionalPrice,
+    promotion
+  };
+}
 
+async function isChapterUnlocked() {
+  if (!currentUser) return false;
 
-    lockScreen.style.display =
-      "block";
+  const { data, error } = await supabaseClient
+    .from("chapter_unlocks")
+    .select("*")
+    .eq("user_id", currentUser.id)
+    .eq("chapter_id", currentChapter.id)
+    .maybeSingle();
 
-    chapterContent.style.display =
-      "none";
+  if (error) {
+    console.warn("Unlock check:", error);
+    return false;
+  }
 
+  return !!data;
+}
 
+async function renderChapter() {
+  if (!currentChapter) {
+    showError("This chapter could not be found.");
+    return;
+  }
+
+  const number = getChapterNumber(currentChapter);
+  const title = getChapterTitle(currentChapter);
+  const free = isChapterFree(currentChapter);
+  const pricing = getEffectivePrice(currentChapter);
+
+  chapterTitleEl.textContent = title;
+
+  chapterMetaEl.textContent =
+    "Chapter " +
+    number +
+    " · " +
+    (
+      free
+        ? "Free"
+        : pricing.effectivePrice + " Coins"
+    );
+
+  chapterStatusEl.textContent =
+    free
+      ? "🆓 Free Chapter"
+      : pricing.promotion
+        ? "🔥 " +
+          pricing.effectivePrice +
+          " Coins · Limited Offer"
+        : "🪙 " +
+          pricing.normalPrice +
+          " Coins";
+
+  document.title =
+    title + " | Novelora";
+
+  chapterContent.style.display = "none";
+  lockScreen.style.display = "none";
+
+  unlockMessage.className = "chapter-message";
+  unlockMessage.textContent = "";
+
+  if (free) {
+    showChapterContent();
+    return;
+  }
+
+  if (!currentUser) {
+    showLockScreen(
+      pricing,
+      "Please log in to unlock this chapter."
+    );
+    return;
+  }
+
+  const unlocked = await isChapterUnlocked();
+
+  if (unlocked) {
+    showChapterContent();
+    return;
+  }
+
+  showLockScreen(pricing);
+}
+
+function showChapterContent() {
+  const content = getChapterContent(currentChapter);
+
+  if (!content) {
+    chapterContent.innerHTML = `
+      <div class="empty-state">
+        This chapter has no content yet.
+      </div>
+    `;
+  } else {
+    chapterContent.innerHTML = content;
+  }
+
+  chapterContent.style.display = "block";
+  lockScreen.style.display = "none";
+}
+
+function showLockScreen(pricing, message) {
+  chapterContent.style.display = "none";
+  lockScreen.style.display = "block";
+
+  if (pricing.promotion) {
+    unlockPriceEl.innerHTML = `
+      <span class="promo-old-price">
+        ${pricing.normalPrice}
+      </span>
+
+      <span class="promo-price">
+        ${pricing.effectivePrice}
+      </span>
+    `;
+
+    promotionBadge.style.display = "block";
+    promotionExpiry.style.display = "block";
+
+    promotionExpiry.textContent =
+      "Offer ends " +
+      formatDate(pricing.promotion.endDate);
+  } else {
     unlockPriceEl.textContent =
       pricing.effectivePrice;
 
+    promotionBadge.style.display = "none";
+    promotionExpiry.style.display = "none";
+  }
 
-    if (pricing.promotion) {
+  updateCoinDisplay();
 
-      promotionBadge.style.display =
-        "block";
+  if (!currentUser) {
+    unlockButton.disabled = false;
+    unlockButton.textContent = "🔐 Log In to Unlock";
 
-      unlockPriceBox.innerHTML =
-        "🪙 " +
+    unlockButton.onclick = function() {
+      window.location.href = "login.html";
+    };
+  } else {
+    unlockButton.disabled = false;
+    unlockButton.textContent = "🔓 Unlock Chapter";
+    unlockButton.onclick = unlockChapter;
+  }
 
-        '<span class="promo-old-price">' +
+  if (message) {
+    showUnlockMessage(message, "error");
+  }
+}
 
-        pricing.normalPrice +
+async function unlockChapter() {
+  if (!currentUser) {
+    window.location.href = "login.html";
+    return;
+  }
 
-        "</span>" +
+  const pricing =
+    getEffectivePrice(currentChapter);
 
-        '<span class="promo-price">' +
+  const price =
+    Number(pricing.effectivePrice);
 
-        pricing.effectivePrice +
+  if (currentCoinBalance < price) {
+    showUnlockMessage(
+      "You don't have enough coins. Please get more coins to continue reading.",
+      "error"
+    );
+    return;
+  }
 
-        "</span>" +
+  unlockButton.disabled = true;
+  unlockButton.textContent = "Unlocking...";
 
-        " Coins";
+  const alreadyUnlocked =
+    await isChapterUnlocked();
 
+  if (alreadyUnlocked) {
+    showChapterContent();
+    return;
+  }
 
-      if (pricing.promotion.endDate) {
+  /*
+   * We intentionally do not fake a successful
+   * purchase. The profile must have a real
+   * coin balance field before coins are deducted.
+   */
 
-        const end =
-          new Date(
-            pricing.promotion.endDate
-          );
+  let balanceColumn = null;
 
-        if (!isNaN(end.getTime())) {
+  try {
+    const { data, error } =
+      await supabaseClient
+        .from("profiles")
+        .select("*")
+        .eq("id", currentUser.id)
+        .maybeSingle();
 
-          promotionExpiry.style.display =
-            "block";
-
-          promotionExpiry.textContent =
-            "Offer ends " +
-            end.toLocaleDateString(
-              undefined,
-              {
-                year: "numeric",
-                month: "short",
-                day: "numeric"
-              }
-            );
-
-        }
-
+    if (!error && data) {
+      if (
+        data.coins !== undefined &&
+        data.coins !== null
+      ) {
+        balanceColumn = "coins";
+      } else if (
+        data.coin_balance !== undefined &&
+        data.coin_balance !== null
+      ) {
+        balanceColumn = "coin_balance";
       }
-
-    } else {
-
-      promotionBadge.style.display =
-        "none";
-
-      promotionExpiry.style.display =
-        "none";
-
-      unlockPriceBox.innerHTML =
-        "🪙 <span id=\"unlockPrice\">" +
-        pricing.effectivePrice +
-        "</span> Coins";
-
     }
-
-
-    updateCoinDisplays(reader);
-
+  } catch (error) {
+    console.warn(
+      "Could not inspect coin balance:",
+      error
+    );
   }
 
+  if (!balanceColumn) {
+    unlockButton.disabled = false;
+    unlockButton.textContent = "🔓 Unlock Chapter";
 
-  /* =========================================================
-     UNLOCK CHAPTER
-  ========================================================= */
+    showUnlockMessage(
+      "Your Novelora coin balance is not connected to the reader profile yet.",
+      "error"
+    );
 
-  function unlockChapter() {
+    return;
+  }
 
-    if (!currentChapter) {
-      return;
-    }
+  const newBalance =
+    Math.max(
+      0,
+      currentCoinBalance - price
+    );
 
+  const updateData = {};
+  updateData[balanceColumn] = newBalance;
 
-    const reader =
-      getReader();
+  const {
+    error: balanceError
+  } = await supabaseClient
+    .from("profiles")
+    .update(updateData)
+    .eq("id", currentUser.id);
 
+  if (balanceError) {
+    console.error(
+      "Coin deduction error:",
+      balanceError
+    );
+
+    unlockButton.disabled = false;
+    unlockButton.textContent = "🔓 Unlock Chapter";
+
+    showUnlockMessage(
+      "The coins could not be deducted. Nothing was charged.",
+      "error"
+    );
+
+    return;
+  }
+
+  const {
+    error: unlockError
+  } = await supabaseClient
+    .from("chapter_unlocks")
+    .insert({
+      user_id: currentUser.id,
+      chapter_id: currentChapter.id,
+      book_id: bookId,
+      coins_spent: price
+    });
+
+  if (unlockError) {
+    console.error(
+      "Unlock record error:",
+      unlockError
+    );
 
     /*
-     * Re-check the promotion at the moment of purchase.
-     * This prevents an expired promotion from being charged.
+     * Restore the coins if the unlock record
+     * could not be created.
      */
 
-    const pricing =
-      getEffectivePrice(currentChapter);
+    const restoreData = {};
+    restoreData[balanceColumn] =
+      currentCoinBalance;
 
+    await supabaseClient
+      .from("profiles")
+      .update(restoreData)
+      .eq("id", currentUser.id);
 
-    const price =
-      pricing.effectivePrice;
+    unlockButton.disabled = false;
+    unlockButton.textContent = "🔓 Unlock Chapter";
 
-
-    const balance =
-      getCoins(reader);
-
-
-    if (isChapterUnlocked(reader)) {
-
-      showChapterContent();
-
-      return;
-
-    }
-
-
-    if (price <= 0) {
-
-      recordUnlock(
-        reader,
-        currentChapter,
-        0,
-        pricing.promotion
-      );
-
-      recordActivity(
-        reader,
-        currentChapter,
-        0,
-        pricing.promotion
-      );
-
-      showChapterContent();
-
-      return;
-
-    }
-
-
-    if (balance < price) {
-
-      showMessage(
-
-        "You need " +
-        price +
-        " coins to unlock this chapter, but you only have " +
-        balance +
-        ".",
-
-        "error"
-
-      );
-
-      return;
-
-    }
-
-
-    unlockButton.disabled =
-      true;
-
-    unlockButton.textContent =
-      "Unlocking...";
-
-
-    /*
-     * Deduct the ACTUAL effective price.
-     */
-
-    const newBalance =
-      balance - price;
-
-
-    saveReaderCoins(
-      reader,
-      newBalance
+    showUnlockMessage(
+      "The chapter could not be unlocked. Your coins were restored.",
+      "error"
     );
 
-
-    recordUnlock(
-      reader,
-      currentChapter,
-      price,
-      pricing.promotion
-    );
-
-
-    recordTransaction(
-      reader,
-      currentChapter,
-      price,
-      pricing.promotion
-    );
-
-
-    recordActivity(
-      reader,
-      currentChapter,
-      price,
-      pricing.promotion
-    );
-
-
-    showMessage(
-
-      pricing.promotion
-
-        ? "Chapter unlocked for " +
-          price +
-          " coins! 🔥"
-
-        : "Chapter unlocked successfully! 💗",
-
-      "success"
-
-    );
-
-
-    setTimeout(function () {
-
-      showChapterContent();
-
-    }, 350);
-
+    return;
   }
 
+  currentCoinBalance = newBalance;
+  updateCoinDisplay();
 
-  /* =========================================================
-     CHAPTER NAVIGATION
-  ========================================================= */
+  /*
+   * Record the transaction if the current
+   * transaction table accepts these fields.
+   */
 
-  function renderNavigation() {
-
-    const publishedChapters =
-      adminChapters
-
-        .filter(function (chapter) {
-
-          const chapterBook =
-            chapter.bookId ||
-            chapter.bookID ||
-            chapter.book;
-
-          const status =
-            String(
-              chapter.status || ""
-            ).toLowerCase();
-
-          return (
-
-            String(chapterBook) ===
-            String(bookId)
-
-            &&
-
-            (
-              status === "published" ||
-              status === "publish" ||
-              status === "live"
-            )
-
-          );
-
-        })
-
-        .sort(function (a, b) {
-
-          const aNumber =
-            Number(
-              a.chapterNumber ||
-              a.number ||
-              a.chapter ||
-              0
-            );
-
-          const bNumber =
-            Number(
-              b.chapterNumber ||
-              b.number ||
-              b.chapter ||
-              0
-            );
-
-          return aNumber - bNumber;
-
-        });
-
-
-    const currentIndex =
-      publishedChapters.findIndex(
-        function (chapter) {
-
-          const number =
-            chapter.chapterNumber ||
-            chapter.number ||
-            chapter.chapter;
-
-          return (
-            String(number) ===
-            String(chapterNumber)
-          );
-
-        }
-      );
-
-
-    chapterNavigation.innerHTML =
-      "";
-
-
-    if (
-      currentIndex > 0
-    ) {
-
-      const previous =
-        publishedChapters[
-          currentIndex - 1
-        ];
-
-      const previousNumber =
-        previous.chapterNumber ||
-        previous.number ||
-        previous.chapter;
-
-      const previousTitle =
-        previous.title ||
-        previous.chapterTitle ||
-        "Previous Chapter";
-
-
-      const previousLink =
-        document.createElement("a");
-
-      previousLink.href =
-        "chapter.html?book=" +
-        encodeURIComponent(bookId) +
-        "&chapter=" +
-        encodeURIComponent(previousNumber);
-
-      previousLink.innerHTML =
-        '<span class="nav-label">← Previous</span>' +
-        '<span class="nav-title">' +
-        escapeHTML(previousTitle) +
-        "</span>";
-
-      chapterNavigation.appendChild(
-        previousLink
-      );
-
-    } else {
-
-      const spacer =
-        document.createElement("div");
-
-      spacer.style.flex = "1";
-
-      chapterNavigation.appendChild(
-        spacer
-      );
-
-    }
-
-
-    if (
-      currentIndex !== -1 &&
-      currentIndex <
-      publishedChapters.length - 1
-    ) {
-
-      const next =
-        publishedChapters[
-          currentIndex + 1
-        ];
-
-      const nextNumber =
-        next.chapterNumber ||
-        next.number ||
-        next.chapter;
-
-      const nextTitle =
-        next.title ||
-        next.chapterTitle ||
-        "Next Chapter";
-
-
-      const nextLink =
-        document.createElement("a");
-
-      nextLink.className =
-        "next";
-
-      nextLink.href =
-        "chapter.html?book=" +
-        encodeURIComponent(bookId) +
-        "&chapter=" +
-        encodeURIComponent(nextNumber);
-
-      nextLink.innerHTML =
-        '<span class="nav-label">Next →</span>' +
-        '<span class="nav-title">' +
-        escapeHTML(nextTitle) +
-        "</span>";
-
-      chapterNavigation.appendChild(
-        nextLink
-      );
-
-    } else {
-
-      const spacer =
-        document.createElement("div");
-
-      spacer.style.flex = "1";
-
-      chapterNavigation.appendChild(
-        spacer
-      );
-
-    }
-
+  try {
+    await supabaseClient
+      .from("coin_transactions")
+      .insert({
+        user_id: currentUser.id,
+        amount: -price,
+        type: "chapter_unlock",
+        description:
+          "Unlocked Chapter " +
+          getChapterNumber(currentChapter),
+        chapter_id: currentChapter.id,
+        book_id: bookId
+      });
+  } catch (error) {
+    console.warn(
+      "Transaction record was not created:",
+      error
+    );
   }
 
+  showUnlockMessage(
+    "Chapter unlocked successfully! 💗",
+    "success"
+  );
 
-  /* =========================================================
-     SAFE HTML
-  ========================================================= */
+  setTimeout(() => {
+    showChapterContent();
+    unlockButton.disabled = false;
+    unlockButton.textContent = "✓ Unlocked";
+  }, 500);
+}
 
-  function escapeHTML(value) {
+function showUnlockMessage(message, type) {
+  unlockMessage.textContent = message;
+  unlockMessage.className =
+    "chapter-message " + type;
+}
 
-    return String(value || "")
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;")
-      .replace(/'/g, "&#039;");
+function buildChapterURL(id) {
+  return (
+    "chapter.html?id=" +
+    encodeURIComponent(id) +
+    "&bookId=" +
+    encodeURIComponent(bookId)
+  );
+}
 
+function renderNavigation() {
+  chapterNavigation.innerHTML = "";
+
+  if (currentChapterIndex < 0) return;
+
+  const previous =
+    chapters[currentChapterIndex - 1];
+
+  const next =
+    chapters[currentChapterIndex + 1];
+
+  const previousLink =
+    document.createElement("a");
+
+  if (previous) {
+    previousLink.href =
+      buildChapterURL(previous.id);
+
+    previousLink.innerHTML = `
+      <span class="nav-label">
+        ← Previous Chapter
+      </span>
+
+      <span class="nav-title">
+        ${escapeHTML(
+          getChapterTitle(previous)
+        )}
+      </span>
+    `;
+
+    previousLink.addEventListener(
+      "click",
+      event => {
+        event.preventDefault();
+        switchToChapter(previous.id);
+      }
+    );
+  } else {
+    previousLink.className = "disabled";
+
+    previousLink.innerHTML = `
+      <span class="nav-label">
+        ← Previous Chapter
+      </span>
+
+      <span class="nav-title">
+        Beginning of story
+      </span>
+    `;
   }
 
+  const nextLink =
+    document.createElement("a");
 
-  /* =========================================================
-     GLOBAL CURRENT DATA
-  ========================================================= */
+  nextLink.className = "next";
 
-  let currentBook =
-    null;
+  if (next) {
+    nextLink.href =
+      buildChapterURL(next.id);
 
-  let currentChapter =
-    null;
+    nextLink.innerHTML = `
+      <span class="nav-label">
+        Next Chapter →
+      </span>
 
+      <span class="nav-title">
+        ${escapeHTML(
+          getChapterTitle(next)
+        )}
+      </span>
+    `;
 
-  /* =========================================================
-     INITIALIZE
-  ========================================================= */
+    nextLink.addEventListener(
+      "click",
+      event => {
+        event.preventDefault();
+        switchToChapter(next.id);
+      }
+    );
+  } else {
+    nextLink.className =
+      "next disabled";
 
-  function initialize() {
+    nextLink.innerHTML = `
+      <span class="nav-label">
+        Next Chapter →
+      </span>
 
-    if (!bookId || !chapterNumber) {
+      <span class="nav-title">
+        End of story
+      </span>
+    `;
+  }
 
-      loadingState.textContent =
-        "Chapter information is missing.";
+  chapterNavigation.appendChild(previousLink);
+  chapterNavigation.appendChild(nextLink);
+}
 
-      return;
+async function switchToChapter(nextChapterId) {
+  if (!nextChapterId) return;
 
-    }
+  const newURL =
+    buildChapterURL(nextChapterId);
 
+  window.history.pushState(
+    {
+      chapterId: nextChapterId
+    },
+    "",
+    newURL
+  );
 
-    currentBook =
-      findBook();
+  chapterId = nextChapterId;
+
+  currentChapterIndex =
+    findCurrentChapter();
+
+  currentChapter =
+    chapters[currentChapterIndex];
+
+  if (!currentChapter) {
+    showError(
+      "This chapter could not be found."
+    );
+    return;
+  }
+
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth"
+  });
+
+  await renderChapter();
+  renderNavigation();
+}
+
+window.addEventListener(
+  "popstate",
+  async () => {
+    const newParams =
+      new URLSearchParams(
+        window.location.search
+      );
+
+    chapterId =
+      newParams.get("id");
+
+    currentChapterIndex =
+      findCurrentChapter();
 
     currentChapter =
-      findChapter();
+      chapters[currentChapterIndex];
 
-
-    if (!currentBook) {
-
-      loadingState.textContent =
-        "Book not found.";
-
-      return;
-
-    }
-
-
-    if (!currentChapter) {
-
-      loadingState.textContent =
-        "Chapter not found.";
-
-      return;
-
-    }
-
-
-    const status =
-      String(
-        currentChapter.status || ""
-      ).toLowerCase();
-
-
-    /*
-     * Only published chapters can be read.
-     */
-
-    if (
-      status !== "published" &&
-      status !== "publish" &&
-      status !== "live"
-    ) {
-
-      loadingState.textContent =
-        "This chapter is not published yet.";
-
-      return;
-
-    }
-
-
-    const reader =
-      getReader();
-
-
-    const title =
-      currentBook.title ||
-      currentBook.bookTitle ||
-      "Untitled Book";
-
-
-    const chapterTitle =
-      currentChapter.title ||
-      currentChapter.chapterTitle ||
-      ("Chapter " + chapterNumber);
-
-
-    const words =
-      currentChapter.wordCount ||
-      currentChapter.words ||
-      "";
-
-
-    bookTitleEl.textContent =
-      title;
-
-
-    chapterTitleEl.textContent =
-      chapterTitle;
-
-
-    chapterMetaEl.textContent =
-      words
-        ? "Chapter " +
-          chapterNumber +
-          " · " +
-          words +
-          " words"
-
-        : "Chapter " +
-          chapterNumber;
-
-
-    backToBook.href =
-      "book-details.html?id=" +
-      encodeURIComponent(bookId);
-
-
-    const access =
-      String(
-        currentChapter.access ||
-        currentChapter.accessType ||
-        currentChapter.type ||
-        ""
-      ).toLowerCase();
-
-
-    const isFree =
-      access === "free";
-
-
-    const pricing =
-      getEffectivePrice(
-        currentChapter
-      );
-
-
-    if (isFree) {
-
-      chapterStatusEl.textContent =
-        "🆓 Free Chapter";
-
-    } else if (pricing.promotion) {
-
-      chapterStatusEl.textContent =
-        "🔥 " +
-        pricing.effectivePrice +
-        " Coins · Limited Offer";
-
+    if (currentChapter) {
+      await renderChapter();
+      renderNavigation();
     } else {
-
-      chapterStatusEl.textContent =
-        "🪙 " +
-        pricing.normalPrice +
-        " Coins";
-
-    }
-
-
-    updateCoinDisplays(
-      reader
-    );
-
-
-    /*
-     * Free chapter.
-     */
-
-    if (isFree) {
-
-      showChapterContent();
-
-    }
-
-    /*
-     * Already unlocked.
-     */
-
-    else if (
-      isChapterUnlocked(reader)
-    ) {
-
-      showChapterContent();
-
-    }
-
-    /*
-     * Locked paid chapter.
-     */
-
-    else {
-
-      showLockScreen(
-        currentChapter,
-        reader
+      showError(
+        "This chapter could not be found."
       );
+    }
+  }
+);
 
+function showError(message) {
+  loadingState.style.display = "none";
+  chapterArea.style.display = "block";
+
+  chapterArea.innerHTML = `
+    <div class="error-state">
+
+      <h2>
+        Chapter unavailable
+      </h2>
+
+      <p>
+        ${escapeHTML(message)}
+      </p>
+
+      <br>
+
+      <a
+        href="reader-dashboard.html"
+        class="back-btn"
+      >
+        ← Back to Dashboard
+      </a>
+
+    </div>
+  `;
+}
+
+async function initialize() {
+  try {
+    if (!chapterId) {
+      showError("No chapter was selected.");
+      return;
     }
 
+    if (!bookId) {
+      showError("No book was selected.");
+      return;
+    }
+
+    await loadCurrentUser();
+
+    const bookLoaded =
+      await loadBook();
+
+    if (!bookLoaded) return;
+
+    const chaptersLoaded =
+      await loadChapterList();
+
+    if (!chaptersLoaded) {
+      showError(
+        "Could not load the chapters for this book."
+      );
+      return;
+    }
+
+    currentChapterIndex =
+      findCurrentChapter();
+
+    if (currentChapterIndex === -1) {
+      showError(
+        "This chapter does not exist or is not published."
+      );
+      return;
+    }
+
+    currentChapter =
+      chapters[currentChapterIndex];
+
+    await loadCoinBalance();
+
+    await renderChapter();
 
     renderNavigation();
 
+    chapterArea.style.display = "block";
+    loadingState.style.display = "none";
 
-    chapterArea.style.display =
-      "block";
+  } catch (error) {
+    console.error(
+      "Chapter initialization error:",
+      error
+    );
 
-    loadingState.style.display =
-      "none";
-
+    showError(
+      "Something went wrong while loading this chapter."
+    );
   }
+}
 
-
-  /* =========================================================
-     BUTTON
-  ========================================================= */
-
-  unlockButton.addEventListener(
-    "click",
-    unlockChapter
-  );
-
-
-  /* =========================================================
-     START
-  ========================================================= */
-
-  initialize();
-
-})();
+initialize();
 </script>
 
 </body>
